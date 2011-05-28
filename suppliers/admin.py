@@ -21,9 +21,12 @@ class SupplierInvoiceAdmin(admin.ModelAdmin):
     inlines = [SupplierPaymentInline]
     list_display = ["identifier", "supplier", "date_due",
                     "declared_value", "total_value", "payments",
-                    "status"]
+                    "status", "tag_list"]
     list_filter = ["supplier", "date_due", "status"]
     search_fields = ["supplier", "identifier"]
+
+    def tag_list(self, o):
+        return ", ".join(t.name for t in o.tags.all())
 
 
 admin.site.register(Supplier)

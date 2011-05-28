@@ -1,4 +1,5 @@
 from django.db import models
+from cashflow.models import Tag as CashFlowTag
 from django.core.validators import MinValueValidator
 import datetime
 
@@ -52,3 +53,5 @@ class SupplierPayment(models.Model):
     note = models.TextField(blank=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES,
                               default=STATUS_CHOICES[0][0])
+    tags = models.ManyToManyField(CashFlowTag,
+                                  limit_choices_to={"active": True})
