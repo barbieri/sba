@@ -4,6 +4,28 @@ from django.core.exceptions import ValidationError
 import datetime
 
 
+def color_validator(value):
+    if value:
+        if value[0] != "#":
+            raise ValidationError(u"%s is not a valid #rrggbb color." %
+                                  (value,))
+        try:
+            a = int(value[1:], 16)
+        except ValueError:
+            raise ValidationError(u"%s is not a valid #rrggbb color." %
+                                  (value,))
+
+class Tag(models.Model):
+    name = models.CharField(max_length=30)
+    color = models.CharField(max_length=7, default="#ffffff",
+                             validators=[color_validator])
+    note = models.TextField(blank=True)
+    active = models.BooleanField(default=True)
+
+    def __unicode__(self):
+        return self.name
+
+
 class Balance(models.Model):
     TYPE_CHOICES = (
         ("C", "Credit"),
@@ -17,6 +39,7 @@ class Balance(models.Model):
     value = models.FloatField(validators=[MinValueValidator(1.0)])
     estimated = models.BooleanField()
     note = models.TextField(blank=True)
+    tags = models.ManyToManyField(Tag, limit_choices_to={"active": True})
 
     def __unicode__(self):
         if not self.estimated:
@@ -25,21 +48,10 @@ class Balance(models.Model):
             return "%s*" % (self.description,)
 
 
-def color_validator(value):
-    if value:
-        if value[0] != "#":
-            raise ValidationError(u"%s is not a valid #rrggbb color." %
-                                  (value,))
-        try:
-            a = int(value[1:], 16)
-        except ValueError:
-            raise ValidationError(u"%s is not a valid #rrggbb color." %
-                                  (value,))
-
-
 class CostCenter(models.Model):
     name = models.CharField(max_length=30)
-    color = models.CharField(max_length=7, validators=[color_validator])
+    color = models.CharField(max_length=7, default="#ffffff",
+                             validators=[color_validator])
     note = models.TextField(blank=True)
 
     def __unicode__(self):
@@ -60,6 +72,7 @@ class Payment(models.Model):
     estimated = models.BooleanField()
     paid = models.BooleanField()
     note = models.TextField(blank=True)
+    tags = models.ManyToManyField(Tag, limit_choices_to={"active": True})
 
     def __unicode__(self):
         if not self.estimated:
