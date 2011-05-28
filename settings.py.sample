@@ -117,6 +117,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'suppliers',
+    'cashflow',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
