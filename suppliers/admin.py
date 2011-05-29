@@ -24,6 +24,7 @@ class SupplierInvoiceAdmin(admin.ModelAdmin):
                     "status", "tag_list"]
     list_filter = ["supplier", "date_due", "status"]
     search_fields = ["supplier", "identifier"]
+    filter_horizontal = ("tags",)
 
     def tag_list(self, o):
         return ", ".join(t.name for t in o.tags.all())

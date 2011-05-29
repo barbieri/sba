@@ -13,6 +13,7 @@ class BalanceAdmin(admin.ModelAdmin):
                     "tag_list"]
     list_filter = ["date", "type", "estimated"]
     search_fields = ["description", "value"]
+    filter_horizontal = ("tags",)
 
     def tag_list(self, o):
         return ", ".join(t.name for t in o.tags.all())
@@ -28,6 +29,7 @@ class PaymentAdmin(admin.ModelAdmin):
                     "estimated", "paid", "tag_list"]
     list_filter = ["cost_center", "date", "type", "estimated", "paid"]
     search_fields = ["description", "value"]
+    filter_horizontal = ("tags",)
 
     def tag_list(self, o):
         return ", ".join(t.name for t in o.tags.all())
