@@ -53,6 +53,7 @@ class CostCenter(models.Model):
     color = models.CharField(max_length=7, default="#ffffff",
                              validators=[color_validator])
     note = models.TextField(blank=True)
+    active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.name
