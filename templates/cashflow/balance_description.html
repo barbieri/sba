@@ -1,0 +1,14 @@
+<div class="balance">
+  <span class="date">{{ date|date:"Y-m-d" }}</span>
+  <div>{{ description }}</div>
+  {% if tags|length > 0 %}
+  <div class="taglist">
+    Tags:
+    <ul>
+    {% for t in tags %}
+      <li class="tag" style="background-color: {{ t.color }};">{{ t.name }}</li>
+    {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+</div>

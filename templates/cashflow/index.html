@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load cashflow_extras %}
+{% block title %}Cash Flow Reports{% endblock %}
+{% block content %}
+<h1>Cash Flow Report</h1>
+
+<form method="POST">
+  {% csrf_token %}
+
+  <fieldset>
+    <legend>Balances</legend>
+    <select name="balances" multiple="multiple">
+    {% for o in balance_filters %}
+      <option value="{{o.0}}" {{o.2}}>{{o.1}}</option>
+    {% endfor %}
+    </select>
+  </fieldset>
+
+  <fieldset>
+    <legend>Cost Centers</legend>
+    <select name="cost_centers" multiple="multiple">
+    {% for o in cost_center_filters %}
+      <option value="{{o.0}}" {{o.2}}>{{o.1}}</option>
+    {% endfor %}
+    </select>
+  </fieldset>
+
+  <fieldset>
+    <legend>Payments</legend>
+    <select name="payments" multiple="multiple">
+    {% for o in payment_filters %}
+      <option value="{{o.0}}" {{o.2}}>{{o.1}}</option>
+    {% endfor %}
+    </select>
+  </fieldset>
+
+  <fieldset>
+    <legend>Tags</legend>
+    <select name="tags" multiple="multiple">
+    {% for o in tag_filters %}
+      <option value="{{o.0}}" {{o.2}}>{{o.1}}</option>
+    {% endfor %}
+    </select>
+  </fieldset>
+
+  <fieldset>
+    <legend>Extra Filters</legend>
+
+    <input type="checkbox" name="show_suppliers" id="_suppliers" value="1" {{suppliers_filter}} />
+    <label for="_suppliers">Show supplier payments</label><br />
+
+    <input type="checkbox" name="show_estimateds" id="_estimateds" value="1" {{estimateds_filter}} />
+    <label for="_estimateds">Show estimated values</label><br />
+
+    <input type="checkbox" name="show_details" id="_details" value="1" {{details_filter}} />
+    <label for="_details">Show detailed descriptions</label><br />
+
+    <label for="_start_date">Start Date</label>
+    <input type="date" name="start_date" id="_start_date" value="{{start_date_filter}}" /><br/>
+
+    <label for="_end_date">End Date</label>
+    <input type="date" name="end_date" id="_end_date" value="{{end_date_filter}}" /><br />
+
+  </fieldset>
+
+  <input type="submit" value="Atualizar" />
+</form>
+
+<table id="cashflow" cellspacing="0">
+  <thead>
+    <tr>
+      {% if show_estimateds %}
+      <td class="value-aggregator" colspan="2">Operation</td>
+      <td class="value-aggregator" colspan="2">Total</td>
+      {% else %}
+      <td class="value-aggregator">Operation</td>
+      <td class="value-aggregator">Total</td>
+      {% endif %}
+      <td class="description" rowspan="2">Description</td>
+      <td class="action" rowspan="2"></td>
+    </tr>
+    <tr>
+      <td class="value">Value</td>
+      {% if show_estimateds %}<td class="value estimated">Estimated</td>{% endif %}
+      <td class="value">Value</td>
+      {% if show_estimateds %}<td class="value estimated">Estimated</td>{% endif %}
+    </tr>
+  </thead>
+  <tbody>
+  {% for month in flow_report %}
+    <tr class="month">
+      <td class="value"></td>
+      {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
+      <td class="value total"><span class="{% if month.1 >= 0 %}positive{% else %}negative{% endif %}">{{ month.1|currency }}</span></td>
+      {% if show_estimateds %}<td class="value estimated total"><span class="{% if month.2 >= 0 %}positive{% else %}negative{% endif %}">{{ month.2|currency }}</span></td>{% endif %}
+      <td class="description" colspan="2">Month {{ month.0 }}</td>
+    </tr>
+    {% for week in month.3 %}
+    <tr class="week">
+      <td class="value"></td>
+      {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
+      <td class="value total"><span class="{% if week.1 >= 0 %}positive{% else %}negative{% endif %}">{{ week.1|currency }}</span></td>
+      {% if show_estimateds %}<td class="value estimated total"><span class="{% if week.2 >= 0 %}positive{% else %}negative{% endif %}">{{ week.2|currency }}</span></td>{% endif %}
+      <td class="description" colspan="2">Week {{ week.0 }}</td>
+    </tr>
+      {% for day in week.3 %}
+    <tr class="day">
+      <td class="value"></td>
+      {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
+      <td class="value total"><span class="{% if day.1 >= 0 %}positive{% else %}negative{% endif %}">{{ day.1|currency }}</span></td>
+      {% if show_estimateds %}<td class="value estimated total"><span class="{% if day.2 >= 0 %}positive{% else %}negative{% endif %}">{{ day.2|currency }}</span></td>{% endif %}
+      <td class="description" colspan="2">Day {{ day.0 }}</td>
+    </tr>
+        {% for op in day.3 %}
+    <tr class="operation {% cycle 'odd' 'even' %}">
+      {% if op.0 != 0.0 %}
+      <td class="value"><span class="{% if op.0 >= 0 %}positive{% else %}negative{% endif %}">{{ op.0|currency }}</span></td>
+      {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
+      {% else %}
+      <td class="value"></td>
+      {% if show_estimateds %}<td class="value estimated"><span class="{% if op.1 >= 0 %}positive{% else %}negative{% endif %}">{{ op.1|currency }}</span></td>{% endif %}
+      {% endif %}
+      <td class="value total"><span class="{% if op.2 >= 0 %}positive{% else %}negative{% endif %}">{{ op.2|currency }}</span></td>
+      {% if show_estimateds %}<td class="value estimated total"><span class="{% if op.3 >= 0 %}positive{% else %}negative{% endif %}">{{ op.3|currency }}</span></td>{% endif %}
+      <td class="description">{{ op.4|safe }}</td>
+      <td class="action"><a href="{{ op.5 }}" target="_blank">view</a></td>
+    </tr>
+        {% endfor %}
+      {% endfor %}
+    {% endfor %}
+  {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr class="final">
+      <td class="value"></td>
+      {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
+      <td class="value final"><span class="{% if final.0 >= 0 %}positive{% else %}negative{% endif %}">{{ final.0|currency }}</span></td>
+      {% if show_estimateds %}<td class="value estimated final"><span class="{% if final.1 >= 0 %}positive{% else %}negative{% endif %}">{{ final.1|currency }}</span></td>{% endif %}
+      <td class="description" colspan="2">Final balance</td>
+    </tr>
+    <tr class="difference">
+      <td class="value"></td>
+      {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
+      <td class="value difference"><span class="{% if difference.0 >= 0 %}positive{% else %}negative{% endif %}">{{ difference.0|currency }}</span></td>
+      {% if show_estimateds %}<td class="value estimated difference"><span class="{% if difference.1 >= 0 %}positive{% else %}negative{% endif %}">{{ difference.1|currency }}</span></td>{% endif %}
+      <td class="description" colspan="2">Difference</td>
+    </tr>
+  </tfoot>
+</table>
+
+{% endblock %}

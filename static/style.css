@@ -1,0 +1,173 @@
+body {
+    font: 10pt Lucida Grande, Sans-Serif;
+}
+
+table#cashflow {
+    border: 1px solid black;
+    width: 100%;
+}
+
+table#cashflow td {
+    padding: 2px;
+    margin: 0px;
+    border-bottom: 1px solid #dddddd;
+    border-right: 1px solid #ffffff;
+    border-collapse: collapse;
+    vertical-align: top;
+}
+
+table#cashflow td.value-aggregator {
+    text-align: center;
+}
+
+table#cashflow td.value {
+    text-align: right;
+    word-wrap: none;
+    width: 80pt;
+}
+
+table#cashflow tr.month td.value,
+table#cashflow tr.week td.value,
+table#cashflow tr.day td.value,
+table#cashflow tr.operation td.value,
+table#cashflow tr.final td.value,
+table#cashflow tr.difference td.value {
+    font: 10pt monospace;
+}
+
+table#cashflow td.description {
+}
+
+table#cashflow thead tr {
+    background-color: #000000;
+    color: #ffffff;
+    border-bottom: 1px solid black;
+    font: bold 12pt Sans-serif;
+}
+
+table#cashflow tbody tr.month {
+    background-color: #c9c9c9;
+    color: #000000;
+    font: bold 12pt Sans-serif;
+}
+
+table#cashflow tbody tr.week {
+    background-color: #d9d9d9;
+    color: #000000;
+    font: bold 10pt Sans-serif;
+}
+
+table#cashflow tbody tr.day {
+    background-color: #e9e9e9;
+    color: #000000;
+    font-size: 10pt Sans-serif;
+}
+
+table#cashflow tbody tr.operation {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+table#cashflow tfoot tr.final,
+table#cashflow tfoot tr.difference {
+    background-color: #c9c9c9;
+    color: #000000;
+    font-weight: bold;
+}
+
+table#cashflow tbody tr.month td {
+    border-top: 1px solid #aaaaaa;
+}
+
+table#cashflow tfoot tr.final td,
+table#cashflow tfoot tr.difference td {
+    border-top: 1px solid #000000;
+}
+
+table#cashflow tr.month td.description {
+}
+
+table#cashflow tr.week td.description {
+    padding-left: 10px;
+}
+
+table#cashflow tr.day td.description {
+    padding-left: 20px;
+}
+
+table#cashflow tr.operation td.description {
+    padding-left: 30px;
+}
+
+table#cashflow span.positive {
+    color: #0000d9;
+}
+
+table#cashflow span.negative {
+    color: #d90000;
+}
+
+/* balance */
+div.balance span.date {
+    font: 8pt monospace;
+    float: left;
+    padding-right: 5px;
+    vertical-align: baseline;
+    color: #666666;
+}
+
+div.balance div.taglist {
+    font-size: 7pt;
+}
+
+div.balance ul {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+div.balance ul li {
+    display: inline-block;
+    padding: 2px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}
+
+/* payment */
+div.payment span.date {
+    font: 8pt monospace;
+    float: left;
+    margin-right: 5px;
+    vertical-align: baseline;
+    color: #666666;
+}
+
+div.payment span.cost_center {
+    font: 8pt monospace;
+    float: left;
+    margin-right: 5px;
+    vertical-align: baseline;
+}
+
+div.payment div.taglist {
+    font-size: 7pt;
+}
+
+div.payment div.paid {
+    font-style: oblique;
+}
+
+div.payment ul {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+div.payment ul li {
+    display: inline-block;
+    padding: 2px;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+}

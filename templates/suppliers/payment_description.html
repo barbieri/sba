@@ -1,0 +1,12 @@
+<div class="payment">
+  <span class="date">{{ date|date:"Y-m-d" }}</span>
+  <div class="{% if paid %}paid{% endif %}">
+    {{ invoice }} ({{ supplier }} - {{ status }})
+  </div>
+  {% if tags|length > 0 %}<div class="taglist">
+    Tags:
+    <ul>{% for t in tags %}
+      <li class="tag" style="background-color: {{ t.color }};">{{ t.name }}</li>{% endfor %}
+    </ul>
+  </div>{% endif %}
+</div>
