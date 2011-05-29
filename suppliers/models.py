@@ -27,9 +27,11 @@ class SupplierInvoice(models.Model):
     declared_value = models.FloatField(validators=[MinValueValidator(1.0)])
     status = models.CharField(max_length=1, choices=STATUS_CHOICES,
                               default=STATUS_CHOICES[0][0])
+    tags = models.ManyToManyField(CashFlowTag,
+                                  limit_choices_to={"active": True})
 
     def __unicode__(self):
-        return self.identifier
+        return "%s (%s)" % (self.identifier, self.supplier)
 
     def total_value(self):
         total = 0.0
@@ -53,5 +55,3 @@ class SupplierPayment(models.Model):
     note = models.TextField(blank=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES,
                               default=STATUS_CHOICES[0][0])
-    tags = models.ManyToManyField(CashFlowTag,
-                                  limit_choices_to={"active": True})
