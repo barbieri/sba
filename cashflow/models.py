@@ -45,7 +45,7 @@ class Balance(models.Model):
         if not self.estimated:
             return self.description
         else:
-            return "%s*" % (self.description,)
+            return u"%s*" % (self.description,)
 
 
 class CostCenter(models.Model):
@@ -79,4 +79,4 @@ class Payment(models.Model):
         if not self.estimated:
             return self.description
         else:
-            return "%s*" % (self.description,)
+            return u"%s*" % (self.description,)

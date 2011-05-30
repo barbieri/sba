@@ -31,7 +31,7 @@ class SupplierInvoice(models.Model):
                                   limit_choices_to={"active": True})
 
     def __unicode__(self):
-        return "%s (%s)" % (self.identifier, self.supplier)
+        return u"%s (%s)" % (self.identifier, self.supplier)
 
     def total_value(self):
         total = 0.0
