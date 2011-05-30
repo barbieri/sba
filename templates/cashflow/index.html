@@ -1,9 +1,11 @@
-{% extends "base.html" %}
+{% extends "admin/base_site.html" %}
 {% load cashflow_extras %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="/static/style.css" />{% endblock %}
 {% block title %}Cash Flow Reports{% endblock %}
 {% block content %}
 <h1>Cash Flow Report</h1>
 
+<div id="cashflow-form">
 <form method="POST">
   {% csrf_token %}
 
@@ -58,35 +60,56 @@
     <input type="checkbox" name="show_details" id="_details" value="1" {{details_filter}} />
     <label for="_details">Show detailed descriptions</label><br />
 
-    <label for="_start_date">Start Date</label>
-    <input type="date" name="start_date" id="_start_date" value="{{start_date_filter}}" /><br/>
-
-    <label for="_end_date">End Date</label>
+    <label for="_start_date">From</label>
+    <input type="date" name="start_date" id="_start_date" value="{{start_date_filter}}" />
+    <label for="_end_date">To</label>
     <input type="date" name="end_date" id="_end_date" value="{{end_date_filter}}" /><br />
 
   </fieldset>
 
-  <input type="submit" value="Atualizar" />
+  <input id="btn-update" type="submit" value="Update" />
 </form>
+</div>
+
+<div id="cashflow-parameters">
+  Cash flow created at {% now "D j F Y H:i" %} based on the following parameters:
+  <ul>
+    <li>{% if balance_filters|length < 1 %}No balance{% else %}{% if balance_filters|length == balance_enabled_count %}All balances{% else %}Balance:
+      {% for o in balance_filters %}{% if o.2 %}{{o.1}}{% endif %}{% endfor %}
+      {% endif %}{% endif %}</li>
+    <li>{% if cost_center_filters|length < 1 %}No cost_center{% else %}{% if cost_center_filters|length == cost_center_enabled_count %}All cost_centers{% else %}Cost_Centers:
+      <ul>{% for o in cost_center_filters %}{% if o.2 %}<li>{{o.1}}</li>{% endif %}{% endfor %}
+      </ul>{% endif %}{% endif %}</li>
+    <li>{% if payment_filters|length < 1 %}No payment{% else %}{% if payment_filters|length == payment_enabled_count %}All payments{% else %}Payment:
+      {% for o in payment_filters %}{% if o.2 %}{{o.1}}{% endif %}{% endfor %}{% endif %}{% endif %}</li>
+    <li>{% if tag_filters|length < 1 %}No tag{% else %}{% if tag_filters|length == tag_enabled_count %}All tags{% else %}Tags:
+      <ul>{% for o in tag_filters %}{% if o.2 %}<li>{{o.1}}</li>{% endif %}{% endfor %}
+      </ul>{% endif %}{% endif %}</li>
+    <li>{% if suppliers_filter %}Accounting supplier payments{% else %}Not accounting supplier payments {% endif %}</li>
+    <li>{% if revenues_filter %}Accounting sales revenue{% else %}Not accounting sales revenue {% endif %}</li>
+    <li>{{ duration }} days since {{ start_date_filter }} to {{ end_date_filter }}</li>
+  </ul>
+</div>
 
 <table id="cashflow" cellspacing="0">
   <thead>
     <tr>
       {% if show_estimateds %}
-      <td class="value-aggregator" colspan="2">Operation</td>
-      <td class="value-aggregator" colspan="2">Total</td>
+      <th class="value-aggregator" colspan="2">Operation</th>
+      <th class="value-aggregator" colspan="2">Total</th>
       {% else %}
-      <td class="value-aggregator">Operation</td>
-      <td class="value-aggregator">Total</td>
+      <th class="value-aggregator">Operation</th>
+      <th class="value-aggregator">Total</th>
       {% endif %}
-      <td class="description" rowspan="2">Description</td>
-      <td class="action" rowspan="2"></td>
+      <th colspan="2"></th>
     </tr>
     <tr>
-      <td class="value">Value</td>
-      {% if show_estimateds %}<td class="value estimated">Estimated</td>{% endif %}
-      <td class="value">Value</td>
-      {% if show_estimateds %}<td class="value estimated">Estimated</td>{% endif %}
+      <th class="value">Value</th>
+      {% if show_estimateds %}<th class="value estimated">Estimated</th>{% endif %}
+      <th class="value">Value</th>
+      {% if show_estimateds %}<th class="value estimated">Estimated</th>{% endif %}
+      <th class="cashflow-description">Description</th>
+      <th class="action"></th>
     </tr>
   </thead>
   <tbody>
@@ -96,7 +119,7 @@
       {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
       <td class="value total"><span class="{% if month.1 >= 0 %}positive{% else %}negative{% endif %}">{{ month.1|currency }}</span></td>
       {% if show_estimateds %}<td class="value estimated total"><span class="{% if month.2 >= 0 %}positive{% else %}negative{% endif %}">{{ month.2|currency }}</span></td>{% endif %}
-      <td class="description" colspan="2">Month {{ month.0 }}</td>
+      <td class="cashflow-description" colspan="2">Month {{ month.0 }}</td>
     </tr>
     {% for week in month.3 %}
     <tr class="week">
@@ -104,7 +127,7 @@
       {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
       <td class="value total"><span class="{% if week.1 >= 0 %}positive{% else %}negative{% endif %}">{{ week.1|currency }}</span></td>
       {% if show_estimateds %}<td class="value estimated total"><span class="{% if week.2 >= 0 %}positive{% else %}negative{% endif %}">{{ week.2|currency }}</span></td>{% endif %}
-      <td class="description" colspan="2">Week {{ week.0 }}</td>
+      <td class="cashflow-description" colspan="2">Week {{ week.0 }}</td>
     </tr>
       {% for day in week.3 %}
     <tr class="day">
@@ -112,7 +135,7 @@
       {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
       <td class="value total"><span class="{% if day.1 >= 0 %}positive{% else %}negative{% endif %}">{{ day.1|currency }}</span></td>
       {% if show_estimateds %}<td class="value estimated total"><span class="{% if day.2 >= 0 %}positive{% else %}negative{% endif %}">{{ day.2|currency }}</span></td>{% endif %}
-      <td class="description" colspan="2">Day {{ day.0 }}</td>
+      <td class="cashflow-description" colspan="2">{{ day.0 }}</td>
     </tr>
         {% for op in day.3 %}
     <tr class="operation {% cycle 'odd' 'even' %}">
@@ -125,7 +148,7 @@
       {% endif %}
       <td class="value total"><span class="{% if op.2 >= 0 %}positive{% else %}negative{% endif %}">{{ op.2|currency }}</span></td>
       {% if show_estimateds %}<td class="value estimated total"><span class="{% if op.3 >= 0 %}positive{% else %}negative{% endif %}">{{ op.3|currency }}</span></td>{% endif %}
-      <td class="description">{{ op.4|safe }}</td>
+      <td class="cashflow-description">{{ op.4|safe }}</td>
       <td class="action"><a href="{{ op.5 }}" target="_blank">view</a></td>
     </tr>
         {% endfor %}
@@ -139,14 +162,14 @@
       {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
       <td class="value final"><span class="{% if final.0 >= 0 %}positive{% else %}negative{% endif %}">{{ final.0|currency }}</span></td>
       {% if show_estimateds %}<td class="value estimated final"><span class="{% if final.1 >= 0 %}positive{% else %}negative{% endif %}">{{ final.1|currency }}</span></td>{% endif %}
-      <td class="description" colspan="2">Final balance</td>
+      <td class="cashflow-description" colspan="2">Final balance</td>
     </tr>
     <tr class="difference">
       <td class="value"></td>
       {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
       <td class="value difference"><span class="{% if difference.0 >= 0 %}positive{% else %}negative{% endif %}">{{ difference.0|currency }}</span></td>
       {% if show_estimateds %}<td class="value estimated difference"><span class="{% if difference.1 >= 0 %}positive{% else %}negative{% endif %}">{{ difference.1|currency }}</span></td>{% endif %}
-      <td class="description" colspan="2">Difference</td>
+      <td class="cashflow-description" colspan="2">Difference</td>
     </tr>
   </tfoot>
 </table>
