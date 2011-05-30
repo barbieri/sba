@@ -3,6 +3,7 @@ from cashflow.models import CostCenter as CashFlowCostCenter
 from cashflow.models import Payment as CashFlowPayment
 from cashflow.models import Tag as CashFlowTag
 from suppliers.models import SupplierPayment
+from sales.models import SaleRevenue
 
 from django.shortcuts import render_to_response
 from django.template import Context, RequestContext, loader
@@ -100,6 +101,7 @@ def index(request):
         payments = _all_options(all_payments)
         tags = _all_options(all_tags)
         show_suppliers = True
+        show_revenues = True
         show_estimateds = True
         show_details = True
         start_date = default_start
@@ -111,6 +113,7 @@ def index(request):
         payments = _get_list(request.POST, "payments", all_payments)
         tags = _get_list(request.POST, "tags", all_tags, int)
         show_suppliers = _get_bool(request.POST, "show_suppliers", False)
+        show_revenues = request.POST.get("show_revenues", False)
         show_estimateds = _get_bool(request.POST, "show_estimateds", False)
         show_details = request.POST.get("show_details", False)
         start_date = _get_date(request.POST, "start_date", default_start)
@@ -174,6 +177,15 @@ def index(request):
         print "supplier-payment: tags=%r, date<%s: %r" % (tags, start_date, value)
         initial_estimate -= value
         initial_value -= value
+
+    # initial revenue: sales.SaleRevenue
+    if show_revenues:
+        q = SaleRevenue.objects.filter(date_due__lt=start_date)
+        value = q.aggregate(Sum("net_value")).get("net_value__sum")
+        if value:
+            initial_estimate += value
+            initial_value += value
+        print "sales-revenue: date<%s: %r" % (start_date, value)
 
     # flow: cashflow.Balance
     filters = {
@@ -269,6 +281,32 @@ def index(request):
             url = "/admin/suppliers/supplierpayment/%d/" % o.id
             flow.append((o.date_due, -o.value, False, description, url))
 
+    # flow: sales.SaleRevenue
+    if show_revenues:
+        filters = {
+            "date_due__range": (start_date, end_date),
+            }
+        if show_details:
+            desc_tmpl = loader.get_template(
+                "sales/revenue_description.html")
+        for o in SaleRevenue.objects.filter(**filters):
+            if not show_details:
+                description = o
+            else:
+                c = Context(
+                    {"date": o.date_due,
+                     "value": o.value,
+                     "net_value": o.net_value,
+                     "method": o.method.name,
+                     "operation_cost": o.operation_cost,
+                     "percentual_cost": o.percentual_cost,
+                     "sale": o.sale,
+                     })
+                description = desc_tmpl.render(c)
+
+            url = "/admin/sales/sale/%d/" % o.sale.id
+            flow.append((o.date_due, o.net_value, False, description, url))
+
     # report
     flow.sort(cmp=lambda a, b: cmp(a[0], b[0]))
     flow_report = []
@@ -320,6 +358,9 @@ def index(request):
     suppliers_filter = _to_checked(show_suppliers)
     estimateds_filter = _to_checked(show_estimateds)
 
+    # sales.models
+    revenues_filter = _to_checked(show_revenues)
+
     # extra
     details_filter = _to_checked(show_details)
     start_date_filter = start_date.strftime("%Y-%m-%d")
@@ -331,6 +372,7 @@ def index(request):
         "payment_filters": payment_filters,
         "tag_filters": tag_filters,
         "suppliers_filter": suppliers_filter,
+        "revenues_filter": revenues_filter,
         "estimateds_filter": estimateds_filter,
         "details_filter": details_filter,
         "start_date_filter": start_date_filter,

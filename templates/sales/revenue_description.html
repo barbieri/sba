@@ -1,0 +1,13 @@
+<div class="revenue">
+  <span class="date">{{ date|date:"Y-m-d" }}</span>
+  <div>
+    <span class="net-value">net: ${{ net_value }}</span>,
+    <span class="gross-value">gross: ${{ value }}</span>,
+    <span class="method">using {{ method }}</span>
+  </div>
+  <div class="sale">
+    sold at {{ sale.datetime|date:"Y-m-d" }}
+    {% if sale.vendor %}by {{ sale.vendor }}{% endif %}
+    {% if sale.customer %}to {{ sale.customer }}{% endif %}
+  </div>
+</div>

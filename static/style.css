@@ -171,3 +171,16 @@ div.payment ul li {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
 }
+
+/* revenue */
+div.revenue span.date {
+    font: 8pt monospace;
+    float: left;
+    margin-right: 5px;
+    vertical-align: baseline;
+    color: #666666;
+}
+
+div.revenue div.sale {
+    font-size: 7pt;
+}
