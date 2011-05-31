@@ -1,6 +1,11 @@
 {% extends "admin/base_site.html" %}
 {% load cashflow_extras %}
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="/static/style.css" />{% endblock %}
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="/static/style.css" />
+<link rel="stylesheet" type="text/css" href="/static/print.css" media="print" />
+{% endblock %}
+{% block extrahead %}{{ block.super }}<script type="text/javascript" language="javascript" src="/static/script.js"></script>{% endblock %}
 {% block title %}Cash Flow Reports{% endblock %}
 {% block content %}
 <h1>Cash Flow Report</h1>
@@ -91,6 +96,68 @@
   </ul>
 </div>
 
+<div id="cashflow-calendars">
+{% for month in calendar %}
+  <div class="calendar-month">
+    <table class="calendar-month-body" cellspacing="0">
+      <caption>{{ month.name }}</caption>
+      <tbody>
+      {% for week in month.weeks %}
+        <tr>
+          <th class="calendar-week">W{{ week.id.1 }}</th>
+          {% for day in week.days %}
+          {% if day.sibling_month %}<td class="calendar-day sibling-month {% if day.id.weekday > 4 %}weekend{% endif %}">{{ day.id.day }}</td>{% else %}
+          <script type="text/javascript" language="javascript">
+          function tooltip_{{ day.id|date:'Y_n_j' }}() {
+            var message = '<div id="calendar-day-tooltip">';
+            message += '<div class="title">{{ day.id|date:"l, j-F-Y" }}</div>';
+
+            message += '<div class="accounting">';
+            {% if show_estimateds %}
+            {% if day.difference_estimate != day.difference_value %}
+            {% if day.difference_estimate %}
+            message += "Estimated accounting <strong>{{ day.difference_estimate|currency }}</strong>. ";
+            {% endif %}
+            {% endif %}
+            {% endif %}
+
+            {% if day.difference_value %}
+            {% if show_estimateds and day.difference_estimate and day.difference_estimate != day.difference_value %}
+            message += "Known";
+            {% else %}
+            message += "Accounting";
+            {% endif %}
+            message += " <strong>{{ day.difference_value|currency }}</strong>.";
+            {% else %}
+            {% if show_estimateds and not day.difference_estimate %}
+            message += "Known accounting is unchanged.";
+            {% endif %}
+            {% endif %}
+            message += '</div>';
+
+            message += '<div class="consolidated">';
+            {% if show_estimateds and day.estimate != day.value %}
+            message += "Estimated balance <strong>{{ day.estimate|currency }}</strong>. Known <strong>{{ day.value|currency }}</strong>";
+            {% else %}
+            message += "Balance <strong>{{ day.value|currency }}</strong>.";
+            {% endif %}
+            message += '</div>';
+
+            message += '</div>';
+            tooltip.show(message);
+          }
+          </script>
+          <td class="calendar-day {% if day.id.weekday > 4 %}weekend{% endif %} {% if day.operations %}operations{% endif %} {%if day.id == today %}today{% endif %} {%if day.value >= 0 %}positive{% else %}negative{% endif %}" onmouseover="tooltip_{{ day.id|date:'Y_n_j' }}();" onmouseout="tooltip.hide();">
+          {% if not day.operations %}{{ day.id.day }}{% else %}<a href="#report-day-{{ day.id|date:'Y-n-j' }}">{{ day.id.day }}</a>{% endif %}
+          </td>
+          {% endif %}
+          {% endfor %}</tr>
+    {% endfor %}</tbody>
+    </table>
+  </div>
+{% endfor %}
+</div>
+
 <table id="cashflow" cellspacing="0">
   <thead>
     <tr>
@@ -117,39 +184,39 @@
     <tr class="month">
       <td class="value"></td>
       {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
-      <td class="value total"><span class="{% if month.1 >= 0 %}positive{% else %}negative{% endif %}">{{ month.1|currency }}</span></td>
-      {% if show_estimateds %}<td class="value estimated total"><span class="{% if month.2 >= 0 %}positive{% else %}negative{% endif %}">{{ month.2|currency }}</span></td>{% endif %}
-      <td class="cashflow-description" colspan="2">Month {{ month.0 }}</td>
+      <td class="value total"><span class="{% if month.total_value >= 0 %}positive{% else %}negative{% endif %}">{{ month.total_value|currency }}</span></td>
+      {% if show_estimateds %}<td class="value estimated total"><span class="{% if month.total_estimate >= 0 %}positive{% else %}negative{% endif %}">{{ month.total_estimate|currency }}</span></td>{% endif %}
+      <td class="cashflow-description" colspan="2"><a name="report-month-{{ month.id.0 }}-{{ month.id.1 }}"></a>{{ month.name }}</td>
     </tr>
-    {% for week in month.3 %}
+    {% for week in month.weeks %}
     <tr class="week">
       <td class="value"></td>
       {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
-      <td class="value total"><span class="{% if week.1 >= 0 %}positive{% else %}negative{% endif %}">{{ week.1|currency }}</span></td>
-      {% if show_estimateds %}<td class="value estimated total"><span class="{% if week.2 >= 0 %}positive{% else %}negative{% endif %}">{{ week.2|currency }}</span></td>{% endif %}
-      <td class="cashflow-description" colspan="2">Week {{ week.0 }}</td>
+      <td class="value total"><span class="{% if week.total_value >= 0 %}positive{% else %}negative{% endif %}">{{ week.total_value|currency }}</span></td>
+      {% if show_estimateds %}<td class="value estimated total"><span class="{% if week.total_estimate >= 0 %}positive{% else %}negative{% endif %}">{{ week.total_estimate|currency }}</span></td>{% endif %}
+      <td class="cashflow-description" colspan="2"><a name="report-week-{{ week.id.0 }}-{{ week.id.1 }}"></a>Week {{ week.id.1 }}</td>
     </tr>
-      {% for day in week.3 %}
+      {% for day in week.days %}
     <tr class="day">
       <td class="value"></td>
       {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
-      <td class="value total"><span class="{% if day.1 >= 0 %}positive{% else %}negative{% endif %}">{{ day.1|currency }}</span></td>
-      {% if show_estimateds %}<td class="value estimated total"><span class="{% if day.2 >= 0 %}positive{% else %}negative{% endif %}">{{ day.2|currency }}</span></td>{% endif %}
-      <td class="cashflow-description" colspan="2">{{ day.0 }}</td>
+      <td class="value total"><span class="{% if day.total_value >= 0 %}positive{% else %}negative{% endif %}">{{ day.total_value|currency }}</span></td>
+      {% if show_estimateds %}<td class="value estimated total"><span class="{% if day.total_estimate >= 0 %}positive{% else %}negative{% endif %}">{{ day.total_estimate|currency }}</span></td>{% endif %}
+      <td class="cashflow-description" colspan="2"><a name="report-day-{{ day.id|date:'Y-n-j' }}"></a>{{ day.id|date:'l, j' }}</td>
     </tr>
-        {% for op in day.3 %}
+        {% for op in day.operations %}
     <tr class="operation {% cycle 'odd' 'even' %}">
-      {% if op.0 != 0.0 %}
-      <td class="value"><span class="{% if op.0 >= 0 %}positive{% else %}negative{% endif %}">{{ op.0|currency }}</span></td>
+      {% if op.value != 0.0 %}
+      <td class="value"><span class="{% if op.value >= 0 %}positive{% else %}negative{% endif %}">{{ op.value|currency }}</span></td>
       {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
       {% else %}
       <td class="value"></td>
-      {% if show_estimateds %}<td class="value estimated"><span class="{% if op.1 >= 0 %}positive{% else %}negative{% endif %}">{{ op.1|currency }}</span></td>{% endif %}
+      {% if show_estimateds %}<td class="value estimated"><span class="{% if op.estimate >= 0 %}positive{% else %}negative{% endif %}">{{ op.estimate|currency }}</span></td>{% endif %}
       {% endif %}
-      <td class="value total"><span class="{% if op.2 >= 0 %}positive{% else %}negative{% endif %}">{{ op.2|currency }}</span></td>
-      {% if show_estimateds %}<td class="value estimated total"><span class="{% if op.3 >= 0 %}positive{% else %}negative{% endif %}">{{ op.3|currency }}</span></td>{% endif %}
-      <td class="cashflow-description">{{ op.4|safe }}</td>
-      <td class="action"><a href="{{ op.5 }}" target="_blank">view</a></td>
+      <td class="value total"><span class="{% if op.total_value >= 0 %}positive{% else %}negative{% endif %}">{{ op.total_value|currency }}</span></td>
+      {% if show_estimateds %}<td class="value estimated total"><span class="{% if op.total_estimate >= 0 %}positive{% else %}negative{% endif %}">{{ op.total_estimate|currency }}</span></td>{% endif %}
+      <td class="cashflow-description">{{ op.description|safe }}</td>
+      <td class="action"><a href="{{ op.url }}" target="_blank">view</a></td>
     </tr>
         {% endfor %}
       {% endfor %}

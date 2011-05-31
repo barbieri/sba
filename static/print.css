@@ -1,0 +1,20 @@
+/* hide cashflow elements that should not make into print */
+div#cashflow-form {
+    display: none;
+}
+
+table#cashflow .action {
+    display: none;
+}
+
+div.balance span.date {
+    display: none;
+}
+
+div.payment span.date {
+    display: none;
+}
+
+div.revenue span.date {
+    display: none;
+}

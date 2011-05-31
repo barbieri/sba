@@ -1,3 +1,39 @@
+/* tooltip */
+#tooltip {
+    position: absolute;
+    display: block;
+    background: #666;
+    color:#FFF;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+
+    border-bottom-left-radius: 0px;
+    -moz-border-bottom-left-radius: 0px;
+    -webkit-border-bottom-left-radius: 0px;
+}
+
+#tooltip-top {
+    display: block;
+    height: 5px;
+    margin-left: 5px;
+    overflow: hidden;
+}
+
+#tooltip-content {
+    display: block;
+    padding: 2px 12px 3px 7px;
+    margin-left: 5px;
+}
+
+#tooltip-bottom {
+    display: block;
+    height: 5px;
+    margin-left: 5px;
+    overflow: hidden;
+}
+
+/* cashflow */
 div#cashflow-form {
     vertical-align: middle;
 }
@@ -37,6 +73,60 @@ div#cashflow-parameters ul {
     padding-left: 20pt;
 }
 
+/* cashflow calendar */
+div#cashflow-calendars {
+    font-size: smaller;
+    vertical-align: top;
+    margin-bottom: 30px;
+}
+
+div#cashflow-calendars div.calendar-month {
+    vertical-align: top;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+div#cashflow-calendars td.sibling-month {
+    color: #aaaaaa;
+}
+
+div#cashflow-calendars td.weekend {
+    background-color: #eeeeee;
+}
+
+div#cashflow-calendars td.today {
+    background-color: #ffffcc;
+}
+
+div#cashflow-calendars th.calendar-week {
+    color: #666666;
+    font-size: smaller;
+    border-right: 1px solid #eeeeee;
+}
+
+div#cashflow-calendars td.operations a {
+    text-decoration: underline;
+}
+
+div#cashflow-calendars td.positive, div#cashflow-calendars td.positive a {
+    color: #0000d9;
+}
+
+div#cashflow-calendars td.negative, div#cashflow-calendars td.negative a {
+    color: #d90000;
+}
+
+div#calendar-day-tooltip div.title {
+    font-size: larger;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+div#calendar-day-tooltip div.estimate {
+    margin-top: 5px;
+}
+
 /* cashflow table with results */
 table#cashflow {
     width: 100%;
@@ -49,7 +139,7 @@ table#cashflow td.value-aggregator {
 
 table#cashflow td.value {
     text-align: right;
-    width: 80pt;
+    width: 70pt;
 }
 
 table#cashflow tr.month td.value,
@@ -205,3 +295,4 @@ div.revenue span.date {
 div.revenue div.sale {
     font-size: 7pt;
 }
+

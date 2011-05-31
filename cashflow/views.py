@@ -174,7 +174,7 @@ def index(request):
         # note: can't use q.aggregate(Sum("value")) since it will replicate
         # due multiple tags matching
         value = sum(o.value for o in q)
-        print "supplier-payment: tags=%r, date<%s: %r" % (tags, start_date, value)
+        #print "supplier-payment: tags=%r, date<%s: %r" % (tags, start_date, value)
         initial_estimate -= value
         initial_value -= value
 
@@ -185,7 +185,7 @@ def index(request):
         if value:
             initial_estimate += value
             initial_value += value
-        print "sales-revenue: date<%s: %r" % (start_date, value)
+        #print "sales-revenue: date<%s: %r" % (start_date, value)
 
     # flow: cashflow.Balance
     filters = {
@@ -310,30 +310,47 @@ def index(request):
     # report
     flow.sort(cmp=lambda a, b: cmp(a[0], b[0]))
     flow_report = []
-    last_month = [None, None, None, None]
-    last_week = [None, None, None, None]
-    last_day = [None, None, None, None]
+    last_month = {"id": None}
+    last_week = {"id": None}
+    last_day = {"id": None}
     total_value = initial_value
     total_estimate = initial_estimate
     for row in flow:
-        month_name = row[0].strftime("%B %Y")
-        if month_name != last_month[0]:
-            month = [month_name, total_value, total_estimate, []]
+        date = row[0]
+        year = date.year
+        month_id = (year, date.month)
+        if month_id != last_month["id"]:
+            month = {
+                "id": month_id,
+                "name": date.strftime("%B %Y"),
+                "total_value": total_value,
+                "total_estimate": total_estimate,
+                "weeks": [],
+                }
             flow_report.append(month)
             last_month = month
-            last_week = [None, None]
+            last_week = {"id": None}
 
-        week_number = row[0].isocalendar()[1]
-        if week_number != last_week[0]:
-            week = [week_number, total_value, total_estimate, []]
-            last_month[3].append(week)
+        week_id = (year, date.isocalendar()[1])
+        if week_id != last_week["id"]:
+            week = {
+                "id": week_id,
+                "total_value": total_value,
+                "total_estimate": total_estimate,
+                "days": [],
+                }
+            last_month["weeks"].append(week)
             last_week = week
-            last_day = [None, None]
+            last_day = {"id": None}
 
-        day_name = row[0].strftime("%A, %d")
-        if day_name != last_day[0]:
-            day = [day_name, total_value, total_estimate, []]
-            last_week[3].append(day)
+        if date != last_day["id"]:
+            day = {
+                "id": date,
+                "total_value": total_value,
+                "total_estimate": total_estimate,
+                "operations": [],
+                }
+            last_week["days"].append(day)
             last_day = day
 
         if row[2]:
@@ -344,8 +361,108 @@ def index(request):
             estimate = 0
         total_value += value
         total_estimate += row[1]
-        last_day[3].append((value, estimate, total_value, total_estimate,
-                            row[3], row[4]))
+        last_day["operations"].append(
+            {"value": value,
+             "estimate": estimate,
+             "total_value": total_value,
+             "total_estimate": total_estimate,
+             "description": row[3],
+             "url": row[4],
+             })
+
+    # calendar
+    day = datetime.date(start_date.year, start_date.month, 1)
+    if end_date.month < 12:
+        finish_day = datetime.date(end_date.year, end_date.month + 1, 1)
+    else:
+        finish_day = datetime.date(end_date.year + 1, 1, 1)
+    calendar = []
+    last_month = {"id": None}
+    last_week = {"id": None}
+    flow_idx = 0
+    last_value = initial_value
+    last_estimate = initial_estimate
+    day_of_week = None
+    dbg_operations = 0
+    while day < finish_day:
+        day_of_week = day.weekday()
+        month_id = (day.year, day.month)
+        if month_id != last_month["id"]:
+            if last_month["id"] and last_week["id"]:
+                # fill in the remaining days of the week with next month
+                for i in xrange(day_of_week, 7):
+                    last_week["days"][i] = {
+                        "id": day + datetime.timedelta(i - day_of_week),
+                        "sibling_month": True,
+                        }
+
+            last_month = {
+                "id": month_id,
+                "name": day.strftime("%B %Y"),
+                "weeks": [],
+                }
+            calendar.append(last_month)
+            last_week = {"id": None}
+
+        week_id = (day.year, day.isocalendar()[1])
+        if week_id != last_week["id"]:
+            last_week = {
+                "id": week_id,
+                "days": [None] * 7,
+                }
+            last_month["weeks"].append(last_week)
+            # fill in the preceding days of the week with the previous month
+            for i in xrange(0, day_of_week + 1):
+                last_week["days"][i] = {
+                    "id": day - datetime.timedelta(day_of_week - i),
+                    "sibling_month": True,
+                    }
+
+        day_operations = []
+        if day >= start_date and day <= end_date:
+            for i in xrange(flow_idx, len(flow)):
+                if flow[i][0] == day:
+                    day_operations.append(flow[i])
+                    flow_idx = i + 1
+                elif flow[i][0] > day:
+                    break
+                else:
+                    flow_idx = i + 1
+
+        start_value = last_value
+        start_estimate = last_estimate
+        for row in day_operations:
+            dbg_operations += 1
+            if row[2]:
+                value = 0
+                estimate = row[1]
+            else:
+                value = row[1]
+                estimate = 0
+            last_value += value
+            last_estimate += row[1]
+
+        last_week["days"][day_of_week] = {
+            "id": day,
+            "sibling_month": False,
+            "operations": bool(day_operations),
+            "value": last_value,
+            "estimate": last_estimate,
+            "start_value": start_value,
+            "start_estimate": start_estimate,
+            "difference_value": last_value - start_value,
+            "difference_estimate": last_estimate - start_estimate,
+            }
+        day += datetime.timedelta(1)
+
+    if day_of_week is not None and last_month["id"] and last_week["id"]:
+        # fill in the remaining days of the week with next month
+        day_of_week += 1
+        for i in xrange(day_of_week, 7):
+            last_week["days"][i] = {
+                "id": day + datetime.timedelta(i - day_of_week),
+                "sibling_month": True,
+                }
 
 
     # cashflow.models
@@ -383,6 +500,8 @@ def index(request):
         "end_date_filter": end_date_filter,
         "duration": (end_date - start_date).days,
         "flow_report": flow_report,
+        "calendar": calendar,
+        "today": datetime.date.today(),
         "final": (total_value, total_estimate),
         "difference": (total_value - initial_value,
                        total_estimate - initial_estimate),
