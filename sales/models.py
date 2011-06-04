@@ -54,7 +54,7 @@ class Product(models.Model):
     identifier = models.CharField(max_length=50)
     description = models.CharField(max_length=100)
     note = models.TextField(blank=True)
-    active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     cost = models.FloatField()
 
     def __unicode__(self):
@@ -65,7 +65,7 @@ class RevenueMethod(models.Model):
     name = models.CharField(max_length=30, unique=True)
     operation_cost = models.FloatField(default=0.0)
     percentual_cost = models.FloatField(default=0.0)
-    active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.name
@@ -103,7 +103,7 @@ class Sale(models.Model):
 
 class SaleProduct(models.Model):
     sale = models.ForeignKey(Sale)
-    product = models.ForeignKey(Product, limit_choices_to={"active": True})
+    product = models.ForeignKey(Product, limit_choices_to={"is_active": True})
     count = models.IntegerField(validators=[MinValueValidator(1)])
 
 
@@ -115,7 +115,8 @@ class SaleRevenue(models.Model):
     # method is referenced, but operation_cost and percentual_cost are
     # copied from RevenueMethod at the moment of the sale. Values
     # should not change when the reference changes.
-    method = models.ForeignKey(RevenueMethod, limit_choices_to={"active": True})
+    method = models.ForeignKey(RevenueMethod,
+                               limit_choices_to={"is_active": True})
     operation_cost = models.FloatField(default=0)
     percentual_cost = models.FloatField(default=0)
     net_value = models.FloatField(default=0)

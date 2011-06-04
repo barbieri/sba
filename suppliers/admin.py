@@ -7,7 +7,7 @@ class SupplierPaymentInline(admin.TabularInline):
 
 class SupplierPaymentAdmin(admin.ModelAdmin):
     list_display = ["invoice_supplier", "invoice_identifier", "date_due",
-                    "value", "status"]
+                    "value", "status", "note"]
     list_filter = ["date_due", "status"]
 
     def invoice_supplier(self, o):

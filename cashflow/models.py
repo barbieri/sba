@@ -20,7 +20,7 @@ class Tag(models.Model):
     color = models.CharField(max_length=7, default="#ffffff",
                              validators=[color_validator])
     note = models.TextField(blank=True)
-    active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.name
@@ -37,12 +37,12 @@ class Balance(models.Model):
     type = models.CharField(max_length=1, choices=TYPE_CHOICES,
                             default=TYPE_CHOICES[0][0])
     value = models.FloatField(validators=[MinValueValidator(1.0)])
-    estimated = models.BooleanField()
+    is_estimated = models.BooleanField()
     note = models.TextField(blank=True)
-    tags = models.ManyToManyField(Tag, limit_choices_to={"active": True})
+    tags = models.ManyToManyField(Tag, limit_choices_to={"is_active": True})
 
     def __unicode__(self):
-        if not self.estimated:
+        if not self.is_estimated:
             return self.description
         else:
             return u"%s*" % (self.description,)
@@ -53,7 +53,7 @@ class CostCenter(models.Model):
     color = models.CharField(max_length=7, default="#ffffff",
                              validators=[color_validator])
     note = models.TextField(blank=True)
-    active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.name
@@ -70,13 +70,13 @@ class Payment(models.Model):
     type = models.CharField(max_length=1, choices=TYPE_CHOICES,
                             default=TYPE_CHOICES[0][0])
     value = models.FloatField(validators=[MinValueValidator(1.0)])
-    estimated = models.BooleanField()
-    paid = models.BooleanField()
+    is_estimated = models.BooleanField()
+    was_paid = models.BooleanField()
     note = models.TextField(blank=True)
-    tags = models.ManyToManyField(Tag, limit_choices_to={"active": True})
+    tags = models.ManyToManyField(Tag, limit_choices_to={"is_active": True})
 
     def __unicode__(self):
-        if not self.estimated:
+        if not self.is_estimated:
             return self.description
         else:
             return u"%s*" % (self.description,)

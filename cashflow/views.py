@@ -130,7 +130,7 @@ def index(request):
         if not show_estimateds and estimated:
             return 0.0
         q = CashFlowBalance.objects.filter(
-            type=type, tags__id__in=tags, estimated=estimated,
+            type=type, tags__id__in=tags, is_estimated=estimated,
             date__lt=start_date
             ).distinct()
         # note: can't use q.aggregate(Sum("value")) since it will replicate
@@ -154,7 +154,7 @@ def index(request):
             return 0.0
         q = CashFlowPayment.objects.filter(
             type__in=payments, tags__id__in=tags, cost_center__in=cost_centers,
-            estimated=estimated, date__lt=start_date
+            is_estimated=estimated, date__lt=start_date
             ).distinct()
         # note: can't use q.aggregate(Sum("value")) since it will replicate
         # due multiple tags matching
@@ -193,7 +193,7 @@ def index(request):
         "date__range": (start_date, end_date),
         }
     if not show_estimateds:
-        filters["estimated"] = False
+        filters["is_estimated"] = False
     if show_details:
         desc_tmpl = loader.get_template("cashflow/balance_description.html")
     for o in CashFlowBalance.objects.filter(**filters):
@@ -217,7 +217,7 @@ def index(request):
             description = desc_tmpl.render(c)
 
         url = "/admin/cashflow/balance/%d/" % o.id
-        flow.append((o.date, value, o.estimated, description, url))
+        flow.append((o.date, value, o.is_estimated, description, url))
 
     # flow: cashflow.Payment
     filters = {
@@ -226,7 +226,7 @@ def index(request):
         "tags__id__in": tags,
         }
     if not show_estimateds:
-        filters["estimated"] = False
+        filters["is_estimated"] = False
     if show_details:
         desc_tmpl = loader.get_template("cashflow/payment_description.html")
     for o in CashFlowPayment.objects.filter(**filters).distinct():
@@ -241,12 +241,12 @@ def index(request):
                  "description": o.description,
                  "tags": list(o.tags.all()),
                  "cost_center": o.cost_center,
-                 "paid": o.paid,
+                 "paid": o.was_paid,
                  })
             description = desc_tmpl.render(c)
 
         url = "/admin/cashflow/payment/%d/" % o.id
-        flow.append((o.date, -o.value, o.estimated, description, url))
+        flow.append((o.date, -o.value, o.is_estimated, description, url))
 
     # flow: suppliers.SupplierPayment
     if show_suppliers:

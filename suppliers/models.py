@@ -28,7 +28,7 @@ class SupplierInvoice(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES,
                               default=STATUS_CHOICES[0][0])
     tags = models.ManyToManyField(CashFlowTag,
-                                  limit_choices_to={"active": True})
+                                  limit_choices_to={"is_active": True})
 
     def __unicode__(self):
         return u"%s (%s)" % (self.identifier, self.supplier)

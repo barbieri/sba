@@ -24,13 +24,13 @@ class CustomerGeoStateAdmin(admin.ModelAdmin):
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["identifier", "description", "active", "cost"]
-    list_filter = ["active"]
+    list_display = ["identifier", "description", "is_active", "cost"]
+    list_filter = ["is_active"]
     search_fields = ["identifier", "description"]
     actions = ["make_inactive"]
 
     def make_inactive(self, request, queryset):
-        rows_updated = queryset.update(active=False)
+        rows_updated = queryset.update(is_active=False)
         if rows_updated < 1:
             message_bit = "No product"
         elif rows_updated == 1:
