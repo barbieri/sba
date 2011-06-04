@@ -7,7 +7,7 @@
   </div>
   <div class="sale">
     sold at {{ sale.datetime|date:"Y-m-d" }}
-    {% if sale.vendor %}by {{ sale.vendor }}{% endif %}
+    {% if sale.seller %}by {{ sale.seller }}{% endif %}
     {% if sale.customer %}to {{ sale.customer }}{% endif %}
   </div>
 </div>

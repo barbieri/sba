@@ -54,10 +54,10 @@ class SaleProductInline(admin.TabularInline):
 
 class SaleAdmin(admin.ModelAdmin):
     inlines = [SaleRevenueInline, SaleProductInline]
-    list_display = ["datetime", "vendor", "customer", "value",
+    list_display = ["datetime", "seller", "customer", "value",
                     "discount", "product_count", "revenue_count"]
-    list_filter = ["datetime", "vendor", "customer", "discount"]
-    search_fields = ["vendor", "customer"]
+    list_filter = ["datetime", "seller", "customer", "discount"]
+    search_fields = ["seller", "customer"]
     date_hierarchy = "datetime"
     actions = ["summary"]
     readonly_fields = ["value"]

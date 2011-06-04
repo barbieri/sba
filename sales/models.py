@@ -76,7 +76,7 @@ class RevenueMethod(models.Model):
 
 class Sale(models.Model):
     datetime = models.DateTimeField(default=today)
-    vendor = models.ForeignKey(User, blank=True, null=True)
+    seller = models.ForeignKey(User, blank=True, null=True)
     customer = models.ForeignKey(Customer, blank=True, null=True)
     value = models.FloatField(default=0.0,
                               help_text="Updated automatically on save.")
@@ -90,9 +90,9 @@ class Sale(models.Model):
         self.save()
 
     def __unicode__(self):
-        if self.vendor:
+        if self.seller:
             return u"%s: %s (%s)" % (self.datetime.strftime("%Y-%m-%d %H:%M"),
-                                     self.value, self.vendor)
+                                     self.value, self.seller)
         else:
             return u"%s: %s" % (self.datetime.strftime("%Y-%m-%d %H:%M"),
                                 self.value)
