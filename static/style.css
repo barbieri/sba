@@ -77,12 +77,14 @@ div#cashflow-parameters ul {
 div#cashflow-calendars {
     font-size: smaller;
     vertical-align: top;
+    text-align: center;
     margin-bottom: 30px;
 }
 
 div#cashflow-calendars div.calendar-month {
     vertical-align: top;
     display: inline-block;
+    margin-left: 10px;
     margin-right: 10px;
     margin-bottom: 10px;
 }
