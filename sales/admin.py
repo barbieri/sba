@@ -1,5 +1,7 @@
 from sales.models import CustomerGeoState, CustomerCity, Customer, \
-    Product, RevenueMethod, Sale, SaleProduct, SaleRevenue
+    Product, RevenueMethod, Sale, SaleProduct, SaleRevenue, \
+    NonSaleReason, NonSale
+
 from django.contrib import admin
 from django.db.models import Sum
 from django import forms
@@ -99,9 +101,18 @@ class SaleAdmin(admin.ModelAdmin):
     summary.short_description = "Summary"
 
 
+class NonSaleAdmin(admin.ModelAdmin):
+    list_display = ["datetime", "seller", "customer", "reason", "note"]
+    list_filter = ["datetime", "seller", "customer", "reason"]
+    search_fields = ["seller", "customer", "reason", "note"]
+    date_hierarchy = "datetime"
+
+
 admin.site.register(CustomerGeoState, CustomerGeoStateAdmin)
 admin.site.register(CustomerCity, CustomerCityAdmin)
 admin.site.register(Customer)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Sale, SaleAdmin)
 admin.site.register(RevenueMethod)
+admin.site.register(NonSaleReason)
+admin.site.register(NonSale, NonSaleAdmin)

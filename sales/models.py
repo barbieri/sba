@@ -136,3 +136,26 @@ class SaleRevenue(models.Model):
         sale = self.sale
         super(SaleRevenue, self).delete()
         sale.recalc()
+
+
+class NonSaleReason(models.Model):
+    description = models.CharField(max_length=100)
+    note = models.TextField(blank=True)
+
+    def __unicode__(self):
+        return self.description
+
+
+class NonSale(models.Model):
+    datetime = models.DateTimeField(default=today)
+    seller = models.ForeignKey(User)
+    customer = models.ForeignKey(Customer, blank=True, null=True)
+    reason = models.ForeignKey(NonSaleReason)
+    note = models.TextField(blank=True)
+
+    def __unicode__(self):
+        return u"%s: %s (%s)" % (self.datetime.strftime("%Y-%m-%d %H:%M"),
+                                 self.seller, self.reason)
+
+    class Meta:
+        ordering = ["datetime"]
