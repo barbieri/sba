@@ -1,0 +1,28 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="/static/style.css" />
+<link rel="stylesheet" type="text/css" href="/static/print.css" media="print" />
+{% endblock %}
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" language="javascript" src="/static/script.js"></script>
+{% endblock %}
+{% block title %}Sellers Reports{% endblock %}
+{% block breadcrumbs %}
+<div class="breadcrumbs"><a href="../">
+{% trans "Sales" %}</a> &rsaquo;
+{% trans "Sellers" %}
+</div>{% endblock %}
+
+{% block content %}
+
+<h1>Seller's Reports</h1>
+
+<ul>
+  <li><a href="daily/">Daily</a></li>
+  <li><a href="weekly/">Weekly</a></li>
+  <li><a href="monthly/">Monthly</a></li>
+</ul>
+
+{% endblock %}

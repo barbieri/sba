@@ -17,6 +17,14 @@ def last_month():
         return datetime.date(now.year, now.month - 1, 1)
 
 
+def index(request):
+    return render_to_response("sales/index.html")
+
+
+def sellers(request):
+    return render_to_response("sales/sellers/index.html")
+
+
 class PeriodForm(forms.Form):
     start = forms.DateField(initial=last_month)
     end = forms.DateField(initial=datetime.date.today)
