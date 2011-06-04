@@ -1,4 +1,5 @@
 {% extends "admin/base_site.html" %}
+{% load i18n %}
 {% load cashflow_extras %}
 {% block extrastyle %}
 {{ block.super }}
@@ -7,6 +8,11 @@
 {% endblock %}
 {% block extrahead %}{{ block.super }}<script type="text/javascript" language="javascript" src="/static/script.js"></script>{% endblock %}
 {% block title %}Cash Flow Reports{% endblock %}
+{% block breadcrumbs %}
+<div class="breadcrumbs"><a href="../">
+{% trans "Reports" %}</a> &rsaquo;
+{% trans "Cash Flow" %}
+</div>{% endblock %}
 {% block content %}
 <h1>Cash Flow Report</h1>
 

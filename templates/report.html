@@ -8,22 +8,29 @@
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" language="javascript" src="/static/script.js"></script>
 {% endblock %}
-{% block title %}Sellers Reports{% endblock %}
+{% block title %}Reports{% endblock %}
 {% block breadcrumbs %}
-<div class="breadcrumbs"><a href="../../">
-{% trans "Reports" %}</a> &rsaquo; <a href="../">
-{% trans "Sales" %}</a> &rsaquo;
-{% trans "Sellers" %}
+<div class="breadcrumbs">{% trans "Reports" %}
 </div>{% endblock %}
 
 {% block content %}
 
-<h1>Seller's Reports</h1>
+<h1>Reports</h1>
 
 <ul>
-  <li><a href="daily/">Daily</a></li>
-  <li><a href="weekly/">Weekly</a></li>
-  <li><a href="monthly/">Monthly</a></li>
+  <li><a href="sales/">Sales</a>
+    <ul>
+      <li>
+        <a href="sales/sellers/">Sellers</a>
+        <ul>
+          <li><a href="sales/sellers/daily/">Daily</a></li>
+          <li><a href="sales/sellers/weekly/">Weekly</a></li>
+          <li><a href="sales/sellers/monthly/">Monthly</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="cashflow/">Cash Flow</a></li>
 </ul>
 
 {% endblock %}
