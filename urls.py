@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import admin
 admin.autodiscover()
@@ -9,6 +9,10 @@ admin.autodiscover()
 @login_required
 def report(request):
     return render_to_response("report.html")
+
+@login_required
+def profile(request):
+    return redirect("/report")
 
 
 urlpatterns = patterns('',
@@ -21,5 +25,6 @@ urlpatterns = patterns('',
     url(r'^report/sales/sellers/monthly/$', "sales.views.sellers_monthly"),
     url(r'^report/cashflow/$', "cashflow.views.index"),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/profile/$', profile),
     url(r'^accounts/', include('django.contrib.auth.urls')),
 )
