@@ -146,3 +146,6 @@ LOGGING = {
         },
     }
 }
+
+# sba - small business administration specific settings
+SBA_SELLER_GROUP = "Seller"

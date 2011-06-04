@@ -1,0 +1,242 @@
+{% extends "admin/base_site.html" %}
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="/static/style.css" />
+<link rel="stylesheet" type="text/css" href="/static/print.css" media="print" />
+{% endblock %}
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" language="javascript" src="/static/script.js"></script>
+<script type="text/javascript">
+    google.load('visualization', '1', {'packages':['corechart', 'annotatedtimeline']});
+    google.setOnLoadCallback(drawCharts);
+
+    function drawCharts() {
+        drawTotalValueCharts();
+        drawAverageValueCharts();
+        drawNumberOfSalesCharts();
+        drawProductsPerSaleCharts();
+        drawRatioSaleCharts();
+    }
+
+    function drawEvolutionChart(dt, element_id) {
+        var elm = document.getElementById(element_id);
+        var w = elm.width;
+        var h = elm.height;
+        var chart = new google.visualization.AnnotatedTimeLine(elm);
+        chart.draw(dt, {width: w, height: h, displayRangeSelector: false});
+    }
+
+    function drawPieChart(dt, element_id) {
+        var elm = document.getElementById(element_id);
+        var w = elm.width;
+        var h = elm.height;
+        var chart = new google.visualization.PieChart(elm);
+        chart.draw(dt, {width: w, height: h, is3D: true});
+    }
+
+    function drawAggregateChart(dt, element_id) {
+        var elm = document.getElementById(element_id);
+        var w = elm.width;
+        var h = elm.height;
+        var chart = new google.visualization.BarChart(elm);
+        chart.draw(dt, {width: w, height: h});
+    }
+
+</script>
+{% endblock %}
+{% block title %}Cash Flow Reports{% endblock %}
+{% block content %}
+
+<h1>Seller's Daily Report</h1>
+
+<div id="sellers-daily-form">
+<form method="POST">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Update" />
+</form>
+</div>
+
+<div id="sellers-daily-charts">
+
+<h2>Total Value</h2>
+<div class="chart-group">
+<div id="sellers-daily-evolution-total-value" class="chart-timeline"></div>
+<div id="sellers-daily-aggregate-total-value" class="chart-pie"></div>
+</div>
+<script type="text/javascript">
+function drawTotalValueCharts() {
+    drawTotalValueEvolutionChart();
+    drawTotalValuePieChart();
+}
+
+function drawTotalValueEvolutionChart() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("date", "Date");
+
+    {% for row in sellers %}
+    dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
+
+    {% for d, s in days %}
+    dt.addRow([new Date{{ d }}{% for data in s %}, {{ data.value|safe }}{% endfor %}]);{% endfor %}
+
+    drawEvolutionChart(dt, "sellers-daily-evolution-total-value");
+}
+
+function drawTotalValuePieChart() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("string", "Seller");
+    dt.addColumn("number", "Value");
+
+    {% for row in sellers %}
+    dt.addRow(["{{ row.name|escapejs }}", {{ row.value|safe }}]);{% endfor %}
+    drawPieChart(dt, "sellers-daily-aggregate-total-value");
+}
+</script>
+
+<h2>Average Value</h2>
+<div class="chart-group">
+<div id="sellers-daily-evolution-average-value" class="chart-timeline"></div>
+<div id="sellers-daily-aggregate-average-value" class="chart-pie"></div>
+</div>
+<script type="text/javascript">
+function drawAverageValueCharts() {
+    drawAverageValueEvolutionChart();
+    drawAverageValuePieChart();
+}
+
+function drawAverageValueEvolutionChart() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("date", "Date");
+
+    {% for row in sellers %}
+    dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
+
+    {% for d, s in days %}
+    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.sales > 0 %}{{ data.value|safe }}/{{ data.sales|safe }}{% else %}0{% endif %}{% endfor %}]);{% endfor %}
+
+    drawEvolutionChart(dt, "sellers-daily-evolution-average-value");
+}
+
+function drawAverageValuePieChart() {
+    var dt = new google.visualization.DataTable();
+
+    {% for row in sellers %}
+    dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
+    dt.addRow([{% for row in sellers %}{% if not forloop.first %}, {% endif %}{% if row.sales > 0 %}{{ row.value|safe }}/{{ row.sales|safe }}{% else %}0{% endif %}{% endfor %}]);
+
+    drawAggregateChart(dt, "sellers-daily-aggregate-average-value");
+}
+</script>
+
+<h2>Number of Sales</h2>
+<div class="chart-group">
+<div id="sellers-daily-evolution-number-sales" class="chart-timeline"></div>
+<div id="sellers-daily-aggregate-number-sales" class="chart-pie"></div>
+</div>
+<script type="text/javascript">
+function drawNumberOfSalesCharts() {
+    drawNumberOfSalesEvolutionChart();
+    drawNumberOfSalesPieChart();
+}
+
+function drawNumberOfSalesEvolutionChart() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("date", "Date");
+
+    {% for row in sellers %}
+    dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
+
+    {% for d, s in days %}
+    dt.addRow([new Date{{ d }}{% for data in s %}, {{ data.sales|safe }}{% endfor %}]);{% endfor %}
+
+    drawEvolutionChart(dt, "sellers-daily-evolution-number-sales");
+}
+
+function drawNumberOfSalesPieChart() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("string", "Seller");
+    dt.addColumn("number", "Sales");
+
+    {% for row in sellers %}
+    dt.addRow(["{{ row.name|escapejs }}", {{ row.sales|safe }}]);{% endfor %}
+    drawPieChart(dt, "sellers-daily-aggregate-number-sales");
+}
+</script>
+
+<h2>Products per Sale</h2>
+<div class="chart-group">
+<div id="sellers-daily-evolution-products-sale" class="chart-timeline"></div>
+<div id="sellers-daily-aggregate-products-sale" class="chart-pie"></div>
+</div>
+<script type="text/javascript">
+function drawProductsPerSaleCharts() {
+    drawProductsPerSaleEvolutionChart();
+    drawProductsPerSalePieChart();
+}
+
+function drawProductsPerSaleEvolutionChart() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("date", "Date");
+
+    {% for row in sellers %}
+    dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
+
+    {% for d, s in days %}
+    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.sales > 0 %}{{ data.products|safe }}/{{ data.sales|safe }}{% else %}0{% endif %}{% endfor %}]);{% endfor %}
+
+    drawEvolutionChart(dt, "sellers-daily-evolution-products-sale");
+}
+
+function drawProductsPerSalePieChart() {
+    var dt = new google.visualization.DataTable();
+
+    {% for row in sellers %}
+    dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
+    dt.addRow([{% for row in sellers %}{% if not forloop.first %}, {% endif %}{% if row.sales > 0 %}{{ row.products|safe }}/{{ row.sales|safe }}{% else %}0{% endif %}{% endfor %}]);
+
+    drawAggregateChart(dt, "sellers-daily-aggregate-products-sale");
+}
+</script>
+
+<h2>Sale <abbr title="Sales / (Non-Sales + Sales)">Ratio</abbr></h2>
+<div class="chart-group">
+<div id="sellers-daily-evolution-ratio-sale" class="chart-timeline"></div>
+<div id="sellers-daily-aggregate-ratio-sale" class="chart-pie"></div>
+</div>
+<script type="text/javascript">
+function drawRatioSaleCharts() {
+    drawRatioSaleEvolutionChart();
+    drawRatioSalePieChart();
+}
+
+function drawRatioSaleEvolutionChart() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("date", "Date");
+
+    {% for row in sellers %}
+    dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
+
+    {% for d, s in days %}
+    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.operations > 0 %}100 * {{ data.sales|safe }}/{{ data.operations|safe }}{% else %}0{% endif %}{% endfor %}]);{% endfor %}
+
+    drawEvolutionChart(dt, "sellers-daily-evolution-ratio-sale");
+}
+
+function drawRatioSalePieChart() {
+    var dt = new google.visualization.DataTable();
+
+    {% for row in sellers %}
+    dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
+    dt.addRow([{% for row in sellers %}{% if not forloop.first %}, {% endif %}{% if row.operations > 0 %}100 * {{ row.sales|safe }}/{{ row.operations|safe }}{% else %}0{% endif %}{% endfor %}]);
+
+    drawAggregateChart(dt, "sellers-daily-aggregate-ratio-sale");
+
+}
+</script>
+
+</div>
+
+
+{% endblock %}

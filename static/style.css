@@ -298,3 +298,20 @@ div.revenue div.sale {
     font-size: 7pt;
 }
 
+
+/* charts */
+div.chart-group {
+    white-space: nowrap;
+}
+
+div.chart-pie {
+    display: inline-block;
+    width: 400px;
+    height: 240px;
+}
+
+div.chart-timeline {
+    display: inline-block;
+    width: 600px;
+    height: 240px;
+}
