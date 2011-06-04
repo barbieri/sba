@@ -308,7 +308,7 @@ def index(request):
             flow.append((o.date_due, o.net_value, False, description, url))
 
     # report
-    flow.sort(cmp=lambda a, b: cmp(a[0], b[0]))
+    flow.sort(cmp=lambda a, b: cmp(a[0], b[0]) or cmp(a[1], b[1]))
     flow_report = []
     last_month = {"id": None}
     last_week = {"id": None}
