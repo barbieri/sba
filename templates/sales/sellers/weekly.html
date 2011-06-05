@@ -1,4 +1,5 @@
 {% extends "admin/base_site.html" %}
+{% load url from future %}
 {% load i18n %}
 {% block extrastyle %}
 {{ block.super }}
@@ -47,6 +48,10 @@
 </script>
 {% endblock %}
 {% block title %}Seller's Weekly Report{% endblock %}
+{% block userlinks %}
+{% if user.is_active and user.is_staff %}<a href="{% url 'admin:index' %}">Admin</a> /{{ block.super }}
+{% endif %}
+{% endblock %}
 {% block breadcrumbs %}
 <div class="breadcrumbs"><a href="../../../">
 {% trans "Reports" %}</a> &rsaquo; <a href="../../">

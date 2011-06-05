@@ -1,4 +1,5 @@
 {% extends "admin/base_site.html" %}
+{% load url from future %}
 {% load i18n %}
 {% load cashflow_extras %}
 {% block extrastyle %}
@@ -13,6 +14,10 @@
 {% trans "Reports" %}</a> &rsaquo;
 {% trans "Cash Flow" %}
 </div>{% endblock %}
+{% block userlinks %}
+{% if user.is_active and user.is_staff %}<a href="{% url 'admin:index' %}">Admin</a> /{{ block.super }}
+{% endif %}
+{% endblock %}
 {% block content %}
 <h1>Cash Flow Report</h1>
 

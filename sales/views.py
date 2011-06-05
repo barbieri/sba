@@ -19,12 +19,14 @@ def last_month():
 
 @login_required
 def index(request):
-    return render_to_response("sales/index.html")
+    return render_to_response("sales/index.html",
+                              context_instance=RequestContext(request))
 
 
 @login_required
 def sellers(request):
-    return render_to_response("sales/sellers/index.html")
+    return render_to_response("sales/sellers/index.html",
+                              context_instance=RequestContext(request))
 
 
 class PeriodForm(forms.Form):
