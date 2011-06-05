@@ -1,0 +1,152 @@
+{% extends "admin/base_site.html" %}
+{% load url from future %}
+{% load i18n %}
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="/static/style.css" />
+<link rel="stylesheet" type="text/css" href="/static/print.css" media="print" />
+{% endblock %}
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript" language="javascript" src="/static/script.js"></script>
+<script type="text/javascript">
+    google.load('visualization', '1', {'packages':['corechart', 'annotatedtimeline']});
+    google.setOnLoadCallback(drawCharts);
+
+    function drawCharts() {
+        drawTotalValueCharts();
+        drawAverageValueCharts();
+        drawNumberOfSalesCharts();
+        drawProductsPerSaleCharts();
+        drawRatioSaleCharts();
+    }
+
+    function drawEvolutionChart(dt, element_id) {
+        var elm = document.getElementById(element_id);
+        var w = elm.width;
+        var h = elm.height;
+        var chart = new google.visualization.LineChart(elm);
+        chart.draw(dt, {width: w, height: h, displayRangeSelector: false});
+    }
+
+</script>
+{% endblock %}
+{% block title %}Total's Monthly Report{% endblock %}
+{% block userlinks %}
+{% if user.is_active and user.is_staff %}<a href="{% url 'admin:index' %}">Admin</a> /{{ block.super }}
+{% endif %}
+{% endblock %}
+{% block breadcrumbs %}
+<div class="breadcrumbs"><a href="../../../">
+{% trans "Reports" %}</a> &rsaquo; <a href="../../">
+{% trans "Sales" %}</a> &rsaquo;
+<a href="../">
+{% trans "Total" %}</a> &rsaquo;
+{% trans "Monthly" %}
+</div>{% endblock %}
+
+{% block content %}
+
+<h1>Total's Monthly Report</h1>
+
+<div id="total-monthly-form">
+<form method="POST">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Update" />
+</form>
+</div>
+
+{% if form.is_valid %}
+<div id="total-monthly-charts">
+
+<h2>Total Value</h2>
+<div class="chart-group">
+<div id="total-monthly-evolution-total-value" class="chart-timeline"></div>
+</div>
+<script type="text/javascript">
+function drawTotalValueCharts() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("string", "Month");
+    dt.addColumn("number", "Total");
+
+    {% for m, s in months %}
+    dt.addRow(["{{ m.2 }}", {{ s.value|safe }}]);{% endfor %}
+
+    drawEvolutionChart(dt, "total-monthly-evolution-total-value");
+}
+</script>
+
+<h2>Average Value</h2>
+<div class="chart-group">
+<div id="total-monthly-evolution-average-value" class="chart-timeline"></div>
+</div>
+<script type="text/javascript">
+function drawAverageValueCharts() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("string", "Month");
+    dt.addColumn("number", "Average");
+
+    {% for m, s in months %}
+    dt.addRow(["{{ m.2 }}", {% if s.sales > 0 %}{{ s.value|safe }}/{{ s.sales|safe }}{% else %}0{% endif %}]);{% endfor %}
+
+    drawEvolutionChart(dt, "total-monthly-evolution-average-value");
+}
+</script>
+
+<h2>Number of Sales</h2>
+<div class="chart-group">
+<div id="total-monthly-evolution-number-sales" class="chart-timeline"></div>
+</div>
+<script type="text/javascript">
+function drawNumberOfSalesCharts() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("string", "Month");
+    dt.addColumn("number", "Sales");
+
+    {% for m, s in months %}
+    dt.addRow(["{{ m.2 }}", {{ s.sales|safe }}]);{% endfor %}
+
+    drawEvolutionChart(dt, "total-monthly-evolution-number-sales");
+}
+</script>
+
+<h2>Products per Sale</h2>
+<div class="chart-group">
+<div id="total-monthly-evolution-products-sale" class="chart-timeline"></div>
+</div>
+<script type="text/javascript">
+function drawProductsPerSaleCharts() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("string", "Month");
+
+    dt.addColumn("number", "Products/Sale");
+
+    {% for m, s in months %}
+    dt.addRow(["{{ m.2 }}", {% if s.sales > 0 %}{{ s.products|safe }}/{{ s.sales|safe }}{% else %}0{% endif %}]);{% endfor %}
+
+    drawEvolutionChart(dt, "total-monthly-evolution-products-sale");
+}
+</script>
+
+<h2>Sale <abbr title="Sales / (Non-Sales + Sales)">Ratio</abbr></h2>
+<div class="chart-group">
+<div id="total-monthly-evolution-ratio-sale" class="chart-timeline"></div>
+</div>
+<script type="text/javascript">
+function drawRatioSaleCharts() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("string", "Month");
+    dt.addColumn("number", "Sale Ratio");
+
+    {% for m, s in months %}
+    dt.addRow(["{{ m.2 }}", {% if s.operations > 0 %}100 * {{ s.sales|safe }}/{{ s.operations|safe }}{% else %}0{% endif %}]);{% endfor %}
+
+    drawEvolutionChart(dt, "total-monthly-evolution-ratio-sale");
+}
+</script>
+
+</div>
+{% endif %}
+
+{% endblock %}

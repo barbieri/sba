@@ -28,6 +28,11 @@ def sellers(request):
     return render_to_response("sales/sellers/index.html",
                               context_instance=RequestContext(request))
 
+@login_required
+def total(request):
+    return render_to_response("sales/total/index.html",
+                              context_instance=RequestContext(request))
+
 
 class PeriodForm(forms.Form):
     start = forms.DateField(initial=last_month)
@@ -188,6 +193,61 @@ def sales_data_get(start, end, seller_id, key, date_id_get):
         "total_products": t_sales_products_count,
         }
     return ctxt
+
+
+def total_report(request, key, date_id_get, template):
+    ctxt = {}
+    if request.method != "POST":
+        form = PeriodForm()
+    else:
+        form = PeriodForm(request.POST)
+        if form.is_valid():
+            ctxt = sales_data_get(form.cleaned_data["start"],
+                                  form.cleaned_data["end"],
+                                  None, key, date_id_get)
+
+    old_keys = ctxt.pop(key + "s", [])
+    keys = []
+    for date_id, data in old_keys:
+        d = {"operations": 0,
+             "non_sales": 0,
+             "sales": 0,
+             "value": 0.0,
+             "discount_count": 0,
+             "discount_value": 0.0,
+             "products": 0,
+             }
+        for s in data:
+            for k, v in s.iteritems():
+                d[k] += v
+        keys.append((date_id, d))
+
+    ctxt["form"] = form
+    ctxt[key + "s"] = keys
+    return render_to_response(template, ctxt,
+                              context_instance=RequestContext(request))
+
+@login_required
+def total_daily(request):
+    def date_id_get(date):
+        return (date.year, date.month, date.day)
+    return total_report(request, "day", date_id_get,
+                          "sales/total/daily.html")
+
+
+@login_required
+def total_weekly(request):
+    def date_id_get(date):
+        return (date.year, date.isocalendar()[1])
+    return total_report(request, "week", date_id_get,
+                          "sales/total/weekly.html")
+
+@login_required
+def total_monthly(request):
+    def date_id_get(date):
+        return (date.year, date.month, date.strftime("%B %Y"))
+    return total_report(request, "month", date_id_get,
+                          "sales/total/monthly.html")
 
 
 class SellerPeriodForm(PeriodForm):
