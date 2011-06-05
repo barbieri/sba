@@ -7,8 +7,9 @@
 <link rel="stylesheet" type="text/css" href="/static/print.css" media="print" />
 {% endblock %}
 {% block extrahead %}{{ block.super }}
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" language="javascript" src="/static/script.js"></script>
+{% if form.is_valid %}
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
     google.load('visualization', '1', {'packages':['corechart', 'annotatedtimeline']});
     google.setOnLoadCallback(drawCharts);
@@ -30,6 +31,7 @@
     }
 
 </script>
+{% endif %}
 {% endblock %}
 {% block title %}Total's Daily Report{% endblock %}
 {% block userlinks %}
