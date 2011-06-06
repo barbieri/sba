@@ -9,71 +9,11 @@ from django.shortcuts import render_to_response
 from django.template import Context, RequestContext, loader
 from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
+from django.utils.translation import ugettext_lazy as _
+from django.contrib.admin.widgets import AdminDateWidget
+from django import forms
 
 import datetime
-
-
-def _all_options(iterator):
-    return [d[0] for d in iterator]
-
-
-def _to_options(iterator, reference_set):
-    result = []
-    for k, v in iterator:
-        if k in reference_set:
-            selected = 'selected=1'
-        else:
-            selected = ""
-        result.append((k, v, selected))
-    return result
-
-
-def _to_checked(value):
-    if value:
-        return "checked=1"
-    else:
-        return ""
-
-
-def _get_list(query, field, reference_set, typeconversion=lambda x: x):
-    result = []
-    refs = set(_all_options(reference_set))
-    for v in query.getlist(field):
-        try:
-            v = typeconversion(v)
-        except:
-            continue
-        if v in refs:
-            result.append(v)
-    return result
-
-
-_bool_mapping = {
-    "1": True,
-    "true": True,
-    "yes": True,
-    "on": True,
-    "0": False,
-    "false": False,
-    "no": False,
-    "off": False,
-}
-def _get_bool(query, field, default):
-    v = query.get(field, default)
-    if isinstance(v, basestring):
-        return _bool_mapping.get(v, default)
-    return bool(v)
-
-
-def _get_date(query, field, default):
-    value = query.get(field, None)
-    if value is None:
-        return default
-    try:
-        dt = datetime.datetime.strptime(value, "%Y-%m-%d")
-        return datetime.date(dt.year, dt.month, dt.day)
-    except ValueError:
-        return default
 
 
 def _filter_db(iterator, reference_set):
@@ -82,6 +22,36 @@ def _filter_db(iterator, reference_set):
         if o.id in reference_set:
             result.append(o)
     return result
+
+
+def default_end_date():
+    return datetime.date.today() + datetime.timedelta(60)
+
+
+class CashFlowForm(forms.Form):
+    balances = forms.MultipleChoiceField(label=_("Balance Types"),
+                                         required=False)
+    cost_centers = forms.TypedMultipleChoiceField(label=_("Cost Centers"),
+                                                  required=False, coerce=int)
+    payments = forms.MultipleChoiceField(label=_("Payment Types"),
+                                         required=False)
+    tags = forms.TypedMultipleChoiceField(label=_("Tags"),
+                                          required=False, coerce=int)
+    show_suppliers = forms.BooleanField(label=_("Show supplier payments"),
+                                        initial=True, required=False)
+    show_revenues = forms.BooleanField(label=_("Show sales revenues"),
+                                       initial=True, required=False)
+    show_estimateds = forms.BooleanField(label=_("Show estimated values"),
+                                         initial=True, required=False)
+    show_details = forms.BooleanField(label=_("Show detailed descriptions"),
+                                      initial=True, required=False)
+    start_date = forms.DateField(label=_("From"),
+                                 initial=datetime.date.today,
+                                 widget=AdminDateWidget())
+    end_date = forms.DateField(label=_("To"),
+                               initial=default_end_date,
+                               widget=AdminDateWidget())
+
 
 @login_required
 def index(request):
@@ -92,32 +62,36 @@ def index(request):
     all_tags = [(o.id, o.name) for o in
                 CashFlowTag.objects.all().order_by("name")]
 
-    default_start = datetime.date.today()
-    default_end = datetime.date.today() + datetime.timedelta(60)
-
     if request.method != "POST":
-        balances = _all_options(all_balances)
-        cost_centers = _all_options(all_cost_centers)
-        payments = _all_options(all_payments)
-        tags = _all_options(all_tags)
-        show_suppliers = True
-        show_revenues = True
-        show_estimateds = True
-        show_details = True
-        start_date = default_start
-        end_date = default_end
+        form = CashFlowForm()
     else:
-        balances = _get_list(request.POST, "balances", all_balances)
-        cost_centers = _get_list(request.POST, "cost_centers", all_cost_centers,
-                                 int)
-        payments = _get_list(request.POST, "payments", all_payments)
-        tags = _get_list(request.POST, "tags", all_tags, int)
-        show_suppliers = _get_bool(request.POST, "show_suppliers", False)
-        show_revenues = request.POST.get("show_revenues", False)
-        show_estimateds = _get_bool(request.POST, "show_estimateds", False)
-        show_details = request.POST.get("show_details", False)
-        start_date = _get_date(request.POST, "start_date", default_start)
-        end_date = _get_date(request.POST, "end_date", default_end)
+        form = CashFlowForm(request.POST)
+
+    form.fields["balances"].choices = all_balances
+    form.fields["cost_centers"].choices = all_cost_centers
+    form.fields["payments"].choices = all_payments
+    form.fields["tags"].choices = all_tags
+
+    form.fields["balances"].initial = [x[0] for x in all_balances]
+    form.fields["cost_centers"].initial = [x[0] for x in all_cost_centers]
+    form.fields["payments"].initial = [x[0] for x in all_payments]
+    form.fields["tags"].initial = [x[0] for x in all_tags]
+
+    if not form.is_valid():
+        ctxt = {"form": form}
+        return render_to_response('cashflow/index.html', ctxt,
+                                  context_instance=RequestContext(request))
+
+    balances = form.cleaned_data["balances"]
+    cost_centers = form.cleaned_data["cost_centers"]
+    payments = form.cleaned_data["payments"]
+    tags = form.cleaned_data["tags"]
+    show_suppliers = form.cleaned_data["show_suppliers"]
+    show_revenues = form.cleaned_data["show_revenues"]
+    show_estimateds = form.cleaned_data["show_estimateds"]
+    show_details = form.cleaned_data["show_details"]
+    start_date = form.cleaned_data["start_date"]
+    end_date = form.cleaned_data["end_date"]
 
     flow = []
     initial_value = 0.0
@@ -464,49 +438,40 @@ def index(request):
                 "sibling_month": True,
                 }
 
-
-    # cashflow.models
-    balance_filters = _to_options(CashFlowBalance.TYPE_CHOICES, balances)
-    cost_center_filters = _to_options(all_cost_centers, cost_centers)
-    payment_filters = _to_options(CashFlowPayment.TYPE_CHOICES, payments)
-    tag_filters = _to_options(all_tags, tags)
-
-    # suppliers.models
-    suppliers_filter = _to_checked(show_suppliers)
-    estimateds_filter = _to_checked(show_estimateds)
-
-    # sales.models
-    revenues_filter = _to_checked(show_revenues)
-
-    # extra
-    details_filter = _to_checked(show_details)
-    start_date_filter = start_date.strftime("%Y-%m-%d")
-    end_date_filter = end_date.strftime("%Y-%m-%d")
+    def revmap_labels(used, reference):
+        labels = []
+        for k, v in reference:
+            for x in used:
+                if x == k:
+                    labels.append(v)
+                    break
+        labels.sort()
+        return labels
 
     ctxt = {
-        "balance_filters": balance_filters,
-        "balance_enabled_count": len(balances),
-        "cost_center_filters": cost_center_filters,
-        "cost_center_enabled_count": len(cost_centers),
-        "payment_filters": payment_filters,
-        "payment_enabled_count": len(payments),
-        "tag_filters": tag_filters,
-        "tag_enabled_count": len(tags),
-        "suppliers_filter": suppliers_filter,
-        "revenues_filter": revenues_filter,
-        "estimateds_filter": estimateds_filter,
-        "details_filter": details_filter,
-        "start_date_filter": start_date_filter,
-        "end_date_filter": end_date_filter,
+        "form": form,
+        "balances_labels": revmap_labels(balances, all_balances),
+        "cost_centers_labels": revmap_labels(cost_centers, all_cost_centers),
+        "payments_labels": revmap_labels(payments, all_payments),
+        "tags_labels": revmap_labels(tags, all_tags),
+        "all_balances": all_balances,
+        "all_cost_centers": all_cost_centers,
+        "all_payments": all_payments,
+        "all_tags": all_tags,
         "duration": (end_date - start_date).days,
         "flow_report": flow_report,
         "calendar": calendar,
         "today": datetime.date.today(),
         "now": datetime.datetime.now(),
+        "start_date": start_date,
+        "end_date": end_date,
         "final": (total_value, total_estimate),
         "difference": (total_value - initial_value,
                        total_estimate - initial_estimate),
+        "show_suppliers": show_suppliers,
+        "show_revenues": show_revenues,
         "show_estimateds": show_estimateds,
+        "show_details": show_details,
         }
     return render_to_response('cashflow/index.html', ctxt,
                               context_instance=RequestContext(request))

@@ -1,13 +1,18 @@
 {% extends "admin/base_site.html" %}
 {% load url from future %}
-{% load i18n %}
+{% load i18n adminmedia %}
 {% load cashflow_extras %}
 {% block extrastyle %}
 {{ block.super }}
 <link rel="stylesheet" type="text/css" href="/static/style.css" />
 <link rel="stylesheet" type="text/css" href="/static/print.css" media="print" />
+<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/widgets.css"/>
 {% endblock %}
-{% block extrahead %}{{ block.super }}<script type="text/javascript" language="javascript" src="/static/script.js"></script>{% endblock %}
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+{{ form.media }}
+<script type="text/javascript" language="javascript" src="/static/script.js"></script>{% endblock %}
 {% block title %}{% trans "Cash Flow Report" %}{% endblock %}
 {% block breadcrumbs %}
 <div class="breadcrumbs"><a href="../">
@@ -25,61 +30,45 @@
 <form method="POST">
   {% csrf_token %}
 
+  {{ form.non_field_errors }}
   <fieldset>
     <legend>{% trans "Balance Types" %}</legend>
-    <select name="balances" multiple="multiple">
-    {% for o in balance_filters %}
-      <option value="{{o.0}}" {{o.2}}>{{o.1}}</option>
-    {% endfor %}
-    </select>
+    {{ form.balances.errors }}{{ form.balances }}
   </fieldset>
 
   <fieldset>
     <legend>{% trans "Cost Centers" %}</legend>
-    <select name="cost_centers" multiple="multiple">
-    {% for o in cost_center_filters %}
-      <option value="{{o.0}}" {{o.2}}>{{o.1}}</option>
-    {% endfor %}
-    </select>
+    {{ form.cost_centers.errors }}{{ form.cost_centers }}
   </fieldset>
 
   <fieldset>
     <legend>{% trans "Payment Types" %}</legend>
-    <select name="payments" multiple="multiple">
-    {% for o in payment_filters %}
-      <option value="{{o.0}}" {{o.2}}>{{o.1}}</option>
-    {% endfor %}
-    </select>
+    {{ form.payments.errors }}{{ form.payments }}
   </fieldset>
 
   <fieldset>
     <legend>{% trans "Tags" %}</legend>
-    <select name="tags" multiple="multiple">
-    {% for o in tag_filters %}
-      <option value="{{o.0}}" {{o.2}}>{{o.1}}</option>
-    {% endfor %}
-    </select>
+    {{ form.tags.errors }}{{ form.tags }}
   </fieldset>
 
   <fieldset>
     <legend>{% trans "Extra Filters" %}</legend>
+    {{ form.show_suppliers.errors }}
+    {{ form.show_suppliers }} {{ form.show_suppliers.label_tag }}<br />
 
-    <input type="checkbox" name="show_suppliers" id="_suppliers" value="1" {{suppliers_filter}} />
-    <label for="_suppliers">{% trans "Show supplier payments" %}</label><br />
+    {{ form.show_revenues.errors }}
+    {{ form.show_revenues }} {{ form.show_revenues.label_tag }}<br />
 
-    <input type="checkbox" name="show_revenues" id="_revenues" value="1" {{revenues_filter}} />
-    <label for="_revenues">{% trans "Show sales revenues" %}</label><br />
+    {{ form.show_estimateds.errors }}
+    {{ form.show_estimateds }} {{ form.show_estimateds.label_tag }}<br />
 
-    <input type="checkbox" name="show_estimateds" id="_estimateds" value="1" {{estimateds_filter}} />
-    <label for="_estimateds">{% trans "Show estimated values" %}</label><br />
+    {{ form.show_details.errors }}
+    {{ form.show_details }} {{ form.show_details.label_tag }}<br />
 
-    <input type="checkbox" name="show_details" id="_details" value="1" {{details_filter}} />
-    <label for="_details">{% trans "Show detailed descriptions" %}</label><br />
-
-    <label for="_start_date">{% trans "From" %}</label>
-    <input type="date" name="start_date" id="_start_date" value="{{start_date_filter}}" />
-    <label for="_end_date">{% trans "To" %}</label>
-    <input type="date" name="end_date" id="_end_date" value="{{end_date_filter}}" /><br />
+    {{ form.start_date.errors }}
+    {{ form.start_date.label_tag }} {{ form.start_date }}&nbsp;
+    {{ form.end_date.errors }}
+    {{ form.end_date.label_tag }} {{ form.end_date }}<br />
 
   </fieldset>
 
@@ -87,23 +76,23 @@
 </form>
 </div>
 
+{% if form.is_valid %}
 <div id="cashflow-parameters">
   {% blocktrans with timestamp=now|date:"D j F Y H:i" %}Cash flow created at {{ timestamp }} based on the following parameters:{% endblocktrans %}
   <ul>
-    <li>{% if balance_filters|length < 1 %}{% trans "No balance type" %}{% else %}{% if balance_filters|length == balance_enabled_count %}{% trans "All balances types" %}{% else %}{% trans "Balance Types" %}:
-      {% for o in balance_filters %}{% if o.2 %}{{o.1}}{% endif %}{% endfor %}
+    <li>{% if balances_labels|length < 1 %}{% trans "No balance type" %}{% else %}{% if balances_labels|length == all_balances|length %}{% trans "All balances types" %}{% else %}{% trans "Balance Types" %}:{% for o in balances_labels %}{{ o }}{% endfor %}
       {% endif %}{% endif %}</li>
-    <li>{% if cost_center_filters|length < 1 %}{% trans "No cost center" %}{% else %}{% if cost_center_filters|length == cost_center_enabled_count %}{% trans "All cost centers" %}{% else %}{% trans "Cost Centers" %}:
-      <ul>{% for o in cost_center_filters %}{% if o.2 %}<li>{{o.1}}</li>{% endif %}{% endfor %}
+    <li>{% if cost_centers_labels|length < 1 %}{% trans "No cost center" %}{% else %}{% if cost_centers_labels|length == all_cost_centers|length %}{% trans "All cost centers" %}{% else %}{% trans "Cost Centers" %}:
+      <ul>{% for o in cost_centers_labels %}<li>{{ o }}</li>{% endfor %}
       </ul>{% endif %}{% endif %}</li>
-    <li>{% if payment_filters|length < 1 %}{% trans "No payment type" %}{% else %}{% if payment_filters|length == payment_enabled_count %}{% trans "All payments types" %}{% else %}{% trans "Payment Types" %}:
-      {% for o in payment_filters %}{% if o.2 %}{{o.1}}{% endif %}{% endfor %}{% endif %}{% endif %}</li>
-    <li>{% if tag_filters|length < 1 %}{% trans "No tag" %}{% else %}{% if tag_filters|length == tag_enabled_count %}{% trans "All tags" %}{% else %}{% trans "Tags" %}:
-      <ul>{% for o in tag_filters %}{% if o.2 %}<li>{{o.1}}</li>{% endif %}{% endfor %}
+    <li>{% if payments_labels|length < 1 %}{% trans "No payment type" %}{% else %}{% if payments_labels|length == all_payments|length %}{% trans "All payments types" %}{% else %}{% trans "Payment Types" %}:
+      {% for o in payments_labels %}{{ o }}{% endfor %}{% endif %}{% endif %}</li>
+    <li>{% if tags_labels|length < 1 %}{% trans "No tag" %}{% else %}{% if tags_labels|length == all_tags|length %}{% trans "All tags" %}{% else %}{% trans "Tags" %}:
+      <ul>{% for o in tags_labels %}<li>{{ o }}</li>{% endfor %}
       </ul>{% endif %}{% endif %}</li>
-    <li>{% if suppliers_filter %}{% trans "Accounting supplier payments" %}{% else %}{% trans "Not accounting supplier payments" %}{% endif %}</li>
-    <li>{% if revenues_filter %}{% trans "Accounting sales revenue" %}{% else %}{% trans "Not accounting sales revenue" %}{% endif %}</li>
-    <li>{% blocktrans %}{{ duration }} days since {{ start_date_filter }} to {{ end_date_filter }}{% endblocktrans %}</li>
+    <li>{% if show_suppliers %}{% trans "Accounting supplier payments" %}{% else %}{% trans "Not accounting supplier payments" %}{% endif %}</li>
+    <li>{% if show_revenues %}{% trans "Accounting sales revenue" %}{% else %}{% trans "Not accounting sales revenue" %}{% endif %}</li>
+    <li>{% blocktrans %}{{ duration }} days since {{ start_date }} to {{ end_date }}{% endblocktrans %}</li>
   </ul>
 </div>
 
@@ -252,4 +241,5 @@
   </tfoot>
 </table>
 
+{% endif %}
 {% endblock %}
