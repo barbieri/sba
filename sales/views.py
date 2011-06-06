@@ -9,6 +9,7 @@ from django.contrib.admin.widgets import AdminDateWidget
 from django import forms
 import datetime
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 def last_month():
     now = datetime.date.today()
@@ -36,8 +37,10 @@ def total(request):
 
 
 class PeriodForm(forms.Form):
-    start = forms.DateField(initial=last_month, widget=AdminDateWidget())
-    end = forms.DateField(initial=datetime.date.today, widget=AdminDateWidget())
+    start = forms.DateField(label=_("start"),
+                            initial=last_month, widget=AdminDateWidget())
+    end = forms.DateField(label=_("end"),
+                          initial=datetime.date.today, widget=AdminDateWidget())
 
 
 SELLERS_QUERY = User.objects.filter(is_active=True,
@@ -252,11 +255,11 @@ def total_monthly(request):
 
 
 class SellerPeriodForm(PeriodForm):
-    seller = forms.ChoiceField(required=False)
+    seller = forms.ChoiceField(label=_("seller"), required=False)
 
 
 def sellers_report(request, key, date_id_get, template):
-    sellers_choices = [("", "All")] + [(o.id, o.get_full_name()) for o in
+    sellers_choices = [("", _("All"))] + [(o.id, o.get_full_name()) for o in
                                        SELLERS_QUERY.order_by("first_name")]
     ctxt = {}
 

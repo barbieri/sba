@@ -9,7 +9,7 @@
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" language="javascript" src="/static/script.js"></script>
 {% endblock %}
-{% block title %}Reports{% endblock %}
+{% block title %}{% trans "Reports" %}{% endblock %}
 {% block userlinks %}
 {% if user.is_active and user.is_staff %}<a href="{% url 'admin:index' %}">Admin</a> /{{ block.super }}
 {% endif %}
@@ -20,30 +20,30 @@
 
 {% block content %}
 
-<h1>Reports</h1>
+<h1>{% trans "Reports" %}</h1>
 
 <ul>
-  <li><a href="sales/">Sales</a>
+  <li><a href="sales/">{% trans "Sales" %}</a>
     <ul>
       <li>
-        <a href="sales/sellers/">Sellers</a>
+        <a href="sales/sellers/">{% trans "Sellers" %}</a>
         <ul>
-          <li><a href="sales/sellers/daily/">Daily</a></li>
-          <li><a href="sales/sellers/weekly/">Weekly</a></li>
-          <li><a href="sales/sellers/monthly/">Monthly</a></li>
+          <li><a href="sales/sellers/daily/">{% trans "Daily" %}</a></li>
+          <li><a href="sales/sellers/weekly/">{% trans "Weekly" %}</a></li>
+          <li><a href="sales/sellers/monthly/">{% trans "Monthly" %}</a></li>
         </ul>
       </li>
       <li>
-        <a href="sales/total/">Total</a>
+        <a href="sales/total/">{% trans "Total" %}</a>
         <ul>
-          <li><a href="sales/total/daily/">Daily</a></li>
-          <li><a href="sales/total/weekly/">Weekly</a></li>
-          <li><a href="sales/total/monthly/">Monthly</a></li>
+          <li><a href="sales/total/daily/">{% trans "Daily" %}</a></li>
+          <li><a href="sales/total/weekly/">{% trans "Weekly" %}</a></li>
+          <li><a href="sales/total/monthly/">{% trans "Monthly" %}</a></li>
         </ul>
       </li>
     </ul>
   </li>
-  <li><a href="cashflow/">Cash Flow</a></li>
+  <li><a href="cashflow/">{% trans "Cash Flow" %}</a></li>
 </ul>
 
 {% endblock %}

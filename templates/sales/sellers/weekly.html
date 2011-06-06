@@ -53,7 +53,7 @@
 </script>
 {% endif %}
 {% endblock %}
-{% block title %}Seller's Weekly Report{% endblock %}
+{% block title %}{% trans "Seller's Weekly Report" %}{% endblock %}
 {% block userlinks %}
 {% if user.is_active and user.is_staff %}<a href="{% url 'admin:index' %}">Admin</a> /{{ block.super }}
 {% endif %}
@@ -68,20 +68,20 @@
 </div>{% endblock %}
 {% block content %}
 
-<h1>Seller's Weekly Report</h1>
+<h1>{% trans "Seller's Weekly Report" %}</h1>
 
 <div id="sellers-weekly-form">
 <form method="POST">
   {% csrf_token %}
   {{ form }}
-  <input type="submit" value="Update" />
+  <input type="submit" value="{% trans 'Update' %}" />
 </form>
 </div>
 
 {% if form.is_valid %}
 <div id="sellers-weekly-charts">
 
-<h2>Total Value</h2>
+<h2>{% trans "Total Value" %}</h2>
 <div class="chart-group">
 <div id="sellers-weekly-evolution-total-value" class="chart-timeline"></div>
 <div id="sellers-weekly-aggregate-total-value" class="chart-pie"></div>
@@ -94,7 +94,7 @@ function drawTotalValueCharts() {
 
 function drawTotalValueEvolutionChart() {
     var dt = new google.visualization.DataTable();
-    dt.addColumn("string", "Week");
+    dt.addColumn("string", "{% trans 'Week' %}");
 
     {% for row in sellers %}
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
@@ -107,8 +107,8 @@ function drawTotalValueEvolutionChart() {
 
 function drawTotalValuePieChart() {
     var dt = new google.visualization.DataTable();
-    dt.addColumn("string", "Seller");
-    dt.addColumn("number", "Value");
+    dt.addColumn("string", "{% trans 'Seller' %}");
+    dt.addColumn("number", "{% trans 'Value' %}");
 
     {% for row in sellers %}
     dt.addRow(["{{ row.name|escapejs }}", {{ row.value|safe }}]);{% endfor %}
@@ -116,7 +116,7 @@ function drawTotalValuePieChart() {
 }
 </script>
 
-<h2>Average Value</h2>
+<h2>{% trans "Average Value" %}</h2>
 <div class="chart-group">
 <div id="sellers-weekly-evolution-average-value" class="chart-timeline"></div>
 <div id="sellers-weekly-aggregate-average-value" class="chart-pie"></div>
@@ -129,7 +129,7 @@ function drawAverageValueCharts() {
 
 function drawAverageValueEvolutionChart() {
     var dt = new google.visualization.DataTable();
-    dt.addColumn("string", "Week");
+    dt.addColumn("string", "{% trans 'Week' %}");
 
     {% for row in sellers %}
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
@@ -151,7 +151,7 @@ function drawAverageValuePieChart() {
 }
 </script>
 
-<h2>Number of Sales</h2>
+<h2>{% trans "Number of Sales" %}</h2>
 <div class="chart-group">
 <div id="sellers-weekly-evolution-number-sales" class="chart-timeline"></div>
 <div id="sellers-weekly-aggregate-number-sales" class="chart-pie"></div>
@@ -164,7 +164,7 @@ function drawNumberOfSalesCharts() {
 
 function drawNumberOfSalesEvolutionChart() {
     var dt = new google.visualization.DataTable();
-    dt.addColumn("string", "Week");
+    dt.addColumn("string", "{% trans 'Week' %}");
 
     {% for row in sellers %}
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
@@ -177,8 +177,8 @@ function drawNumberOfSalesEvolutionChart() {
 
 function drawNumberOfSalesPieChart() {
     var dt = new google.visualization.DataTable();
-    dt.addColumn("string", "Seller");
-    dt.addColumn("number", "Sales");
+    dt.addColumn("string", "{% trans 'Seller' %}");
+    dt.addColumn("number", "{% trans 'Sales' %}");
 
     {% for row in sellers %}
     dt.addRow(["{{ row.name|escapejs }}", {{ row.sales|safe }}]);{% endfor %}
@@ -186,7 +186,7 @@ function drawNumberOfSalesPieChart() {
 }
 </script>
 
-<h2>Products per Sale</h2>
+<h2>{% trans "Products per Sale" %}</h2>
 <div class="chart-group">
 <div id="sellers-weekly-evolution-products-sale" class="chart-timeline"></div>
 <div id="sellers-weekly-aggregate-products-sale" class="chart-pie"></div>
@@ -199,7 +199,7 @@ function drawProductsPerSaleCharts() {
 
 function drawProductsPerSaleEvolutionChart() {
     var dt = new google.visualization.DataTable();
-    dt.addColumn("string", "Week");
+    dt.addColumn("string", "{% trans 'Week' %}");
 
     {% for row in sellers %}
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
@@ -221,7 +221,7 @@ function drawProductsPerSalePieChart() {
 }
 </script>
 
-<h2>Sale <abbr title="Sales / (Non-Sales + Sales)">Ratio</abbr></h2>
+<h2>{% trans 'Sale <abbr title="Sales / (Non-Sales + Sales)">Ratio</abbr>' %}</h2>
 <div class="chart-group">
 <div id="sellers-weekly-evolution-ratio-sale" class="chart-timeline"></div>
 <div id="sellers-weekly-aggregate-ratio-sale" class="chart-pie"></div>
@@ -234,7 +234,7 @@ function drawRatioSaleCharts() {
 
 function drawRatioSaleEvolutionChart() {
     var dt = new google.visualization.DataTable();
-    dt.addColumn("string", "Week");
+    dt.addColumn("string", "{% trans 'Week' %}");
 
     {% for row in sellers %}
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}

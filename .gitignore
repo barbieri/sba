@@ -3,3 +3,4 @@
 *.pyo
 settings.py
 tmp
+*.mo

@@ -1,13 +1,24 @@
+{% load i18n %}
 <div class="revenue">
   <span class="date">{{ date|date:"Y-m-d" }}</span>
   <div>
-    <span class="net-value">net: ${{ net_value }}</span>,
-    <span class="gross-value">gross: ${{ value }}</span>,
-    <span class="method">using {{ method }}</span>
+    <span class="net-value">{% blocktrans %}net: ${{ net_value }}{% endblocktrans %}</span>,
+    <span class="gross-value">{% blocktrans %}gross: ${{ value }}{% endblocktrans %}</span>,
+    <span class="method">{% blocktrans %}using {{ method }}{% endblocktrans %}</span>
   </div>
   <div class="sale">
-    sold at {{ sale.datetime|date:"Y-m-d" }}
-    {% if sale.seller %}by {{ sale.seller }}{% endif %}
-    {% if sale.customer %}to {{ sale.customer }}{% endif %}
+    {% if sale.seller and sale.customer %}
+    {% blocktrans with timestamp=sale.datetime|date:"Y-m-d" seller=sale.seller customer=sale.customer %}sold at {{ timestamp }} by {{ seller }} to {{ customer }}{% endblocktrans %}
+    {% else %}
+    {% if sale.seller %}
+    {% blocktrans with timestamp=sale.datetime|date:"Y-m-d" seller=sale.seller %}sold at {{ timestamp }} by {{ seller }}{% endblocktrans %}
+    {% else %}
+    {% if sale.customer %}
+    {% blocktrans with timestamp=sale.datetime|date:"Y-m-d" customer=sale.customer %}sold at {{ timestamp }} to {{ customer }}{% endblocktrans %}
+    {% else %}
+    {% blocktrans with timestamp=sale.datetime|date:"Y-m-d" %}sold at {{ timestamp }}{% endblocktrans %}
+    {% endif %}
+    {% endif %}
+    {% endif %}
   </div>
 </div>

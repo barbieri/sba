@@ -1,5 +1,6 @@
 from cashflow.models import Tag, Balance, CostCenter, Payment
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 
 def tag2html(t):
     return '<span class="sba-tag" style="background-color: %s;">%s</span>' % \
@@ -16,7 +17,7 @@ class TagAdmin(admin.ModelAdmin):
                 '%s</span>') % \
                 (o.color, o.color)
     view_color.allow_tags = True
-    view_color.short_description = "Color"
+    view_color.short_description = _("Color")
 
 
 class BalanceAdmin(admin.ModelAdmin):
@@ -30,7 +31,7 @@ class BalanceAdmin(admin.ModelAdmin):
     def tag_list(self, o):
         return ", ".join(tag2html(t) for t in o.tags.all())
     tag_list.allow_tags = True
-    tag_list.short_description = "Tags"
+    tag_list.short_description = _("Tags")
 
 
 class CostCenterAdmin(admin.ModelAdmin):
@@ -42,7 +43,7 @@ class CostCenterAdmin(admin.ModelAdmin):
                 '%s</span>') % \
                 (o.color, o.color)
     view_color.allow_tags = True
-    view_color.short_description = "Color"
+    view_color.short_description = _("Color")
 
 
 class PaymentAdmin(admin.ModelAdmin):
@@ -57,7 +58,7 @@ class PaymentAdmin(admin.ModelAdmin):
     def tag_list(self, o):
         return ", ".join(tag2html(t) for t in o.tags.all())
     tag_list.allow_tags = True
-    tag_list.short_description = "Tags"
+    tag_list.short_description = _("Tags")
 
 
 admin.site.register(Balance, BalanceAdmin)

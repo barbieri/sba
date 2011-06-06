@@ -1,9 +1,10 @@
+{% load i18n %}
 <div class="payment">
   <span class="date">{{ date|date:"Y-m-d" }}</span>
   {% if cost_center %}<span class="cost_center" style="background-color: {{ cost_center.color }};">{{ cost_center.name }}</span>{% endif %}
   <div class="{% if paid %}paid{% endif %}">{{ description }}</div>
   {% if tags|length > 0 %}<div class="taglist">
-    Tags:
+    {% trans "Tags" %}:
     <ul>{% for t in tags %}
       <li class="tag" style="background-color: {{ t.color }};">{{ t.name }}</li>{% endfor %}
     </ul>

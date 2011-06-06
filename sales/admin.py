@@ -2,6 +2,7 @@ from sales.models import CustomerGeoState, CustomerCity, Customer, \
     Product, RevenueMethod, Sale, SaleProduct, SaleRevenue, \
     NonSaleReason, NonSale
 
+from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 from django.db.models import Sum
 from django import forms
@@ -39,8 +40,8 @@ class ProductAdmin(admin.ModelAdmin):
             message_bit = "1 product"
         else:
             message_bit = "%d products" % rows_updated
-        self.message_user(request, "%s marked as inactive" % message_bit)
-    make_inactive.short_description = "Mark selected as inactive"
+        self.message_user(request, _("%s marked as inactive") % message_bit)
+    make_inactive.short_description = _("Mark selected as inactive")
 
 
 class SaleRevenueInline(admin.TabularInline):
@@ -69,18 +70,18 @@ class SaleAdmin(admin.ModelAdmin):
         if v:
             return v
         return ""
-    product_count.short_description = "Products"
+    product_count.short_description = _("Products")
 
     def revenue_count(self, o):
         return o.salerevenue_set.count()
-    revenue_count.short_description = "Revenues"
+    revenue_count.short_description = _("Revenues")
 
     def summary(self, request, queryset):
         message = ""
 
         count = queryset.count()
         if count < 1:
-            message = "No sales selected"
+            message = _("No sales selected")
         else:
             revenue = 0.0
             discount = 0.0
@@ -90,15 +91,21 @@ class SaleAdmin(admin.ModelAdmin):
                 discount += o.discount
                 products += o.saleproduct_set.aggregate(Sum("count")
                                                         ).get("count__sum")
-            message = ("%d sales, %d products (%0.1f average), "
-                       "%0.0f%% average discount, "
-                       "revenue %0.2f (%0.2f average)") % \
-                       (count, products, products / float(count),
-                        discount / count,
-                        revenue, revenue / count)
+            message = _("%(sales)d sales, %(products)d products "
+                        "(%(average_products)0.1f average), "
+                        "%(average_discount)0.0f%% average discount, "
+                        "revenue %(revenue)0.2f "
+                        "(%(average_revenue)0.2f average)") % \
+                        {"sales": count,
+                         "products": products,
+                         "average_products": products / float(count),
+                         "average_discount": discount / count,
+                         "revenue": revenue,
+                         "average_revenue": revenue / count,
+                         }
 
         self.message_user(request, message)
-    summary.short_description = "Summary"
+    summary.short_description = _("Summary")
 
 
 class NonSaleAdmin(admin.ModelAdmin):

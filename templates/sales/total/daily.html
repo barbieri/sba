@@ -37,7 +37,7 @@
 </script>
 {% endif %}
 {% endblock %}
-{% block title %}Total's Daily Report{% endblock %}
+{% block title %}{% trans "Total's Daily Report" %}{% endblock %}
 {% block userlinks %}
 {% if user.is_active and user.is_staff %}<a href="{% url 'admin:index' %}">Admin</a> /{{ block.super }}
 {% endif %}
@@ -53,28 +53,28 @@
 
 {% block content %}
 
-<h1>Total's Daily Report</h1>
+<h1>{% trans "Total's Daily Report" %}</h1>
 
 <div id="total-daily-form">
 <form method="POST">
   {% csrf_token %}
   {{ form }}
-  <input type="submit" value="Update" />
+  <input type="submit" value="{% trans 'Update' %}" />
 </form>
 </div>
 
 {% if form.is_valid %}
 <div id="total-daily-charts">
 
-<h2>Total Value</h2>
+<h2>{% trans "Total Value" %}</h2>
 <div class="chart-group">
 <div id="total-daily-evolution-total-value" class="chart-timeline"></div>
 </div>
 <script type="text/javascript">
 function drawTotalValueCharts() {
     var dt = new google.visualization.DataTable();
-    dt.addColumn("date", "Date");
-    dt.addColumn("number", "Total");
+    dt.addColumn("date", "{% trans 'Date' %}");
+    dt.addColumn("number", "{% trans 'Total' %}");
 
     {% for d, s in days %}
     dt.addRow([new Date{{ d }}, {{ s.value|safe }}]);{% endfor %}
@@ -83,15 +83,15 @@ function drawTotalValueCharts() {
 }
 </script>
 
-<h2>Average Value</h2>
+<h2>{% trans "Average Value" %}</h2>
 <div class="chart-group">
 <div id="total-daily-evolution-average-value" class="chart-timeline"></div>
 </div>
 <script type="text/javascript">
 function drawAverageValueCharts() {
     var dt = new google.visualization.DataTable();
-    dt.addColumn("date", "Date");
-    dt.addColumn("number", "Average");
+    dt.addColumn("date", "{% trans 'Date' %}");
+    dt.addColumn("number", "{% trans 'Average' %}");
 
     {% for d, s in days %}
     dt.addRow([new Date{{ d }}, {% if s.sales > 0 %}{{ s.value|safe }}/{{ s.sales|safe }}{% else %}0{% endif %}]);{% endfor %}
@@ -100,15 +100,15 @@ function drawAverageValueCharts() {
 }
 </script>
 
-<h2>Number of Sales</h2>
+<h2>{% trans "Number of Sales" %}</h2>
 <div class="chart-group">
 <div id="total-daily-evolution-number-sales" class="chart-timeline"></div>
 </div>
 <script type="text/javascript">
 function drawNumberOfSalesCharts() {
     var dt = new google.visualization.DataTable();
-    dt.addColumn("date", "Date");
-    dt.addColumn("number", "Sales");
+    dt.addColumn("date", "{% trans 'Date' %}");
+    dt.addColumn("number", "{% trans 'Sales' %}");
 
     {% for d, s in days %}
     dt.addRow([new Date{{ d }}, {{ s.sales|safe }}]);{% endfor %}
@@ -117,16 +117,16 @@ function drawNumberOfSalesCharts() {
 }
 </script>
 
-<h2>Products per Sale</h2>
+<h2>{% trans "Products per Sale" %}</h2>
 <div class="chart-group">
 <div id="total-daily-evolution-products-sale" class="chart-timeline"></div>
 </div>
 <script type="text/javascript">
 function drawProductsPerSaleCharts() {
     var dt = new google.visualization.DataTable();
-    dt.addColumn("date", "Date");
+    dt.addColumn("date", "{% trans 'Date' %}");
 
-    dt.addColumn("number", "Products/Sale");
+    dt.addColumn("number", "{% trans 'Products/Sale' %}");
 
     {% for d, s in days %}
     dt.addRow([new Date{{ d }}, {% if s.sales > 0 %}{{ s.products|safe }}/{{ s.sales|safe }}{% else %}0{% endif %}]);{% endfor %}
@@ -135,15 +135,15 @@ function drawProductsPerSaleCharts() {
 }
 </script>
 
-<h2>Sale <abbr title="Sales / (Non-Sales + Sales)">Ratio</abbr></h2>
+<h2>{% trans 'Sale <abbr title="Sales / (Non-Sales + Sales)">Ratio</abbr>' %}</h2>
 <div class="chart-group">
 <div id="total-daily-evolution-ratio-sale" class="chart-timeline"></div>
 </div>
 <script type="text/javascript">
 function drawRatioSaleCharts() {
     var dt = new google.visualization.DataTable();
-    dt.addColumn("date", "Date");
-    dt.addColumn("number", "Sale Ratio");
+    dt.addColumn("date", "{% trans 'Date' %}");
+    dt.addColumn("number", "{% trans 'Sale Ratio' %}");
 
     {% for d, s in days %}
     dt.addRow([new Date{{ d }}, {% if s.operations > 0 %}100 * {{ s.sales|safe }}/{{ s.operations|safe }}{% else %}0{% endif %}]);{% endfor %}

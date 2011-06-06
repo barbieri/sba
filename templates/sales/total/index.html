@@ -9,7 +9,7 @@
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" language="javascript" src="/static/script.js"></script>
 {% endblock %}
-{% block title %}Total Reports{% endblock %}
+{% block title %}{% trans "Total Reports" %}{% endblock %}
 {% block userlinks %}
 {% if user.is_active and user.is_staff %}<a href="{% url 'admin:index' %}">Admin</a> /{{ block.super }}
 {% endif %}
@@ -23,12 +23,12 @@
 
 {% block content %}
 
-<h1>Total's Reports</h1>
+<h1>{% trans "Total's Reports" %}</h1>
 
 <ul>
-  <li><a href="daily/">Daily</a></li>
-  <li><a href="weekly/">Weekly</a></li>
-  <li><a href="monthly/">Monthly</a></li>
+  <li><a href="daily/">{% trans "Daily" %}</a></li>
+  <li><a href="weekly/">{% trans "Weekly" %}</a></li>
+  <li><a href="monthly/">{% trans "Monthly" %}</a></li>
 </ul>
 
 {% endblock %}

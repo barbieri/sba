@@ -1,4 +1,5 @@
 from suppliers.models import Supplier, SupplierInvoice, SupplierPayment
+from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 
 class SupplierPaymentInline(admin.TabularInline):
@@ -13,9 +14,11 @@ class SupplierPaymentAdmin(admin.ModelAdmin):
 
     def invoice_supplier(self, o):
         return o.invoice.supplier
+    invoice_supplier.short_description = _("Invoice Supplier")
 
     def invoice_identifier(self, o):
         return o.invoice.identifier
+    invoice_identifier.short_description = _("Invoice Identifier")
 
 
 class SupplierInvoiceAdmin(admin.ModelAdmin):
@@ -30,6 +33,7 @@ class SupplierInvoiceAdmin(admin.ModelAdmin):
 
     def tag_list(self, o):
         return ", ".join(t.name for t in o.tags.all())
+    tag_list.short_description = _("Tags")
 
 
 admin.site.register(Supplier)

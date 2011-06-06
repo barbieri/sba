@@ -8,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="/static/print.css" media="print" />
 {% endblock %}
 {% block extrahead %}{{ block.super }}<script type="text/javascript" language="javascript" src="/static/script.js"></script>{% endblock %}
-{% block title %}Cash Flow Reports{% endblock %}
+{% block title %}{% trans "Cash Flow Report" %}{% endblock %}
 {% block breadcrumbs %}
 <div class="breadcrumbs"><a href="../">
 {% trans "Reports" %}</a> &rsaquo;
@@ -19,14 +19,14 @@
 {% endif %}
 {% endblock %}
 {% block content %}
-<h1>Cash Flow Report</h1>
+<h1>{% trans "Cash Flow Report" %}</h1>
 
 <div id="cashflow-form">
 <form method="POST">
   {% csrf_token %}
 
   <fieldset>
-    <legend>Balances</legend>
+    <legend>{% trans "Balance Types" %}</legend>
     <select name="balances" multiple="multiple">
     {% for o in balance_filters %}
       <option value="{{o.0}}" {{o.2}}>{{o.1}}</option>
@@ -35,7 +35,7 @@
   </fieldset>
 
   <fieldset>
-    <legend>Cost Centers</legend>
+    <legend>{% trans "Cost Centers" %}</legend>
     <select name="cost_centers" multiple="multiple">
     {% for o in cost_center_filters %}
       <option value="{{o.0}}" {{o.2}}>{{o.1}}</option>
@@ -44,7 +44,7 @@
   </fieldset>
 
   <fieldset>
-    <legend>Payments</legend>
+    <legend>{% trans "Payment Types" %}</legend>
     <select name="payments" multiple="multiple">
     {% for o in payment_filters %}
       <option value="{{o.0}}" {{o.2}}>{{o.1}}</option>
@@ -53,7 +53,7 @@
   </fieldset>
 
   <fieldset>
-    <legend>Tags</legend>
+    <legend>{% trans "Tags" %}</legend>
     <select name="tags" multiple="multiple">
     {% for o in tag_filters %}
       <option value="{{o.0}}" {{o.2}}>{{o.1}}</option>
@@ -62,48 +62,48 @@
   </fieldset>
 
   <fieldset>
-    <legend>Extra Filters</legend>
+    <legend>{% trans "Extra Filters" %}</legend>
 
     <input type="checkbox" name="show_suppliers" id="_suppliers" value="1" {{suppliers_filter}} />
-    <label for="_suppliers">Show supplier payments</label><br />
+    <label for="_suppliers">{% trans "Show supplier payments" %}</label><br />
 
     <input type="checkbox" name="show_revenues" id="_revenues" value="1" {{revenues_filter}} />
-    <label for="_revenues">Show sales revenues</label><br />
+    <label for="_revenues">{% trans "Show sales revenues" %}</label><br />
 
     <input type="checkbox" name="show_estimateds" id="_estimateds" value="1" {{estimateds_filter}} />
-    <label for="_estimateds">Show estimated values</label><br />
+    <label for="_estimateds">{% trans "Show estimated values" %}</label><br />
 
     <input type="checkbox" name="show_details" id="_details" value="1" {{details_filter}} />
-    <label for="_details">Show detailed descriptions</label><br />
+    <label for="_details">{% trans "Show detailed descriptions" %}</label><br />
 
-    <label for="_start_date">From</label>
+    <label for="_start_date">{% trans "From" %}</label>
     <input type="date" name="start_date" id="_start_date" value="{{start_date_filter}}" />
-    <label for="_end_date">To</label>
+    <label for="_end_date">{% trans "To" %}</label>
     <input type="date" name="end_date" id="_end_date" value="{{end_date_filter}}" /><br />
 
   </fieldset>
 
-  <input id="btn-update" type="submit" value="Update" />
+  <input id="btn-update" type="submit" value="{% trans 'Update' %}" />
 </form>
 </div>
 
 <div id="cashflow-parameters">
-  Cash flow created at {% now "D j F Y H:i" %} based on the following parameters:
+  {% blocktrans with timestamp=now|date:"D j F Y H:i" %}Cash flow created at {{ timestamp }} based on the following parameters:{% endblocktrans %}
   <ul>
-    <li>{% if balance_filters|length < 1 %}No balance{% else %}{% if balance_filters|length == balance_enabled_count %}All balances{% else %}Balance:
+    <li>{% if balance_filters|length < 1 %}{% trans "No balance type" %}{% else %}{% if balance_filters|length == balance_enabled_count %}{% trans "All balances types" %}{% else %}{% trans "Balance Types" %}:
       {% for o in balance_filters %}{% if o.2 %}{{o.1}}{% endif %}{% endfor %}
       {% endif %}{% endif %}</li>
-    <li>{% if cost_center_filters|length < 1 %}No cost_center{% else %}{% if cost_center_filters|length == cost_center_enabled_count %}All cost_centers{% else %}Cost_Centers:
+    <li>{% if cost_center_filters|length < 1 %}{% trans "No cost center" %}{% else %}{% if cost_center_filters|length == cost_center_enabled_count %}{% trans "All cost centers" %}{% else %}{% trans "Cost Centers" %}:
       <ul>{% for o in cost_center_filters %}{% if o.2 %}<li>{{o.1}}</li>{% endif %}{% endfor %}
       </ul>{% endif %}{% endif %}</li>
-    <li>{% if payment_filters|length < 1 %}No payment{% else %}{% if payment_filters|length == payment_enabled_count %}All payments{% else %}Payment:
+    <li>{% if payment_filters|length < 1 %}{% trans "No payment type" %}{% else %}{% if payment_filters|length == payment_enabled_count %}{% trans "All payments types" %}{% else %}{% trans "Payment Types" %}:
       {% for o in payment_filters %}{% if o.2 %}{{o.1}}{% endif %}{% endfor %}{% endif %}{% endif %}</li>
-    <li>{% if tag_filters|length < 1 %}No tag{% else %}{% if tag_filters|length == tag_enabled_count %}All tags{% else %}Tags:
+    <li>{% if tag_filters|length < 1 %}{% trans "No tag" %}{% else %}{% if tag_filters|length == tag_enabled_count %}{% trans "All tags" %}{% else %}{% trans "Tags" %}:
       <ul>{% for o in tag_filters %}{% if o.2 %}<li>{{o.1}}</li>{% endif %}{% endfor %}
       </ul>{% endif %}{% endif %}</li>
-    <li>{% if suppliers_filter %}Accounting supplier payments{% else %}Not accounting supplier payments {% endif %}</li>
-    <li>{% if revenues_filter %}Accounting sales revenue{% else %}Not accounting sales revenue {% endif %}</li>
-    <li>{{ duration }} days since {{ start_date_filter }} to {{ end_date_filter }}</li>
+    <li>{% if suppliers_filter %}{% trans "Accounting supplier payments" %}{% else %}{% trans "Not accounting supplier payments" %}{% endif %}</li>
+    <li>{% if revenues_filter %}{% trans "Accounting sales revenue" %}{% else %}{% trans "Not accounting sales revenue" %}{% endif %}</li>
+    <li>{% blocktrans %}{{ duration }} days since {{ start_date_filter }} to {{ end_date_filter }}{% endblocktrans %}</li>
   </ul>
 </div>
 
@@ -127,30 +127,30 @@
             {% if show_estimateds %}
             {% if day.difference_estimate != day.difference_value %}
             {% if day.difference_estimate %}
-            message += "Estimated accounting <strong>{{ day.difference_estimate|currency }}</strong>. ";
+            message += "{% blocktrans with value=day.difference_estimate|currency %}Estimated accounting <strong>{{ value }}</strong>.{% endblocktrans %} ";
             {% endif %}
             {% endif %}
             {% endif %}
 
             {% if day.difference_value %}
             {% if show_estimateds and day.difference_estimate and day.difference_estimate != day.difference_value %}
-            message += "Known";
+            message += "{% trans 'Known' %}";
             {% else %}
-            message += "Accounting";
+            message += "{% trans 'Accounting' %}";
             {% endif %}
             message += " <strong>{{ day.difference_value|currency }}</strong>.";
             {% else %}
             {% if show_estimateds and not day.difference_estimate %}
-            message += "Known accounting is unchanged.";
+            message += "{% trans 'Known accounting is unchanged.' %}";
             {% endif %}
             {% endif %}
             message += '</div>';
 
             message += '<div class="consolidated">';
             {% if show_estimateds and day.estimate != day.value %}
-            message += "Estimated balance <strong>{{ day.estimate|currency }}</strong>. Known <strong>{{ day.value|currency }}</strong>";
+            message += "{% blocktrans with estimated_value=day.estimate|currency known_value=day.value|currency %}Estimated balance <strong>{{ estimated_value }}</strong>. Known <strong>{{ known_value }}</strong>{% endblocktrans %}";
             {% else %}
-            message += "Balance <strong>{{ day.value|currency }}</strong>.";
+            message += "{% blocktrans with value=day.value|currency %}Balance <strong>{{ value }}</strong>.{% endblocktrans %}";
             {% endif %}
             message += '</div>';
 
@@ -173,20 +173,20 @@
   <thead>
     <tr>
       {% if show_estimateds %}
-      <th class="value-aggregator" colspan="2">Operation</th>
-      <th class="value-aggregator" colspan="2">Total</th>
+      <th class="value-aggregator" colspan="2">{% trans "Operation" %}</th>
+      <th class="value-aggregator" colspan="2">{% trans "Total" %}</th>
       {% else %}
-      <th class="value-aggregator">Operation</th>
-      <th class="value-aggregator">Total</th>
+      <th class="value-aggregator">{% trans "Operation" %}</th>
+      <th class="value-aggregator">{% trans "Total" %}</th>
       {% endif %}
       <th colspan="2"></th>
     </tr>
     <tr>
-      <th class="value">Value</th>
-      {% if show_estimateds %}<th class="value estimated">Estimated</th>{% endif %}
-      <th class="value">Value</th>
-      {% if show_estimateds %}<th class="value estimated">Estimated</th>{% endif %}
-      <th class="cashflow-description">Description</th>
+      <th class="value">{% trans "Value" %}</th>
+      {% if show_estimateds %}<th class="value estimated">{% trans "Estimated" %}</th>{% endif %}
+      <th class="value">{% trans "Value" %}</th>
+      {% if show_estimateds %}<th class="value estimated">{% trans "Estimated" %}</th>{% endif %}
+      <th class="cashflow-description">{% trans "Description" %}</th>
       <th class="action"></th>
     </tr>
   </thead>
@@ -205,7 +205,7 @@
       {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
       <td class="value total"><span class="{% if week.total_value >= 0 %}positive{% else %}negative{% endif %}">{{ week.total_value|currency }}</span></td>
       {% if show_estimateds %}<td class="value estimated total"><span class="{% if week.total_estimate >= 0 %}positive{% else %}negative{% endif %}">{{ week.total_estimate|currency }}</span></td>{% endif %}
-      <td class="cashflow-description" colspan="2"><a name="report-week-{{ week.id.0 }}-{{ week.id.1 }}"></a>Week {{ week.id.1 }}</td>
+      <td class="cashflow-description" colspan="2"><a name="report-week-{{ week.id.0 }}-{{ week.id.1 }}"></a>{% trans "Week" %} {{ week.id.1 }}</td>
     </tr>
       {% for day in week.days %}
     <tr class="day">
@@ -227,7 +227,7 @@
       <td class="value total"><span class="{% if op.total_value >= 0 %}positive{% else %}negative{% endif %}">{{ op.total_value|currency }}</span></td>
       {% if show_estimateds %}<td class="value estimated total"><span class="{% if op.total_estimate >= 0 %}positive{% else %}negative{% endif %}">{{ op.total_estimate|currency }}</span></td>{% endif %}
       <td class="cashflow-description">{{ op.description|safe }}</td>
-      <td class="action"><a href="{{ op.url }}" target="_blank">view</a></td>
+      <td class="action"><a href="{{ op.url }}" target="_blank">{% trans "view" %}</a></td>
     </tr>
         {% endfor %}
       {% endfor %}
@@ -240,14 +240,14 @@
       {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
       <td class="value final"><span class="{% if final.0 >= 0 %}positive{% else %}negative{% endif %}">{{ final.0|currency }}</span></td>
       {% if show_estimateds %}<td class="value estimated final"><span class="{% if final.1 >= 0 %}positive{% else %}negative{% endif %}">{{ final.1|currency }}</span></td>{% endif %}
-      <td class="cashflow-description" colspan="2">Final balance</td>
+      <td class="cashflow-description" colspan="2">{% trans "Final balance" %}</td>
     </tr>
     <tr class="difference">
       <td class="value"></td>
       {% if show_estimateds %}<td class="value estimated"></td>{% endif %}
       <td class="value difference"><span class="{% if difference.0 >= 0 %}positive{% else %}negative{% endif %}">{{ difference.0|currency }}</span></td>
       {% if show_estimateds %}<td class="value estimated difference"><span class="{% if difference.1 >= 0 %}positive{% else %}negative{% endif %}">{{ difference.1|currency }}</span></td>{% endif %}
-      <td class="cashflow-description" colspan="2">Difference</td>
+      <td class="cashflow-description" colspan="2">{% trans "Difference" %}</td>
     </tr>
   </tfoot>
 </table>

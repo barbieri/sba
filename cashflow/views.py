@@ -502,6 +502,7 @@ def index(request):
         "flow_report": flow_report,
         "calendar": calendar,
         "today": datetime.date.today(),
+        "now": datetime.datetime.now(),
         "final": (total_value, total_estimate),
         "difference": (total_value - initial_value,
                        total_estimate - initial_estimate),
