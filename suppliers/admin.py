@@ -9,6 +9,7 @@ class SupplierPaymentAdmin(admin.ModelAdmin):
     list_display = ["invoice_supplier", "invoice_identifier", "date_due",
                     "value", "status", "note"]
     list_filter = ["date_due", "status"]
+    date_hierarchy = "date_due"
 
     def invoice_supplier(self, o):
         return o.invoice.supplier
@@ -25,6 +26,7 @@ class SupplierInvoiceAdmin(admin.ModelAdmin):
     list_filter = ["supplier", "date_due", "status"]
     search_fields = ["supplier", "identifier"]
     filter_horizontal = ("tags",)
+    date_hierarchy = "date_due"
 
     def tag_list(self, o):
         return ", ".join(t.name for t in o.tags.all())

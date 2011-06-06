@@ -47,6 +47,9 @@ class Balance(models.Model):
         else:
             return u"%s*" % (self.description,)
 
+    class Meta:
+        ordering = ["date", "value"]
+
 
 class CostCenter(models.Model):
     name = models.CharField(max_length=30)
@@ -80,3 +83,6 @@ class Payment(models.Model):
             return self.description
         else:
             return u"%s*" % (self.description,)
+
+    class Meta:
+        ordering = ["date", "value"]

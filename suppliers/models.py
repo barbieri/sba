@@ -9,6 +9,9 @@ class Supplier(models.Model):
     email = models.EmailField(blank=True)
     note = models.TextField(blank=True)
 
+    class Meta:
+        ordering = ["name"]
+
     def __unicode__(self):
         return self.name
 
@@ -29,6 +32,9 @@ class SupplierInvoice(models.Model):
                               default=STATUS_CHOICES[0][0])
     tags = models.ManyToManyField(CashFlowTag,
                                   limit_choices_to={"is_active": True})
+
+    class Meta:
+        ordering = ["date_due", "declared_value"]
 
     def __unicode__(self):
         return u"%s (%s)" % (self.identifier, self.supplier)
@@ -55,3 +61,6 @@ class SupplierPayment(models.Model):
     note = models.TextField(blank=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES,
                               default=STATUS_CHOICES[0][0])
+
+    class Meta:
+        ordering = ["date_due", "value"]

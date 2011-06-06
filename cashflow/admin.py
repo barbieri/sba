@@ -25,6 +25,7 @@ class BalanceAdmin(admin.ModelAdmin):
     list_filter = ["date", "type", "is_estimated", "tags"]
     search_fields = ["description", "value"]
     filter_horizontal = ("tags",)
+    date_hierarchy = "date"
 
     def tag_list(self, o):
         return ", ".join(tag2html(t) for t in o.tags.all())
@@ -51,6 +52,7 @@ class PaymentAdmin(admin.ModelAdmin):
                    "tags"]
     search_fields = ["description", "value"]
     filter_horizontal = ("tags",)
+    date_hierarchy = "date"
 
     def tag_list(self, o):
         return ", ".join(tag2html(t) for t in o.tags.all())
