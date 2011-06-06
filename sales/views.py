@@ -5,9 +5,10 @@ from django.template import RequestContext
 from django.db.models import Sum
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.widgets import AdminDateWidget
 from django import forms
 import datetime
-import settings
+from django.conf import settings
 
 def last_month():
     now = datetime.date.today()
@@ -35,8 +36,8 @@ def total(request):
 
 
 class PeriodForm(forms.Form):
-    start = forms.DateField(initial=last_month)
-    end = forms.DateField(initial=datetime.date.today)
+    start = forms.DateField(initial=last_month, widget=AdminDateWidget())
+    end = forms.DateField(initial=datetime.date.today, widget=AdminDateWidget())
 
 
 SELLERS_QUERY = User.objects.filter(is_active=True,

@@ -1,12 +1,16 @@
 {% extends "admin/base_site.html" %}
 {% load url from future %}
-{% load i18n %}
+{% load i18n adminmedia %}
 {% block extrastyle %}
 {{ block.super }}
 <link rel="stylesheet" type="text/css" href="/static/style.css" />
 <link rel="stylesheet" type="text/css" href="/static/print.css" media="print" />
+<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/widgets.css"/>
 {% endblock %}
 {% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
+<script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+{{ form.media }}
 <script type="text/javascript" language="javascript" src="/static/script.js"></script>
 {% if form.is_valid %}
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
