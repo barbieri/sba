@@ -79,6 +79,9 @@ def index(request, date=None):
     sales_others_week = sales_total_week - sellers_week
     sales_others_month = sales_total_month - sellers_month
 
+    sales_trend_week = (sales_total_week * 7) / (date.weekday() + 1)
+    sales_trend_month = (sales_total_month * month[1].day) / date.day
+
     sales = []
     last_day = None
     for o in Sale.objects.filter(datetime__range=month).order_by("datetime"):
@@ -230,6 +233,8 @@ def index(request, date=None):
         "sales_others_date": sales_others_date,
         "sales_others_week": sales_others_week,
         "sales_others_month": sales_others_month,
+        "sales_trend_week": sales_trend_week,
+        "sales_trend_month": sales_trend_month,
         "date_list": date_list,
         "is_today": is_today,
         "date": date,

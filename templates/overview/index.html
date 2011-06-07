@@ -84,6 +84,12 @@
       <td class="value">{{ sales_total_week|currency }}</td>
       <td class="value">{{ sales_total_month|currency }}</td>
     </tr>
+    <tr>
+      <td class="overview-description">{% trans "Trend" %}</td>
+      <td></td>
+      <td class="value">{{ sales_trend_week|currency }}</td>
+      <td class="value">{{ sales_trend_month|currency }}</td>
+    </tr>
   </tfoot>
 </table>
 
