@@ -1,0 +1,202 @@
+{% extends "admin/base_site.html" %}
+{% load url from future %}
+{% load i18n %}
+{% load cashflow_extras %}
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="/static/style.css" />
+<link rel="stylesheet" type="text/css" href="/static/print.css" media="print" />
+{% endblock %}
+{% block extrahead %}{{ block.super }}
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load('visualization', '1', {'packages':['corechart', 'annotatedtimeline']});
+    google.setOnLoadCallback(drawCharts);
+
+    function drawCharts() {
+        drawTotalSalesChart();
+        drawSellersChart();
+    }
+
+    function drawPieChart(dt, element_id) {
+        var elm = document.getElementById(element_id);
+        var w = elm.width;
+        var h = elm.height;
+        var chart = new google.visualization.PieChart(elm);
+        chart.draw(dt, {width: w, height: h, is3D: true});
+    }
+
+    function drawEvolutionChart(dt, element_id) {
+        var elm = document.getElementById(element_id);
+        var w = elm.width;
+        var h = elm.height;
+        var chart = new google.visualization.AnnotatedTimeLine(elm);
+        chart.draw(dt, {width: w, height: h, displayRangeSelector: false, displayZoomButtons: false});
+    }
+</script>
+{% endblock %}
+{% block title %}{% trans "Overview" %}{% endblock %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+{% trans "Overview" %}
+</div>{% endblock %}
+{% block userlinks %}
+{% if user.is_active and user.is_staff %}<a href="{% url 'admin:index' %}">Admin</a> /{{ block.super }}
+{% endif %}
+{% endblock %}
+{% block content %}
+
+<div id="overview-sales">
+<table id="overview-sellers">
+  <caption><a href="{% url 'sales.views.index' %}">{% trans "Sales" %}</a></caption>
+  <thead>
+    <tr>
+      <th class="overview-description">{% trans "Seller" %}</th>
+      {% if is_today %}
+      <th class="value">{% trans "Today" %}</th>
+      <th class="value">{% trans "This Week" %}</th>
+      <th class="value">{% trans "This Month" %}</th>
+      {% else %}
+      <th class="value">{{ date|date:"Y-m-d" }}</th>
+      <th class="value">{% trans "Week" %}</th>
+      <th class="value">{% trans "Month" %}</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>{% for s in sellers %}
+    <tr>
+      <td class="overview-description">{{ s.seller.get_full_name }}</td>
+      <td class="value">{{ s.date|currency }}</td>
+      <td class="value">{{ s.week|currency }}</td>
+      <td class="value">{{ s.month|currency }}</td>
+    </tr>{% endfor %}
+    <tr>
+      <td class="overview-description">{% trans "Others" %}</td>
+      <td class="value">{{ sales_others_date|currency }}</td>
+      <td class="value">{{ sales_others_week|currency }}</td>
+      <td class="value">{{ sales_others_month|currency }}</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td class="overview-description">{% trans "Total" %}</td>
+      <td class="value">{{ sales_total_date|currency }}</td>
+      <td class="value">{{ sales_total_week|currency }}</td>
+      <td class="value">{{ sales_total_month|currency }}</td>
+    </tr>
+  </tfoot>
+</table>
+
+<h2>{% trans "Sales in the last 30 days" %}</h2>
+<div id="overview-sales-chart"></div>
+<h2>{% trans "Participation in the last 30 days" %}</h2>
+<div id="overview-sellers-chart"></div>
+<script type="text/javascript">
+function drawTotalSalesChart() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("date", "{% trans 'Date' %}");
+    dt.addColumn("number", "{% trans 'Total' %}");
+
+    {% for d, s in sales %}
+    dt.addRow([new Date({{ d.year }}, {{ d.month }}, {{ d.day }}), {{ s|safe }}]);{% endfor %}
+
+    drawEvolutionChart(dt, "overview-sales-chart");
+}
+
+function drawSellersChart() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("string", "{% trans 'Seller' %}");
+    dt.addColumn("number", "{% trans 'Value' %}");
+
+    {% for row in sellers %}
+    dt.addRow(["{{ row.seller.first_name|escapejs }}", {{ row.month|safe }}]);{% endfor %}
+    drawPieChart(dt, "overview-sellers-chart");
+}
+
+</script>
+</div>
+
+<div id="overview-forecasts">
+<table id="overview-forecasts-summary">
+  <caption><a href="{% url 'cashflow.views.index' %}">{% trans "Forecast" %}</a></caption>
+  <thead>
+    <tr>
+      <th class="overview-description"></th>
+      <th class="number"><abbr title="{% trans 'Debits' %}">{% trans "#DB" %}</abbr></th>
+      <th class="number"><abbr title="{% trans 'Payments' %}">{% trans "#PY" %}</abbr></th>
+      <th class="number"><abbr title="{% trans 'Suppliers Payments' %}">{% trans "#SP" %}</abbr></th>
+      <th class="number"><abbr title="{% trans 'Credits' %}">{% trans "#CD" %}</abbr></th>
+      <th class="number"><abbr title="{% trans 'Sales Revenue' %}">{% trans "#SR" %}</abbr></th>
+      <th class="number">{% trans "Difference" %}</th>
+      <th class="number">{% trans "Balance" %}</th>
+    </tr>
+  </thead>
+  <tr>
+    <td class="overview-description">{% if is_today %}{% trans "Today" %}{% else %}{{ date }}{% endif %}</td>
+    <td class="number">{{ date_debits_count }}</td>
+    <td class="number">{{ date_payments_count }}</td>
+    <td class="number">{{ date_suppliers_payments_count }}</td>
+    <td class="number">{{ date_credits_count }}</td>
+    <td class="number">{{ date_revenues_count }}</td>
+    <td class="value {% if date_total >= 0 %}positive{% else %}negative{% endif %}">{{ date_total|currency }}</td>
+    <td class="value {% if date_balance >= 0 %}positive{% else %}negative{% endif %}">{{ date_balance|currency }}</td>
+  </tr>
+  <tr>
+    <td class="overview-description">{% trans "Next 7 days" %}</td>
+    <td class="number">{{ days7_debits_count }}</td>
+    <td class="number">{{ days7_payments_count }}</td>
+    <td class="number">{{ days7_suppliers_payments_count }}</td>
+    <td class="number">{{ days7_credits_count }}</td>
+    <td class="number">{{ days7_revenues_count }}</td>
+    <td class="value {% if days7_total >= 0 %}positive{% else %}negative{% endif %}">{{ days7_total|currency }}</td>
+    <td class="value {% if days7_balance >= 0 %}positive{% else %}negative{% endif %}">{{ days7_balance|currency }}</td>
+  </tr>
+  <tr>
+    <td class="overview-description">{% trans "Next 30 days" %}</td>
+    <td class="number">{{ days30_debits_count }}</td>
+    <td class="number">{{ days30_payments_count }}</td>
+    <td class="number">{{ days30_suppliers_payments_count }}</td>
+    <td class="number">{{ days30_credits_count }}</td>
+    <td class="number">{{ days30_revenues_count }}</td>
+    <td class="value {% if days30_total >= 0 %}positive{% else %}negative{% endif %}">{{ days30_total|currency }}</td>
+    <td class="value {% if days30_balance >= 0 %}positive{% else %}negative{% endif %}">{{ days30_balance|currency }}</td>
+  </tr>
+</table>
+
+<table id="overview-forecasts-date">
+  <caption>{% if is_today %}{% trans "Today's Agenda" %}{% else %}{% blocktrans %}Agenda for {{ date }}{% endblocktrans %}{% endif %}</caption>
+  {% if date_list %}
+  <thead>
+    <tr>
+      <th>{% trans "Operation" %}</th>
+      <th class="value">{% trans "Value" %}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for section, list in date_list %}
+    <tr>
+      <td class="section" colspan="3">{{ section }}</td>
+    </tr>
+    {% for o in list %}
+    <tr>
+      <td class="overview-description">{{ o.2|safe }}</td>
+      <td class="value">{{ o.0|currency }}</td>
+      <td class="action"><a href="{{ o.3 }}">view</a></td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <td class="overview-description">{% trans "Total" %}</td>
+      <td class="value {% if date_total >= 0 %}positive{% else %}negative{% endif %}">{{ date_total|currency }}</td>
+      <td></td>
+    </tr>
+  </tfoot>
+  {% else %}
+  <tr><td class="no-items">{% trans "Nothing schedule to date." %}</td></tr>
+  {% endif %}
+</table>
+</div>
+{% endblock %}

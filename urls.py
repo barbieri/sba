@@ -15,6 +15,9 @@ def report(request):
 
 
 urlpatterns = patterns('',
+    url(r'^$', "overview.views.index"),
+    url(r'^overview/$', "overview.views.index"),
+    url(r'^overview/(?P<date>20\d{2}-\d{2}-\d{2})/$', "overview.views.index"),
     url(r'^report/$', report),
     url(r'^report/sales/$', "sales.views.index"),
     url(r'^report/sales/sellers/$', "sales.views.sellers"),

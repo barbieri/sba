@@ -315,3 +315,92 @@ div.chart-timeline {
     width: 600px;
     height: 240px;
 }
+
+/* overview */
+table#overview-sellers,
+table#overview-forecasts-summary,
+table#overview-forecasts-date {
+    border: 1px solid #dddddd;
+}
+
+table#overview-sellers caption,
+table#overview-forecasts-summary caption,
+table#overview-forecasts-date caption,
+div#overview-sales h2 {
+    color: #999999;
+    font-weight: bold;
+    font-size: large;
+    padding-top: 20px;
+}
+
+table#overview-sellers,
+table#overview-forecasts-summary,
+table#overview-forecasts-date {
+    width: 100%;
+}
+
+div#overview-sales {
+    width: 48%;
+    float: left;
+    margin-right: 10px;
+}
+
+div#overview-forecasts {
+    width: 48%;
+    float: left;
+    margin-left: 10px;
+}
+
+table#overview-forecasts-summary .number {
+    text-align: right;
+    width: 20pt;
+}
+
+table#overview-sellers td.value,
+table#overview-forecasts-summary td.value,
+table#overview-forecasts-date td.value {
+    font-family: monospace;
+    text-align: right;
+    width: 70pt;
+}
+
+table#overview-sellers thead th.value,
+table#overview-forecasts-summary thead th.value,
+table#overview-forecasts-date thead th.value {
+    text-align: right;
+}
+
+table#overview-forecasts-summary td.positive,
+table#overview-forecasts-date td.positive {
+    color: #0000d9;
+}
+
+table#overview-forecasts-summary td.negative,
+table#overview-forecasts-date td.negative {
+    color: #d90000;
+}
+
+table#overview-forecasts-date span.date {
+    display: none;
+}
+
+table#overview-forecasts-date td.section {
+    background-color: #edf3fe;
+}
+
+table#overview-forecasts-date tfoot tr td {
+    background-color: #f6f6f6;
+    color: #333333;
+    padding: 5px;
+}
+
+table#overview-sellers .overview-description,
+table#overview-forecasts-summary .overview-description {
+    min-width: 20%;
+}
+
+div#overview-sellers-chart,
+div#overview-sales-chart {
+    width: 100%;
+    height: 240px;
+}
