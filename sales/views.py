@@ -154,7 +154,7 @@ def sales_data_get(start, end, seller_id, key, date_id_get):
         t_sales_products_count += u_sales_products_count
         t_non_sales_count += u_non_sales_count
         sellers.append({
-                "name": u.get_full_name(),
+                "name": u"%s %s." % (u.first_name, u.last_name[:1]),
                 "operations": u_sales_count + u_non_sales_count,
                 "non_sales": u_non_sales_count,
                 "sales": u_sales_count,
