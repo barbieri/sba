@@ -331,6 +331,7 @@ div#overview-sales h2 {
     font-weight: bold;
     font-size: large;
     padding-top: 20px;
+    text-align: center;
 }
 
 table#overview-sellers,
@@ -399,8 +400,9 @@ table#overview-forecasts-summary .overview-description {
     min-width: 20%;
 }
 
+div#overview-sales-chart,
 div#overview-sellers-chart,
-div#overview-sales-chart {
+div#overview-sellers-ratio-chart {
     width: 100%;
     height: 240px;
 }

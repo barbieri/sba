@@ -3,6 +3,7 @@ from cashflow.models import Payment as CashFlowPayment
 from suppliers.models import SupplierPayment
 from sales.models import SaleRevenue
 from sales.models import Sale
+from sales.models import NonSale
 from django.shortcuts import render_to_response
 from django.template import Context, RequestContext, loader
 from django.contrib.auth.models import User
@@ -50,6 +51,16 @@ def index(request, date=None):
             datetime__range=period, seller=seller).aggregate(Sum("value"))
         return q.get("value__sum") or 0.0
 
+    def get_sales_ratio(seller, period):
+        filters = {"datetime__range": period, "seller": seller}
+        sales = len(Sale.objects.filter(**filters))
+        non_sales = len(NonSale.objects.filter(**filters))
+        total = sales + non_sales
+        if total == 0:
+            return None
+        else:
+            return sales / float(total)
+
     sellers = []
     sellers_date = 0.0
     sellers_week = 0.0
@@ -66,6 +77,7 @@ def index(request, date=None):
                 "date": u_date,
                 "week": u_week,
                 "month": u_month,
+                "ratio_month": get_sales_ratio(u, month),
                 })
 
     def get_total_sales(period):
