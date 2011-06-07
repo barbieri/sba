@@ -94,7 +94,7 @@ function drawAverageValueCharts() {
     dt.addColumn("number", "{% trans 'Average' %}");
 
     {% for m, s in months %}
-    dt.addRow(["{{ m.2 }}", {% if s.sales > 0 %}{{ s.value|safe }}/{{ s.sales|safe }}{% else %}0{% endif %}]);{% endfor %}
+    dt.addRow(["{{ m.2 }}", {% if s.sales > 0 %}{{ s.value|safe }}/{{ s.sales|safe }}{% else %}undefined{% endif %}]);{% endfor %}
 
     drawEvolutionChart(dt, "total-monthly-evolution-average-value");
 }
@@ -129,7 +129,7 @@ function drawProductsPerSaleCharts() {
     dt.addColumn("number", "{% trans 'Products/Sale' %}");
 
     {% for m, s in months %}
-    dt.addRow(["{{ m.2 }}", {% if s.sales > 0 %}{{ s.products|safe }}/{{ s.sales|safe }}{% else %}0{% endif %}]);{% endfor %}
+    dt.addRow(["{{ m.2 }}", {% if s.sales > 0 %}{{ s.products|safe }}/{{ s.sales|safe }}{% else %}undefined{% endif %}]);{% endfor %}
 
     drawEvolutionChart(dt, "total-monthly-evolution-products-sale");
 }
@@ -146,7 +146,7 @@ function drawRatioSaleCharts() {
     dt.addColumn("number", "{% trans 'Sale Ratio' %}");
 
     {% for m, s in months %}
-    dt.addRow(["{{ m.2 }}", {% if s.operations > 0 %}100 * {{ s.sales|safe }}/{{ s.operations|safe }}{% else %}0{% endif %}]);{% endfor %}
+    dt.addRow(["{{ m.2 }}", {% if s.operations > 0 %}100 * {{ s.sales|safe }}/{{ s.operations|safe }}{% else %}undefined{% endif %}]);{% endfor %}
 
     drawEvolutionChart(dt, "total-monthly-evolution-ratio-sale");
 }

@@ -101,7 +101,7 @@ function drawTotalValueEvolutionChart() {
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
 
     {% for d, s in days %}
-    dt.addRow([new Date{{ d }}{% for data in s %}, {{ data.value|safe }}{% endfor %}]);{% endfor %}
+    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.operations > 0 %}{{ data.value|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
 
     drawEvolutionChart(dt, "sellers-daily-evolution-total-value");
 }
@@ -136,7 +136,7 @@ function drawAverageValueEvolutionChart() {
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
 
     {% for d, s in days %}
-    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.sales > 0 %}{{ data.value|safe }}/{{ data.sales|safe }}{% else %}0{% endif %}{% endfor %}]);{% endfor %}
+    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.sales > 0 %}{{ data.value|safe }}/{{ data.sales|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
 
     drawEvolutionChart(dt, "sellers-daily-evolution-average-value");
 }
@@ -146,7 +146,7 @@ function drawAverageValuePieChart() {
 
     {% for row in sellers %}
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
-    dt.addRow([{% for row in sellers %}{% if not forloop.first %}, {% endif %}{% if row.sales > 0 %}{{ row.value|safe }}/{{ row.sales|safe }}{% else %}0{% endif %}{% endfor %}]);
+    dt.addRow([{% for row in sellers %}{% if not forloop.first %}, {% endif %}{% if row.sales > 0 %}{{ row.value|safe }}/{{ row.sales|safe }}{% else %}undefined{% endif %}{% endfor %}]);
 
     drawAggregateChart(dt, "sellers-daily-aggregate-average-value");
 }
@@ -171,7 +171,7 @@ function drawNumberOfSalesEvolutionChart() {
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
 
     {% for d, s in days %}
-    dt.addRow([new Date{{ d }}{% for data in s %}, {{ data.sales|safe }}{% endfor %}]);{% endfor %}
+    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.operations > 0 %}{{ data.sales|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
 
     drawEvolutionChart(dt, "sellers-daily-evolution-number-sales");
 }
@@ -206,7 +206,7 @@ function drawProductsPerSaleEvolutionChart() {
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
 
     {% for d, s in days %}
-    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.sales > 0 %}{{ data.products|safe }}/{{ data.sales|safe }}{% else %}0{% endif %}{% endfor %}]);{% endfor %}
+    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.sales > 0 %}{{ data.products|safe }}/{{ data.sales|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
 
     drawEvolutionChart(dt, "sellers-daily-evolution-products-sale");
 }
@@ -216,7 +216,7 @@ function drawProductsPerSalePieChart() {
 
     {% for row in sellers %}
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
-    dt.addRow([{% for row in sellers %}{% if not forloop.first %}, {% endif %}{% if row.sales > 0 %}{{ row.products|safe }}/{{ row.sales|safe }}{% else %}0{% endif %}{% endfor %}]);
+    dt.addRow([{% for row in sellers %}{% if not forloop.first %}, {% endif %}{% if row.sales > 0 %}{{ row.products|safe }}/{{ row.sales|safe }}{% else %}undefined{% endif %}{% endfor %}]);
 
     drawAggregateChart(dt, "sellers-daily-aggregate-products-sale");
 }
@@ -241,7 +241,7 @@ function drawRatioSaleEvolutionChart() {
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
 
     {% for d, s in days %}
-    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.operations > 0 %}100 * {{ data.sales|safe }}/{{ data.operations|safe }}{% else %}0{% endif %}{% endfor %}]);{% endfor %}
+    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.operations > 0 %}100 * {{ data.sales|safe }}/{{ data.operations|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
 
     drawEvolutionChart(dt, "sellers-daily-evolution-ratio-sale");
 }
@@ -251,7 +251,7 @@ function drawRatioSalePieChart() {
 
     {% for row in sellers %}
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
-    dt.addRow([{% for row in sellers %}{% if not forloop.first %}, {% endif %}{% if row.operations > 0 %}100 * {{ row.sales|safe }}/{{ row.operations|safe }}{% else %}0{% endif %}{% endfor %}]);
+    dt.addRow([{% for row in sellers %}{% if not forloop.first %}, {% endif %}{% if row.operations > 0 %}100 * {{ row.sales|safe }}/{{ row.operations|safe }}{% else %}undefined{% endif %}{% endfor %}]);
 
     drawAggregateChart(dt, "sellers-daily-aggregate-ratio-sale");
 
