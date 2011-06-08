@@ -103,7 +103,7 @@ function drawTotalValueEvolutionChart() {
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
 
     {% for d, s in days %}
-    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.operations > 0 %}{{ data.value|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
+    dt.addRow([new Date({{ d.0 }}, {{ d.1 }} - 1, {{ d.2 }}){% for data in s %}, {% if data.operations > 0 %}{{ data.value|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
 
     drawEvolutionChart(dt, "sellers-daily-evolution-total-value");
 }
@@ -138,7 +138,7 @@ function drawAverageValueEvolutionChart() {
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
 
     {% for d, s in days %}
-    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.sales > 0 %}{{ data.value|safe }}/{{ data.sales|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
+    dt.addRow([new Date({{ d.0 }}, {{ d.1 }} - 1, {{ d.2 }}){% for data in s %}, {% if data.sales > 0 %}{{ data.value|safe }}/{{ data.sales|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
 
     drawEvolutionChart(dt, "sellers-daily-evolution-average-value");
 }
@@ -173,7 +173,7 @@ function drawAverageOperationsValueEvolutionChart() {
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
 
     {% for d, s in days %}
-    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.operations > 0 %}{{ data.value|safe }}/{{ data.operations|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
+    dt.addRow([new Date({{ d.0 }}, {{ d.1 }} - 1, {{ d.2 }}){% for data in s %}, {% if data.operations > 0 %}{{ data.value|safe }}/{{ data.operations|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
 
     drawEvolutionChart(dt, "sellers-daily-evolution-average-total-value");
 }
@@ -210,7 +210,7 @@ function drawNumberOfSalesEvolutionChart() {
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
 
     {% for d, s in days %}
-    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.operations > 0 %}{{ data.sales|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
+    dt.addRow([new Date({{ d.0 }}, {{ d.1 }} - 1, {{ d.2 }}){% for data in s %}, {% if data.operations > 0 %}{{ data.sales|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
 
     drawEvolutionChart(dt, "sellers-daily-evolution-number-sales");
 }
@@ -245,7 +245,7 @@ function drawProductsPerSaleEvolutionChart() {
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
 
     {% for d, s in days %}
-    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.sales > 0 %}{{ data.products|safe }}/{{ data.sales|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
+    dt.addRow([new Date({{ d.0 }}, {{ d.1 }} - 1, {{ d.2 }}){% for data in s %}, {% if data.sales > 0 %}{{ data.products|safe }}/{{ data.sales|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
 
     drawEvolutionChart(dt, "sellers-daily-evolution-products-sale");
 }
@@ -280,7 +280,7 @@ function drawProductsPerSaleNonSaleEvolutionChart() {
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
 
     {% for d, s in days %}
-    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.operations > 0 %}{{ data.products|safe }}/{{ data.operations|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
+    dt.addRow([new Date({{ d.0 }}, {{ d.1 }} - 1, {{ d.2 }}){% for data in s %}, {% if data.operations > 0 %}{{ data.products|safe }}/{{ data.operations|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
 
     drawEvolutionChart(dt, "sellers-daily-evolution-products-sale-nonsale");
 }
@@ -315,7 +315,7 @@ function drawRatioSaleEvolutionChart() {
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
 
     {% for d, s in days %}
-    dt.addRow([new Date{{ d }}{% for data in s %}, {% if data.operations > 0 %}100 * {{ data.sales|safe }}/{{ data.operations|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
+    dt.addRow([new Date({{ d.0 }}, {{ d.1 }} - 1, {{ d.2 }}){% for data in s %}, {% if data.operations > 0 %}100 * {{ data.sales|safe }}/{{ data.operations|safe }}{% else %}undefined{% endif %}{% endfor %}]);{% endfor %}
 
     drawEvolutionChart(dt, "sellers-daily-evolution-ratio-sale");
 }

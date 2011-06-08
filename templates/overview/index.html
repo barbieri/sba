@@ -123,7 +123,7 @@ function drawTotalSalesChart() {
     dt.addColumn("number", "{% trans 'Total' %}");
 
     {% for d, s in sales %}
-    dt.addRow([new Date({{ d.year }}, {{ d.month }}, {{ d.day }}), {{ s|safe }}]);{% endfor %}
+    dt.addRow([new Date({{ d.year }}, {{ d.month }} - 1, {{ d.day }}), {{ s|safe }}]);{% endfor %}
 
     drawEvolutionChart(dt, "overview-sales-chart");
 }
