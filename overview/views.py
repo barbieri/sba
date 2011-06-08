@@ -95,10 +95,10 @@ def index(request, date=None):
     sales_trend_month = (sales_total_month * month[1].day) / date.day
 
     sales = []
-    last_day = None
+    last_day = [None, None]
     for o in Sale.objects.filter(datetime__range=month).order_by("datetime"):
         d = datetime.date(o.datetime.year, o.datetime.month, o.datetime.day)
-        if last_day != d:
+        if last_day[0] != d:
             last_day = [d, 0.0]
             sales.append(last_day)
         last_day[1] += o.value
