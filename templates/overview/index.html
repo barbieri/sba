@@ -51,7 +51,7 @@
     <a href="{% url 'overview.views.index' date_before %}">&lsaquo;&nbsp;{% trans "Previous" %}</a>
   </div>
   <div id="overview-navigator-date">
-    {{ date }}
+    {{ date|date:"l" }} - {{ date }}
   </div>
   <div id="overview-navigator-next">
     <a href="{% url 'overview.views.index' date_after %}">{% trans "Next" %}&nbsp;&rsaquo;</a>
