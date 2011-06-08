@@ -21,8 +21,10 @@
     function drawCharts() {
         drawTotalValueCharts();
         drawAverageValueCharts();
+        drawAverageValueOperationsCharts();
         drawNumberOfSalesCharts();
         drawProductsPerSaleCharts();
+        drawProductsPerSaleNonSaleCharts();
         drawRatioSaleCharts();
     }
 
@@ -83,7 +85,7 @@ function drawTotalValueCharts() {
 }
 </script>
 
-<h2>{% trans "Average Value" %}</h2>
+<h2>{% trans "Average Value Per Sale" %}</h2>
 <div class="chart-group">
 <div id="total-weekly-evolution-average-value" class="chart-timeline"></div>
 </div>
@@ -97,6 +99,23 @@ function drawAverageValueCharts() {
     dt.addRow(["w{{ w.1 }}", {% if s.sales > 0 %}{{ s.value|safe }}/{{ s.sales|safe }}{% else %}undefined{% endif %}]);{% endfor %}
 
     drawEvolutionChart(dt, "total-weekly-evolution-average-value");
+}
+</script>
+
+<h2>{% trans "Average Value Per Sale + Non-Sale" %}</h2>
+<div class="chart-group">
+<div id="total-weekly-evolution-average-total-value" class="chart-timeline"></div>
+</div>
+<script type="text/javascript">
+function drawAverageValueOperationsCharts() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("string", "{% trans 'Week' %}");
+    dt.addColumn("number", "{% trans 'Average' %}");
+
+    {% for w, s in weeks %}
+    dt.addRow(["w{{ w.1 }}", {% if s.operations > 0 %}{{ s.value|safe }}/{{ s.operations|safe }}{% else %}undefined{% endif %}]);{% endfor %}
+
+    drawEvolutionChart(dt, "total-weekly-evolution-average-total-value");
 }
 </script>
 
@@ -132,6 +151,24 @@ function drawProductsPerSaleCharts() {
     dt.addRow(["w{{ w.1 }}", {% if s.sales > 0 %}{{ s.products|safe }}/{{ s.sales|safe }}{% else %}undefined{% endif %}]);{% endfor %}
 
     drawEvolutionChart(dt, "total-weekly-evolution-products-sale");
+}
+</script>
+
+<h2>{% trans "Products per Sale + Non-Sale" %}</h2>
+<div class="chart-group">
+<div id="total-weekly-evolution-products-sale-nonsale" class="chart-timeline"></div>
+</div>
+<script type="text/javascript">
+function drawProductsPerSaleNonSaleCharts() {
+    var dt = new google.visualization.DataTable();
+    dt.addColumn("string", "{% trans 'Week' %}");
+
+    dt.addColumn("number", "{% trans 'Products/(Sale+Non-Sale)' %}");
+
+    {% for w, s in weeks %}
+    dt.addRow(["w{{ w.1 }}", {% if s.operations > 0 %}{{ s.products|safe }}/{{ s.operations|safe }}{% else %}undefined{% endif %}]);{% endfor %}
+
+    drawEvolutionChart(dt, "total-weekly-evolution-products-sale-nonsale");
 }
 </script>
 
