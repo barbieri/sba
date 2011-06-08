@@ -250,6 +250,8 @@ def index(request, date=None):
         "date_list": date_list,
         "is_today": is_today,
         "date": date,
+        "date_before": date - datetime.timedelta(1),
+        "date_after": date + datetime.timedelta(1),
         "date_debits_count": date_debits_count,
         "date_credits_count": date_credits_count,
         "date_payments_count": date_payments_count,

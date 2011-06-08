@@ -317,6 +317,22 @@ div.chart-timeline {
 }
 
 /* overview */
+div#overview-navigator {
+    text-align: center;
+}
+
+div#overview-navigator div {
+    display: inline;
+}
+
+div#overview-navigator-previous {
+    float: left;
+}
+
+div#overview-navigator-next {
+    float: right;
+}
+
 table#overview-sellers,
 table#overview-forecasts-summary,
 table#overview-forecasts-date {

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SBA 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-07 20:47-0300\n"
+"POT-Creation-Date: 2011-06-07 20:58-0300\n"
 "PO-Revision-Date: 2011-06-06 00:36-0300\n"
 "Last-Translator: Gustavo Sverzut Barbieri <barbieri@gmail.com>\n"
 "Language-Team: pt_BR <barbieri@gmail.com>\n"
@@ -73,7 +73,7 @@ msgid "Description"
 msgstr "Descrição"
 
 #: cashflow/models.py:42 cashflow/models.py:85
-#: templates/overview/index.html:114 templates/sales/sellers/daily.html:98
+#: templates/overview/index.html:122 templates/sales/sellers/daily.html:98
 #: templates/sales/sellers/daily.html:133
 #: templates/sales/sellers/daily.html:168
 #: templates/sales/sellers/daily.html:203
@@ -90,7 +90,7 @@ msgstr "Tipo"
 #: cashflow/models.py:45 cashflow/models.py:88 sales/models.py:97
 #: sales/models.py:139 suppliers/models.py:68
 #: templates/cashflow/index.html:174 templates/cashflow/index.html.py:176
-#: templates/overview/index.html:126 templates/overview/index.html.py:199
+#: templates/overview/index.html:134 templates/overview/index.html.py:207
 #: templates/sales/sellers/daily.html:112
 #: templates/sales/sellers/monthly.html:111
 #: templates/sales/sellers/weekly.html:111
@@ -101,7 +101,7 @@ msgstr "Valor"
 msgid "Is Estimated?"
 msgstr "É Estimado?"
 
-#: cashflow/models.py:59 templates/overview/index.html:158
+#: cashflow/models.py:59 templates/overview/index.html:166
 msgid "Balance"
 msgstr "Balanço"
 
@@ -135,7 +135,7 @@ msgid "Payment"
 msgstr "Pagamento"
 
 #: cashflow/models.py:104 overview/views.py:147 suppliers/models.py:58
-#: templates/overview/index.html:153
+#: templates/overview/index.html:161
 msgid "Payments"
 msgstr "Pagamentos"
 
@@ -181,11 +181,11 @@ msgstr "Outros Créditos"
 msgid "Other Debits"
 msgstr "Outros Débitos"
 
-#: overview/views.py:169 templates/overview/index.html:154
+#: overview/views.py:169 templates/overview/index.html:162
 msgid "Suppliers Payments"
 msgstr "Pagamentos de Fornecedores"
 
-#: overview/views.py:187 templates/overview/index.html:156
+#: overview/views.py:187 templates/overview/index.html:164
 msgid "Sales Revenue"
 msgstr "Renda de vendas"
 
@@ -313,8 +313,8 @@ msgstr "Métodos de Receita"
 msgid "Date & Time"
 msgstr "Data e Horário"
 
-#: sales/models.py:94 sales/models.py:186 templates/overview/index.html:63
-#: templates/overview/index.html.py:125 templates/sales/sellers/daily.html:111
+#: sales/models.py:94 sales/models.py:186 templates/overview/index.html:71
+#: templates/overview/index.html.py:133 templates/sales/sellers/daily.html:111
 #: templates/sales/sellers/daily.html:181
 #: templates/sales/sellers/monthly.html:110
 #: templates/sales/sellers/monthly.html:180
@@ -336,7 +336,7 @@ msgid "Sale"
 msgstr "Venda"
 
 #: sales/models.py:119 templates/report.html:26
-#: templates/overview/index.html:60 templates/sales/index.html:19
+#: templates/overview/index.html:68 templates/sales/index.html:19
 #: templates/sales/sellers/daily.html:64
 #: templates/sales/sellers/daily.html:182
 #: templates/sales/sellers/index.html:20
@@ -525,8 +525,8 @@ msgid "Monthly"
 msgstr "Mensal"
 
 #: templates/report.html:37 templates/cashflow/index.html:166
-#: templates/cashflow/index.html.py:169 templates/overview/index.html:91
-#: templates/overview/index.html.py:115 templates/overview/index.html:219
+#: templates/cashflow/index.html.py:169 templates/overview/index.html:99
+#: templates/overview/index.html.py:123 templates/overview/index.html:227
 #: templates/sales/index.html:28 templates/sales/total/daily.html:50
 #: templates/sales/total/daily.html:77 templates/sales/total/index.html:21
 #: templates/sales/total/monthly.html:50 templates/sales/total/monthly.html:77
@@ -648,7 +648,7 @@ msgid "Balance <strong>%(value)s</strong>."
 msgstr "Balanço <strong>%(value)s</strong>."
 
 #: templates/cashflow/index.html:165 templates/cashflow/index.html.py:168
-#: templates/overview/index.html:198
+#: templates/overview/index.html:206
 msgid "Operation"
 msgstr "Operação"
 
@@ -656,7 +656,7 @@ msgstr "Operação"
 msgid "Estimated"
 msgstr "Estimado"
 
-#: templates/cashflow/index.html:197 templates/overview/index.html:70
+#: templates/cashflow/index.html:197 templates/overview/index.html:78
 #: templates/sales/sellers/weekly.html:97
 #: templates/sales/sellers/weekly.html:132
 #: templates/sales/sellers/weekly.html:167
@@ -676,27 +676,35 @@ msgstr "ver"
 msgid "Final balance"
 msgstr "Balanço final"
 
-#: templates/cashflow/index.html:239 templates/overview/index.html:157
+#: templates/cashflow/index.html:239 templates/overview/index.html:165
 msgid "Difference"
 msgstr "Diferença"
 
-#: templates/overview/index.html:47 templates/overview/index.html.py:50
+#: templates/overview/index.html:47
 msgid "Overview"
 msgstr "Visão Geral"
 
-#: templates/overview/index.html:65 templates/overview/index.html.py:162
+#: templates/overview/index.html:51
+msgid "Previous"
+msgstr "Anterior"
+
+#: templates/overview/index.html:57
+msgid "Next"
+msgstr "Próximo"
+
+#: templates/overview/index.html:73 templates/overview/index.html.py:170
 msgid "Today"
 msgstr "Hoje"
 
-#: templates/overview/index.html:66
+#: templates/overview/index.html:74
 msgid "This Week"
 msgstr "Esta Semana"
 
-#: templates/overview/index.html:67
+#: templates/overview/index.html:75
 msgid "This Month"
 msgstr "Este Mês"
 
-#: templates/overview/index.html:71 templates/sales/sellers/monthly.html:97
+#: templates/overview/index.html:79 templates/sales/sellers/monthly.html:97
 #: templates/sales/sellers/monthly.html:132
 #: templates/sales/sellers/monthly.html:167
 #: templates/sales/sellers/monthly.html:202
@@ -708,76 +716,76 @@ msgstr "Este Mês"
 msgid "Month"
 msgstr "Mês"
 
-#: templates/overview/index.html:83
+#: templates/overview/index.html:91
 msgid "Others"
 msgstr "Outros"
 
-#: templates/overview/index.html:97
+#: templates/overview/index.html:105
 msgid "Trend"
 msgstr "Tendência"
 
-#: templates/overview/index.html:105
+#: templates/overview/index.html:113
 msgid "Sales in the last 30 days"
 msgstr "Vendas nos últimos 30 dias"
 
-#: templates/overview/index.html:107
+#: templates/overview/index.html:115
 msgid "Participation in the last 30 days"
 msgstr "Participação nos últimos 30 dias"
 
-#: templates/overview/index.html:109
+#: templates/overview/index.html:117
 msgid "Sale Ratio in the last 30 days"
 msgstr "Taxa de Venda nos últimos 30 dias"
 
-#: templates/overview/index.html:148
+#: templates/overview/index.html:156
 msgid "Forecast"
 msgstr "Previsão"
 
-#: templates/overview/index.html:152
+#: templates/overview/index.html:160
 msgid "Debits"
 msgstr "Débitos"
 
-#: templates/overview/index.html:152
+#: templates/overview/index.html:160
 msgid "#DB"
 msgstr "#DB"
 
-#: templates/overview/index.html:153
+#: templates/overview/index.html:161
 msgid "#PY"
 msgstr "#PG"
 
-#: templates/overview/index.html:154
+#: templates/overview/index.html:162
 msgid "#SP"
 msgstr "#PF"
 
-#: templates/overview/index.html:155
+#: templates/overview/index.html:163
 msgid "Credits"
 msgstr "Créditos"
 
-#: templates/overview/index.html:155
+#: templates/overview/index.html:163
 msgid "#CD"
 msgstr "#CD"
 
-#: templates/overview/index.html:156
+#: templates/overview/index.html:164
 msgid "#SR"
 msgstr "#RV"
 
-#: templates/overview/index.html:172
+#: templates/overview/index.html:180
 msgid "Next 7 days"
 msgstr "Próximos 7 dias"
 
-#: templates/overview/index.html:182
+#: templates/overview/index.html:190
 msgid "Next 30 days"
 msgstr "Próximos 30 dias"
 
-#: templates/overview/index.html:194
+#: templates/overview/index.html:202
 msgid "Today's Agenda"
 msgstr "Agenda de Hoje"
 
-#: templates/overview/index.html:194
+#: templates/overview/index.html:202
 #, python-format
 msgid "Agenda for %(date)s"
 msgstr "Agenda para %(date)s"
 
-#: templates/overview/index.html:225
+#: templates/overview/index.html:233
 msgid "Nothing schedule to date."
 msgstr "Nada agendado para o dia."
 
