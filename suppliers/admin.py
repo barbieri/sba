@@ -2,14 +2,23 @@ from suppliers.models import Supplier, SupplierInvoice, SupplierPayment
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 
+class SupplierAdmin(admin.ModelAdmin):
+    list_display = ["name", "phone", "email"]
+    search_fields = ["name", "phone", "email", "note"]
+
+
 class SupplierPaymentInline(admin.TabularInline):
     model = SupplierPayment
     extra = 3
 
+
 class SupplierPaymentAdmin(admin.ModelAdmin):
     list_display = ["invoice_supplier", "invoice_identifier", "date_due",
                     "value", "status", "note"]
-    list_filter = ["date_due", "status"]
+    list_filter = ["invoice__supplier__name", "date_due", "value", "status"]
+    search_fields = ["invoice__supplier__name",
+                     "invoice__identifier", "date_due",
+                     "value", "status", "note"]
     date_hierarchy = "date_due"
 
     def invoice_supplier(self, o):
@@ -26,7 +35,7 @@ class SupplierInvoiceAdmin(admin.ModelAdmin):
     list_display = ["identifier", "supplier", "date_due",
                     "declared_value", "total_value", "payments",
                     "status", "tag_list"]
-    list_filter = ["supplier", "date_due", "status"]
+    list_filter = ["supplier__name", "supplier", "date_due", "status"]
     search_fields = ["supplier__name", "identifier"]
     filter_horizontal = ("tags",)
     date_hierarchy = "date_due"
@@ -36,6 +45,6 @@ class SupplierInvoiceAdmin(admin.ModelAdmin):
     tag_list.short_description = _("Tags")
 
 
-admin.site.register(Supplier)
+admin.site.register(Supplier, SupplierAdmin)
 admin.site.register(SupplierInvoice, SupplierInvoiceAdmin)
 admin.site.register(SupplierPayment, SupplierPaymentAdmin)

@@ -26,6 +26,13 @@ class CustomerGeoStateAdmin(admin.ModelAdmin):
     search_fields = ["code", "name"]
 
 
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ["name", "phone", "email", "city"]
+    list_filter = ["city"]
+    search_fields = ["name", "phone", "email", "address", "neighborhood",
+                     "city__name", "zip", "note"]
+
+
 class ProductAdmin(admin.ModelAdmin):
     list_display = ["identifier", "description", "is_active", "cost"]
     list_filter = ["is_active"]
@@ -109,6 +116,10 @@ class SaleAdmin(admin.ModelAdmin):
     summary.short_description = _("Summary")
 
 
+class RevenueMethodAdmin(admin.ModelAdmin):
+    list_display = ["name", "operation_cost", "percentual_cost", "is_active"]
+
+
 class NonSaleAdmin(admin.ModelAdmin):
     list_display = ["datetime", "seller", "customer", "reason", "note"]
     list_filter = ["datetime", "seller", "customer", "reason"]
@@ -120,9 +131,9 @@ class NonSaleAdmin(admin.ModelAdmin):
 
 admin.site.register(CustomerGeoState, CustomerGeoStateAdmin)
 admin.site.register(CustomerCity, CustomerCityAdmin)
-admin.site.register(Customer)
+admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Sale, SaleAdmin)
-admin.site.register(RevenueMethod)
+admin.site.register(RevenueMethod, RevenueMethodAdmin)
 admin.site.register(NonSaleReason)
 admin.site.register(NonSale, NonSaleAdmin)
