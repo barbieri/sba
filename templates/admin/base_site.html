@@ -1,10 +1,12 @@
 {% extends "admin/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ title }} | {% trans 'Small Business Administration' %}{% endblock %}
+{% block title %}{{ title }} | {% if settings.SBA_BUSINESS_NAME %}{{ settings.SBA_BUSINESS_NAME }}{% else %}{% trans 'Small Business Administration' %}{% endif %}{% endblock %}
+
+{% if settings.SBA_BUSINESS_CSS %}{% block extrastyle %}{{ block.super }}{{ settings.SBA_BUSINESS_CSS }}{% endblock %}{% endif %}
 
 {% block branding %}
-<h1 id="site-name">{% trans 'Small Business Administration' %}</h1>
+<h1 id="site-name"><a href="/">{% if settings.SBA_BUSINESS_NAME %}{{ settings.SBA_BUSINESS_NAME }}{% else %}{% trans 'Small Business Administration' %}{% endif %}</a></h1>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
