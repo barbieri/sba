@@ -32,7 +32,7 @@
         var w = elm.width;
         var h = elm.height;
         var chart = new google.visualization.AnnotatedTimeLine(elm);
-        chart.draw(dt, {width: w, height: h, displayRangeSelector: false, displayZoomButtons: false});
+        chart.draw(dt, {width: w, height: h, displayRangeSelector: false, displayZoomButtons: false, displayExactValues: true});
     }
 
     function drawAggregateChart(dt, element_id) {
