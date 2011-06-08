@@ -49,7 +49,15 @@
         var w = elm.width;
         var h = elm.height;
         var chart = new google.visualization.BarChart(elm);
-        chart.draw(dt, {width: w, height: h});
+        chart.draw(dt, {width: w, height: h, hAxis: {minValue:0, format: "#,###"}});
+    }
+
+    function drawAggregatePercentChart(dt, element_id) {
+        var elm = document.getElementById(element_id);
+        var w = elm.width;
+        var h = elm.height;
+        var chart = new google.visualization.BarChart(elm);
+        chart.draw(dt, {width: w, height: h, hAxis: {minValue: 0, maxValue: 1, format: "###%"}});
     }
 
 </script>
@@ -324,9 +332,9 @@ function drawRatioSalePieChart() {
 
     {% for row in sellers %}
     dt.addColumn("number", "{{ row.name|escapejs }}");{% endfor %}
-    dt.addRow([{% for row in sellers %}{% if not forloop.first %}, {% endif %}{% if row.operations > 0 %}100 * {{ row.sales|safe }}/{{ row.operations|safe }}{% else %}undefined{% endif %}{% endfor %}]);
+    dt.addRow([{% for row in sellers %}{% if not forloop.first %}, {% endif %}{% if row.operations > 0 %}{{ row.sales|safe }}/{{ row.operations|safe }}{% else %}undefined{% endif %}{% endfor %}]);
 
-    drawAggregateChart(dt, "sellers-monthly-aggregate-ratio-sale");
+    drawAggregatePercentChart(dt, "sellers-monthly-aggregate-ratio-sale");
 
 }
 </script>
