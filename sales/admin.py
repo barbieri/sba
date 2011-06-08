@@ -16,7 +16,7 @@ class CustomerCityInline(admin.TabularInline):
 class CustomerCityAdmin(admin.ModelAdmin):
     list_display = ["name", "state"]
     list_filter = ["state"]
-    search_fields = ["name", "state"]
+    search_fields = ["name", "state__name", "state__code"]
 
 
 class CustomerGeoStateAdmin(admin.ModelAdmin):
@@ -60,7 +60,8 @@ class SaleAdmin(admin.ModelAdmin):
     list_display = ["datetime", "seller", "customer", "value",
                     "discount", "product_count", "revenue_count"]
     list_filter = ["datetime", "seller", "customer", "discount"]
-    search_fields = ["seller", "customer"]
+    search_fields = ["seller__first_name", "seller__last_name",
+                     "seller__username", "customer__name"]
     date_hierarchy = "datetime"
     actions = ["summary"]
     readonly_fields = ["value"]
@@ -111,7 +112,9 @@ class SaleAdmin(admin.ModelAdmin):
 class NonSaleAdmin(admin.ModelAdmin):
     list_display = ["datetime", "seller", "customer", "reason", "note"]
     list_filter = ["datetime", "seller", "customer", "reason"]
-    search_fields = ["seller", "customer", "reason", "note"]
+    search_fields = ["seller__first_name", "seller__last_name",
+                     "seller__username", "customer__name",
+                     "reason__description", "note"]
     date_hierarchy = "datetime"
 
 

@@ -27,7 +27,7 @@ class SupplierInvoiceAdmin(admin.ModelAdmin):
                     "declared_value", "total_value", "payments",
                     "status", "tag_list"]
     list_filter = ["supplier", "date_due", "status"]
-    search_fields = ["supplier", "identifier"]
+    search_fields = ["supplier__name", "identifier"]
     filter_horizontal = ("tags",)
     date_hierarchy = "date_due"
 
