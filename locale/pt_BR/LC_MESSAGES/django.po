@@ -203,7 +203,7 @@ msgstr "Marcar selecionados como inativo"
 
 #: sales/admin.py:73 sales/models.py:73
 msgid "Products"
-msgstr "Produtos"
+msgstr "Peças"
 
 #: sales/admin.py:77
 msgid "Revenues"
@@ -220,7 +220,7 @@ msgid ""
 "%(average_discount)0.0f%% average discount, revenue %(revenue)0.2f "
 "(%(average_revenue)0.2f average)"
 msgstr ""
-"%(sales)d vendas, %(products)d produtos (%(average_products)0.1f em média), "
+"%(sales)d vendas, %(products)d peças (%(average_products)0.1f em média), "
 "desconto médio de %(average_discount)0.0f%%, receita %(revenue)0.2f "
 "(%(average_revenue)0.2f em média)"
 
@@ -744,7 +744,7 @@ msgstr "Participação nos últimos 30 dias"
 
 #: templates/overview/index.html:117
 msgid "Sale Ratio in the last 30 days"
-msgstr "Taxa de Venda nos últimos 30 dias"
+msgstr "Índice de Atendimento nos últimos 30 dias"
 
 #: templates/overview/index.html:156
 msgid "Forecast"
@@ -873,7 +873,7 @@ msgstr "Valor Médio Por Venda"
 #: templates/sales/total/daily.html:105 templates/sales/total/monthly.html:105
 #: templates/sales/total/weekly.html:105
 msgid "Average Value Per Sale + Non-Sale"
-msgstr "Valor Médio Por Venda + Não-Venda"
+msgstr "Valor Médio Por Atendimento"
 
 #: templates/sales/sellers/daily.html:194
 #: templates/sales/sellers/monthly.html:193
@@ -889,7 +889,7 @@ msgstr "Número de Vendas"
 #: templates/sales/total/daily.html:139 templates/sales/total/monthly.html:139
 #: templates/sales/total/weekly.html:139
 msgid "Products per Sale"
-msgstr "Produtos por Venda"
+msgstr "Peças por Venda"
 
 #: templates/sales/sellers/daily.html:264
 #: templates/sales/sellers/monthly.html:263
@@ -897,7 +897,7 @@ msgstr "Produtos por Venda"
 #: templates/sales/total/daily.html:157 templates/sales/total/monthly.html:157
 #: templates/sales/total/weekly.html:157
 msgid "Products per Sale + Non-Sale"
-msgstr "Produtos por Venda + Não-Vendas"
+msgstr "Peças por Atendimento"
 
 #: templates/sales/sellers/daily.html:299
 #: templates/sales/sellers/monthly.html:298
@@ -905,7 +905,7 @@ msgstr "Produtos por Venda + Não-Vendas"
 #: templates/sales/total/daily.html:175 templates/sales/total/monthly.html:175
 #: templates/sales/total/weekly.html:175
 msgid "Sale <abbr title=\"Sales / (Non-Sales + Sales)\">Ratio</abbr>"
-msgstr "<abbr title=\"Vendas / (Não-Vendas + Vendas)\">Taxa</abbr> de Venda"
+msgstr "<abbr title=\"Vendas / Atendimento\">Índice</abbr> de Atendimento"
 
 #: templates/sales/sellers/index.html:12
 msgid "Sellers Reports"
@@ -939,17 +939,17 @@ msgstr "Média"
 #: templates/sales/total/daily.html:148 templates/sales/total/monthly.html:148
 #: templates/sales/total/weekly.html:148
 msgid "Products/Sale"
-msgstr "Produtos/Vendas"
+msgstr "Peças/Vendas"
 
 #: templates/sales/total/daily.html:166 templates/sales/total/monthly.html:166
 #: templates/sales/total/weekly.html:166
 msgid "Products/(Sale+Non-Sale)"
-msgstr "Produtos/(Venda+Não-Venda)"
+msgstr "Peças/Atendimento"
 
 #: templates/sales/total/daily.html:183 templates/sales/total/monthly.html:183
 #: templates/sales/total/weekly.html:183
 msgid "Sale Ratio"
-msgstr "Taxa de Venda"
+msgstr "Índice de Atendimento"
 
 #: templates/sales/total/index.html:12
 msgid "Total Reports"
