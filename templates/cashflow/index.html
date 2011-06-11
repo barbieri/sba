@@ -80,18 +80,17 @@
 <div id="cashflow-parameters">
   {% blocktrans with timestamp=now|date:"D j F Y H:i" %}Cash flow created at {{ timestamp }} based on the following parameters:{% endblocktrans %}
   <ul>
-    <li>{% if balances_labels|length < 1 %}{% trans "No balance type" %}{% else %}{% if balances_labels|length == all_balances|length %}{% trans "All balances types" %}{% else %}{% trans "Balance Types" %}:{% for o in balances_labels %}{{ o }}{% endfor %}
-      {% endif %}{% endif %}</li>
-    <li>{% if cost_centers_labels|length < 1 %}{% trans "No cost center" %}{% else %}{% if cost_centers_labels|length == all_cost_centers|length %}{% trans "All cost centers" %}{% else %}{% trans "Cost Centers" %}:
-      <ul>{% for o in cost_centers_labels %}<li>{{ o }}</li>{% endfor %}
-      </ul>{% endif %}{% endif %}</li>
-    <li>{% if payments_labels|length < 1 %}{% trans "No payment type" %}{% else %}{% if payments_labels|length == all_payments|length %}{% trans "All payments types" %}{% else %}{% trans "Payment Types" %}:
-      {% for o in payments_labels %}{{ o }}{% endfor %}{% endif %}{% endif %}</li>
-    <li>{% if tags_labels|length < 1 %}{% trans "No tag" %}{% else %}{% if tags_labels|length == all_tags|length %}{% trans "All tags" %}{% else %}{% trans "Tags" %}:
-      <ul>{% for o in tags_labels %}<li>{{ o }}</li>{% endfor %}
-      </ul>{% endif %}{% endif %}</li>
-    <li>{% if show_suppliers %}{% trans "Accounting supplier payments" %}{% else %}{% trans "Not accounting supplier payments" %}{% endif %}</li>
-    <li>{% if show_revenues %}{% trans "Accounting sales revenue" %}{% else %}{% trans "Not accounting sales revenue" %}{% endif %}</li>
+    <li>{% trans "Balance Types" %}:{% for o, v in balances %}{% if not forloop.first %}, {% endif %}{{ o }} (${{ v|currency }}){% endfor %}. {% trans "Total" %}: ${{ flow_total_balance|currency }}</li>
+    <li>{% trans "Cost Centers" %}:
+      <ul>{% for o, v in cost_centers %}<li>{{ o }}: ${{ v|currency }}</li>{% endfor %}
+      </ul></li>
+    <li>{% trans "Payment Types" %}:
+      {% for o, v in payments %}{% if not forloop.first %}, {% endif %}{{ o }} (${{ v|currency }}){% endfor %}. {% trans "Total" %}: ${{ flow_total_payment|currency }}</li>
+    <li>{% trans "Tags" %}:
+      <ul>{% for o, v in tags %}<li>{{ o }}: ${{ v|currency }}</li>{% endfor %}
+      </ul></li>
+    <li>{% if show_suppliers %}{% trans "Accounting supplier payments" %} (${{ flow_total_supplier_payment|currency }}){% else %}{% trans "Not accounting supplier payments" %}{% endif %}</li>
+    <li>{% if show_revenues %}{% trans "Accounting sales revenue" %} ({% blocktrans with net_value=flow_total_net_revenue|currency %}net: ${{ net_value }}{% endblocktrans %}, {% blocktrans with value=flow_total_revenue|currency %}gross: ${{ value }}{% endblocktrans %}){% else %}{% trans "Not accounting sales revenue" %}{% endif %}</li>
     <li>{% blocktrans %}{{ duration }} days since {{ start_date }} to {{ end_date }}{% endblocktrans %}</li>
   </ul>
 </div>

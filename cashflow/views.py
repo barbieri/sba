@@ -161,6 +161,20 @@ def index(request):
             initial_value += value
         #print "sales-revenue: date<%s: %r" % (start_date, value)
 
+    def account_total(storage, key, value):
+        storage[key] = storage.get(key, 0) + value
+
+    flow_total_payment = 0.0
+    flow_total_balance = 0.0
+    flow_total_supplier_payment = 0.0
+    flow_total_revenue = 0.0
+    flow_total_net_revenue = 0.0
+
+    flow_balances_total = {}
+    flow_cost_centers_total = {}
+    flow_payments_total = {}
+    flow_tags_total = {}
+
     # flow: cashflow.Balance
     filters = {
         "type__in": balances,
@@ -190,6 +204,10 @@ def index(request):
                  })
             description = desc_tmpl.render(c)
 
+        flow_total_balance += value
+        account_total(flow_balances_total, o.type, o.value)
+        for t in o.tags.all():
+            account_total(flow_tags_total, t.id, o.value)
         url = "/admin/cashflow/balance/%d/" % o.id
         flow.append((o.date, value, o.is_estimated, description, url))
 
@@ -219,6 +237,12 @@ def index(request):
                  })
             description = desc_tmpl.render(c)
 
+        flow_total_payment += o.value
+        account_total(flow_payments_total, o.type, o.value)
+        if o.cost_center:
+            account_total(flow_cost_centers_total, o.cost_center.id, o.value)
+        for t in o.tags.all():
+            account_total(flow_tags_total, t.id, o.value)
         url = "/admin/cashflow/payment/%d/" % o.id
         flow.append((o.date, -o.value, o.is_estimated, description, url))
 
@@ -252,6 +276,9 @@ def index(request):
                      })
                 description = desc_tmpl.render(c)
 
+            flow_total_supplier_payment += o.value
+            for t in o.invoice.tags.all():
+                account_total(flow_tags_total, t.id, o.value)
             url = "/admin/suppliers/supplierpayment/%d/" % o.id
             flow.append((o.date_due, -o.value, False, description, url))
 
@@ -278,6 +305,8 @@ def index(request):
                      })
                 description = desc_tmpl.render(c)
 
+            flow_total_revenue += o.value
+            flow_total_net_revenue += o.net_value
             url = "/admin/sales/sale/%d/" % o.sale.id
             flow.append((o.date_due, o.net_value, False, description, url))
 
@@ -438,26 +467,28 @@ def index(request):
                 "sibling_month": True,
                 }
 
-    def revmap_labels(used, reference):
+    def revmap_labels(used, reference, values):
         labels = []
         for k, v in reference:
             for x in used:
                 if x == k:
-                    labels.append(v)
+                    labels.append((v, values.get(k, 0.0)))
                     break
         labels.sort()
         return labels
 
     ctxt = {
         "form": form,
-        "balances_labels": revmap_labels(balances, all_balances),
-        "cost_centers_labels": revmap_labels(cost_centers, all_cost_centers),
-        "payments_labels": revmap_labels(payments, all_payments),
-        "tags_labels": revmap_labels(tags, all_tags),
-        "all_balances": all_balances,
-        "all_cost_centers": all_cost_centers,
-        "all_payments": all_payments,
-        "all_tags": all_tags,
+        "balances": revmap_labels(balances, all_balances, flow_balances_total),
+        "cost_centers": revmap_labels(cost_centers, all_cost_centers,
+                                      flow_cost_centers_total),
+        "payments": revmap_labels(payments, all_payments, flow_payments_total),
+        "tags": revmap_labels(tags, all_tags, flow_tags_total),
+        "flow_total_balance": flow_total_balance,
+        "flow_total_payment": flow_total_payment,
+        "flow_total_supplier_payment": flow_total_supplier_payment,
+        "flow_total_revenue": flow_total_revenue,
+        "flow_total_net_revenue": flow_total_net_revenue,
         "duration": (end_date - start_date).days,
         "flow_report": flow_report,
         "calendar": calendar,
