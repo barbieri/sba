@@ -80,15 +80,15 @@
 <div id="cashflow-parameters">
   {% blocktrans with timestamp=now|date:"D j F Y H:i" %}Cash flow created at {{ timestamp }} based on the following parameters:{% endblocktrans %}
   <ul>
-    <li>{% trans "Balance Types" %}:{% for o, v in balances %}{% if not forloop.first %}, {% endif %}{{ o }} (${{ v|currency }}){% endfor %}. {% trans "Total" %}: ${{ flow_total_balance|currency }}</li>
-    <li>{% trans "Cost Centers" %}:
+    <li>{% if balances %}{% trans "Balance Types" %}:{% for o, v in balances %}{% if not forloop.first %}, {% endif %}{{ o }} (${{ v|currency }}){% endfor %}. {% trans "Total" %}: ${{ flow_total_balance|currency }}{% else %}{% trans "No balance type" %}{% endif %}</li>
+    <li>{% if cost_centers %}{% trans "Cost Centers" %}:
       <ul>{% for o, v in cost_centers %}<li>{{ o }}: ${{ v|currency }}</li>{% endfor %}
-      </ul></li>
-    <li>{% trans "Payment Types" %}:
-      {% for o, v in payments %}{% if not forloop.first %}, {% endif %}{{ o }} (${{ v|currency }}){% endfor %}. {% trans "Total" %}: ${{ flow_total_payment|currency }}</li>
-    <li>{% trans "Tags" %}:
+      </ul>{% else %}{% trans "No cost center" %}{% endif %}</li>
+    <li>{% if payments %}{% trans "Payment Types" %}:
+      {% for o, v in payments %}{% if not forloop.first %}, {% endif %}{{ o }} (${{ v|currency }}){% endfor %}. {% trans "Total" %}: ${{ flow_total_payment|currency }}{% else %}{% trans "No payment type" %}{% endif %}</li>
+    <li>{% if tags %}{% trans "Tags" %}:
       <ul>{% for o, v in tags %}<li>{{ o }}: ${{ v|currency }}</li>{% endfor %}
-      </ul></li>
+      </ul>{% else %}{% trans "No tag" %}{% endif %}</li>
     <li>{% if show_suppliers %}{% trans "Accounting supplier payments" %} (${{ flow_total_supplier_payment|currency }}){% else %}{% trans "Not accounting supplier payments" %}{% endif %}</li>
     <li>{% if show_revenues %}{% trans "Accounting sales revenue" %} ({% blocktrans with net_value=flow_total_net_revenue|currency %}net: ${{ net_value }}{% endblocktrans %}, {% blocktrans with value=flow_total_revenue|currency %}gross: ${{ value }}{% endblocktrans %}){% else %}{% trans "Not accounting sales revenue" %}{% endif %}</li>
     <li>{% blocktrans %}{{ duration }} days since {{ start_date }} to {{ end_date }}{% endblocktrans %}</li>

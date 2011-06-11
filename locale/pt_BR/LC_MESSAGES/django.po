@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SBA 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-11 02:57-0300\n"
+"POT-Creation-Date: 2011-06-11 03:07-0300\n"
 "PO-Revision-Date: 2011-06-06 00:36-0300\n"
 "Last-Translator: Gustavo Sverzut Barbieri <barbieri@gmail.com>\n"
 "Language-Team: pt_BR <barbieri@gmail.com>\n"
@@ -612,6 +612,22 @@ msgstr "Atualizar"
 msgid "Cash flow created at %(timestamp)s based on the following parameters:"
 msgstr ""
 "Fluxo de caixa criado em %(timestamp)s baseado nos seguintes parâmetros:"
+
+#: templates/cashflow/index.html:83
+msgid "No balance type"
+msgstr "Nenhum tipo de balanço"
+
+#: templates/cashflow/index.html:86
+msgid "No cost center"
+msgstr "Nenhum centro de custo"
+
+#: templates/cashflow/index.html:88
+msgid "No payment type"
+msgstr "Nenhum tipo de pagamento"
+
+#: templates/cashflow/index.html:91
+msgid "No tag"
+msgstr "Nenhuma etiqueta"
 
 #: templates/cashflow/index.html:92
 msgid "Accounting supplier payments"
