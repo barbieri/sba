@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SBA 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-07 23:48-0300\n"
+"POT-Creation-Date: 2011-06-11 02:05-0300\n"
 "PO-Revision-Date: 2011-06-06 00:36-0300\n"
 "Last-Translator: Gustavo Sverzut Barbieri <barbieri@gmail.com>\n"
 "Language-Team: pt_BR <barbieri@gmail.com>\n"
@@ -17,20 +17,57 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: cashflow/admin.py:20 cashflow/admin.py:46 cashflow/models.py:21
+#: cashflow/admin.py:21 cashflow/admin.py:90 cashflow/models.py:21
 #: cashflow/models.py:65
 msgid "Color"
 msgstr "Cor"
 
-#: cashflow/admin.py:34 cashflow/admin.py:61 cashflow/models.py:32
+#: cashflow/admin.py:36 cashflow/admin.py:106 cashflow/models.py:32
 #: cashflow/models.py:49 cashflow/models.py:93 cashflow/views.py:38
-#: suppliers/admin.py:36 suppliers/models.py:38
+#: suppliers/admin.py:63 suppliers/models.py:38
 #: templates/cashflow/balance_description.html:7
 #: templates/cashflow/index.html:50 templates/cashflow/index.html.py:90
 #: templates/cashflow/payment_description.html:7
 #: templates/suppliers/payment_description.html:8
 msgid "Tags"
 msgstr "Etiquetas"
+
+#: cashflow/admin.py:43
+msgid "No balance selected"
+msgstr "Nenhum balanço selecionado"
+
+#: cashflow/admin.py:55
+#, python-format
+msgid ""
+"%(credits_count)d credits ($%(credits_value)0.2f), %(debits_count)d debits ($"
+"%(debits_value)0.2f), difference is $%(diff_value)0.2f"
+msgstr ""
+"%(credits_count)d créditos ($%(credits_value)0.2f), %(debits_count)d débitos ($"
+"%(debits_value)0.2f), diferença de $%(diff_value)0.2f"
+
+#: cashflow/admin.py:66
+#, python-format
+msgid "%(credits_count)d credits ($%(credits_value)0.2f)"
+msgstr "%(credits_count)d créditos ($%(credits_value)0.2f)"
+
+#: cashflow/admin.py:72
+#, python-format
+msgid "%(debits_count)d debits ($%(debits_value)0.2f)"
+msgstr "%(debits_count)d débitos ($%(debits_value)0.2f)"
+
+#: cashflow/admin.py:78 cashflow/admin.py:121 sales/admin.py:116
+#: suppliers/admin.py:47 suppliers/admin.py:91
+msgid "Summary"
+msgstr "Resumo"
+
+#: cashflow/admin.py:113 suppliers/admin.py:39
+msgid "No payment selected"
+msgstr "Nenhum pagamento selecionado"
+
+#: cashflow/admin.py:117 suppliers/admin.py:43
+#, python-format
+msgid "%(count)d payments ($%(value)0.2f)"
+msgstr "%(count)d pagamentos ($%(value)0.2f)"
 
 #: cashflow/models.py:11 cashflow/models.py:16
 #, python-format
@@ -73,13 +110,13 @@ msgid "Description"
 msgstr "Descrição"
 
 #: cashflow/models.py:42 cashflow/models.py:85
-#: templates/overview/index.html:122 templates/sales/sellers/daily.html:100
-#: templates/sales/sellers/daily.html:135
-#: templates/sales/sellers/daily.html:170
-#: templates/sales/sellers/daily.html:207
-#: templates/sales/sellers/daily.html:242
-#: templates/sales/sellers/daily.html:277
-#: templates/sales/sellers/daily.html:312 templates/sales/total/daily.html:78
+#: templates/overview/index.html:122 templates/sales/sellers/daily.html:108
+#: templates/sales/sellers/daily.html:143
+#: templates/sales/sellers/daily.html:178
+#: templates/sales/sellers/daily.html:215
+#: templates/sales/sellers/daily.html:250
+#: templates/sales/sellers/daily.html:285
+#: templates/sales/sellers/daily.html:320 templates/sales/total/daily.html:78
 #: templates/sales/total/daily.html:95 templates/sales/total/daily.html:112
 #: templates/sales/total/daily.html:129 templates/sales/total/daily.html:146
 #: templates/sales/total/daily.html:164 templates/sales/total/daily.html:182
@@ -94,9 +131,9 @@ msgstr "Tipo"
 #: sales/models.py:139 suppliers/models.py:68
 #: templates/cashflow/index.html:174 templates/cashflow/index.html.py:176
 #: templates/overview/index.html:134 templates/overview/index.html.py:207
-#: templates/sales/sellers/daily.html:114
-#: templates/sales/sellers/monthly.html:113
-#: templates/sales/sellers/weekly.html:113
+#: templates/sales/sellers/daily.html:122
+#: templates/sales/sellers/monthly.html:121
+#: templates/sales/sellers/weekly.html:121
 msgid "Value"
 msgstr "Valor"
 
@@ -192,28 +229,28 @@ msgstr "Pagamentos de Fornecedores"
 msgid "Sales Revenue"
 msgstr "Renda de vendas"
 
-#: sales/admin.py:43
+#: sales/admin.py:50
 #, python-format
 msgid "%s marked as inactive"
 msgstr "%s marcado como inativo"
 
-#: sales/admin.py:44
+#: sales/admin.py:51
 msgid "Mark selected as inactive"
 msgstr "Marcar selecionados como inativo"
 
-#: sales/admin.py:73 sales/models.py:73
+#: sales/admin.py:81 sales/models.py:73
 msgid "Products"
-msgstr "Peças"
+msgstr "Produtos"
 
-#: sales/admin.py:77
+#: sales/admin.py:85
 msgid "Revenues"
 msgstr "Receitas"
 
-#: sales/admin.py:84
+#: sales/admin.py:92
 msgid "No sales selected"
 msgstr "Nenhuma venda selecionada"
 
-#: sales/admin.py:94
+#: sales/admin.py:102
 #, python-format
 msgid ""
 "%(sales)d sales, %(products)d products (%(average_products)0.1f average), "
@@ -223,10 +260,6 @@ msgstr ""
 "%(sales)d vendas, %(products)d peças (%(average_products)0.1f em média), "
 "desconto médio de %(average_discount)0.0f%%, receita %(revenue)0.2f "
 "(%(average_revenue)0.2f em média)"
-
-#: sales/admin.py:108
-msgid "Summary"
-msgstr "Resumo"
 
 #: sales/models.py:16
 msgid "Code"
@@ -317,12 +350,12 @@ msgid "Date & Time"
 msgstr "Data e Horário"
 
 #: sales/models.py:94 sales/models.py:186 templates/overview/index.html:71
-#: templates/overview/index.html.py:133 templates/sales/sellers/daily.html:113
-#: templates/sales/sellers/daily.html:220
-#: templates/sales/sellers/monthly.html:112
-#: templates/sales/sellers/monthly.html:219
-#: templates/sales/sellers/weekly.html:112
-#: templates/sales/sellers/weekly.html:219
+#: templates/overview/index.html.py:133 templates/sales/sellers/daily.html:121
+#: templates/sales/sellers/daily.html:228
+#: templates/sales/sellers/monthly.html:120
+#: templates/sales/sellers/monthly.html:227
+#: templates/sales/sellers/weekly.html:120
+#: templates/sales/sellers/weekly.html:227
 msgid "Seller"
 msgstr "Vendedor"
 
@@ -340,13 +373,13 @@ msgstr "Venda"
 
 #: sales/models.py:119 templates/report.html:26
 #: templates/overview/index.html:68 templates/sales/index.html:19
-#: templates/sales/sellers/daily.html:66
-#: templates/sales/sellers/daily.html:221
+#: templates/sales/sellers/daily.html:74
+#: templates/sales/sellers/daily.html:229
 #: templates/sales/sellers/index.html:20
-#: templates/sales/sellers/monthly.html:66
-#: templates/sales/sellers/monthly.html:220
-#: templates/sales/sellers/weekly.html:66
-#: templates/sales/sellers/weekly.html:220 templates/sales/total/daily.html:50
+#: templates/sales/sellers/monthly.html:74
+#: templates/sales/sellers/monthly.html:228
+#: templates/sales/sellers/weekly.html:74
+#: templates/sales/sellers/weekly.html:228 templates/sales/total/daily.html:50
 #: templates/sales/total/daily.html:130 templates/sales/total/index.html:20
 #: templates/sales/total/monthly.html:50
 #: templates/sales/total/monthly.html:130 templates/sales/total/weekly.html:50
@@ -418,13 +451,26 @@ msgstr "vendedor"
 msgid "All"
 msgstr "Todos"
 
-#: suppliers/admin.py:17
+#: suppliers/admin.py:28
 msgid "Invoice Supplier"
 msgstr "Fornecedor do Recibo"
 
-#: suppliers/admin.py:21
+#: suppliers/admin.py:32
 msgid "Invoice Identifier"
 msgstr "Identificador do Recibo"
+
+#: suppliers/admin.py:70
+msgid "No invoice selected"
+msgstr "Nenhum recibo selecionado"
+
+#: suppliers/admin.py:81
+#, python-format
+msgid ""
+"%(invoices_count)d invoices declaring $%(declared_value)0.2f, "
+"%(payments_count)d payments ($%(payments_value)0.2f)"
+msgstr ""
+"%(invoices_count)d recibos declarando $%(declared_value)0.2f, "
+"%(payments_count)d pagamentos ($%(payments_value)0.2f)"
 
 #: suppliers/models.py:15 suppliers/models.py:27
 msgid "Supplier"
@@ -466,9 +512,9 @@ msgstr "Recibo de Fornecedor"
 msgid "Supplier's Invoices"
 msgstr "Recibo de Fornecedor"
 
-#: suppliers/models.py:54 templates/sales/sellers/daily.html:87
-#: templates/sales/sellers/monthly.html:86
-#: templates/sales/sellers/weekly.html:86 templates/sales/total/daily.html:71
+#: suppliers/models.py:54 templates/sales/sellers/daily.html:95
+#: templates/sales/sellers/monthly.html:94
+#: templates/sales/sellers/weekly.html:94 templates/sales/total/daily.html:71
 #: templates/sales/total/monthly.html:71 templates/sales/total/weekly.html:71
 msgid "Total Value"
 msgstr "Valor Total"
@@ -491,38 +537,38 @@ msgstr "Pagamentos de Fornecedor"
 
 #: templates/report.html:12 templates/report.html.py:18
 #: templates/report.html:23 templates/cashflow/index.html:19
-#: templates/sales/index.html:19 templates/sales/sellers/daily.html:65
+#: templates/sales/index.html:19 templates/sales/sellers/daily.html:73
 #: templates/sales/sellers/index.html:19
-#: templates/sales/sellers/monthly.html:65
-#: templates/sales/sellers/weekly.html:65 templates/sales/total/daily.html:49
+#: templates/sales/sellers/monthly.html:73
+#: templates/sales/sellers/weekly.html:73 templates/sales/total/daily.html:49
 #: templates/sales/total/index.html:19 templates/sales/total/monthly.html:49
 #: templates/sales/total/weekly.html:49
 msgid "Reports"
 msgstr "Relatórios"
 
 #: templates/report.html:29 templates/sales/index.html:27
-#: templates/sales/sellers/daily.html:68 templates/sales/sellers/index.html:21
-#: templates/sales/sellers/monthly.html:68
-#: templates/sales/sellers/weekly.html:68
+#: templates/sales/sellers/daily.html:76 templates/sales/sellers/index.html:21
+#: templates/sales/sellers/monthly.html:76
+#: templates/sales/sellers/weekly.html:76
 msgid "Sellers"
 msgstr "Vendedores"
 
 #: templates/report.html:31 templates/report.html.py:39
-#: templates/sales/sellers/daily.html:69 templates/sales/sellers/index.html:29
+#: templates/sales/sellers/daily.html:77 templates/sales/sellers/index.html:29
 #: templates/sales/total/daily.html:53 templates/sales/total/index.html:29
 msgid "Daily"
 msgstr "Diário"
 
 #: templates/report.html:32 templates/report.html.py:40
 #: templates/sales/sellers/index.html:30
-#: templates/sales/sellers/weekly.html:69 templates/sales/total/index.html:30
+#: templates/sales/sellers/weekly.html:77 templates/sales/total/index.html:30
 #: templates/sales/total/weekly.html:53
 msgid "Weekly"
 msgstr "Semanal"
 
 #: templates/report.html:33 templates/report.html.py:41
 #: templates/sales/sellers/index.html:31
-#: templates/sales/sellers/monthly.html:69 templates/sales/total/index.html:31
+#: templates/sales/sellers/monthly.html:77 templates/sales/total/index.html:31
 #: templates/sales/total/monthly.html:53
 msgid "Monthly"
 msgstr "Mensal"
@@ -553,9 +599,9 @@ msgstr "Relatório de Fluxo de Caixa"
 msgid "Extra Filters"
 msgstr "Filtros Extra"
 
-#: templates/cashflow/index.html:75 templates/sales/sellers/daily.html:80
-#: templates/sales/sellers/monthly.html:79
-#: templates/sales/sellers/weekly.html:79 templates/sales/total/daily.html:64
+#: templates/cashflow/index.html:75 templates/sales/sellers/daily.html:88
+#: templates/sales/sellers/monthly.html:87
+#: templates/sales/sellers/weekly.html:87 templates/sales/total/daily.html:64
 #: templates/sales/total/monthly.html:64 templates/sales/total/weekly.html:64
 msgid "Update"
 msgstr "Atualizar"
@@ -660,13 +706,13 @@ msgid "Estimated"
 msgstr "Estimado"
 
 #: templates/cashflow/index.html:197 templates/overview/index.html:78
-#: templates/sales/sellers/weekly.html:99
-#: templates/sales/sellers/weekly.html:134
-#: templates/sales/sellers/weekly.html:169
-#: templates/sales/sellers/weekly.html:206
-#: templates/sales/sellers/weekly.html:241
-#: templates/sales/sellers/weekly.html:276
-#: templates/sales/sellers/weekly.html:311
+#: templates/sales/sellers/weekly.html:107
+#: templates/sales/sellers/weekly.html:142
+#: templates/sales/sellers/weekly.html:177
+#: templates/sales/sellers/weekly.html:214
+#: templates/sales/sellers/weekly.html:249
+#: templates/sales/sellers/weekly.html:284
+#: templates/sales/sellers/weekly.html:319
 #: templates/sales/total/weekly.html:78 templates/sales/total/weekly.html:95
 #: templates/sales/total/weekly.html:112 templates/sales/total/weekly.html:129
 #: templates/sales/total/weekly.html:146 templates/sales/total/weekly.html:164
@@ -710,13 +756,13 @@ msgstr "Esta Semana"
 msgid "This Month"
 msgstr "Este Mês"
 
-#: templates/overview/index.html:79 templates/sales/sellers/monthly.html:99
-#: templates/sales/sellers/monthly.html:134
-#: templates/sales/sellers/monthly.html:169
-#: templates/sales/sellers/monthly.html:206
-#: templates/sales/sellers/monthly.html:241
-#: templates/sales/sellers/monthly.html:276
-#: templates/sales/sellers/monthly.html:311
+#: templates/overview/index.html:79 templates/sales/sellers/monthly.html:107
+#: templates/sales/sellers/monthly.html:142
+#: templates/sales/sellers/monthly.html:177
+#: templates/sales/sellers/monthly.html:214
+#: templates/sales/sellers/monthly.html:249
+#: templates/sales/sellers/monthly.html:284
+#: templates/sales/sellers/monthly.html:319
 #: templates/sales/total/monthly.html:78 templates/sales/total/monthly.html:95
 #: templates/sales/total/monthly.html:112
 #: templates/sales/total/monthly.html:129
@@ -856,52 +902,52 @@ msgstr "vendido em %(timestamp)s para %(customer)s"
 msgid "sold at %(timestamp)s"
 msgstr "vendido em %(timestamp)s"
 
-#: templates/sales/sellers/daily.html:58 templates/sales/sellers/daily.html:74
+#: templates/sales/sellers/daily.html:66 templates/sales/sellers/daily.html:82
 msgid "Seller's Daily Report"
 msgstr "Relatórios de Vendedores por Dia"
 
-#: templates/sales/sellers/daily.html:122
-#: templates/sales/sellers/monthly.html:121
-#: templates/sales/sellers/weekly.html:121 templates/sales/total/daily.html:88
+#: templates/sales/sellers/daily.html:130
+#: templates/sales/sellers/monthly.html:129
+#: templates/sales/sellers/weekly.html:129 templates/sales/total/daily.html:88
 #: templates/sales/total/monthly.html:88 templates/sales/total/weekly.html:88
 msgid "Average Value Per Sale"
 msgstr "Valor Médio Por Venda"
 
-#: templates/sales/sellers/daily.html:157
-#: templates/sales/sellers/monthly.html:156
-#: templates/sales/sellers/weekly.html:156
+#: templates/sales/sellers/daily.html:165
+#: templates/sales/sellers/monthly.html:164
+#: templates/sales/sellers/weekly.html:164
 #: templates/sales/total/daily.html:105 templates/sales/total/monthly.html:105
 #: templates/sales/total/weekly.html:105
 msgid "Average Value Per Sale + Non-Sale"
 msgstr "Valor Médio Por Atendimento"
 
-#: templates/sales/sellers/daily.html:194
-#: templates/sales/sellers/monthly.html:193
-#: templates/sales/sellers/weekly.html:193
+#: templates/sales/sellers/daily.html:202
+#: templates/sales/sellers/monthly.html:201
+#: templates/sales/sellers/weekly.html:201
 #: templates/sales/total/daily.html:122 templates/sales/total/monthly.html:122
 #: templates/sales/total/weekly.html:122
 msgid "Number of Sales"
 msgstr "Número de Vendas"
 
-#: templates/sales/sellers/daily.html:229
-#: templates/sales/sellers/monthly.html:228
-#: templates/sales/sellers/weekly.html:228
+#: templates/sales/sellers/daily.html:237
+#: templates/sales/sellers/monthly.html:236
+#: templates/sales/sellers/weekly.html:236
 #: templates/sales/total/daily.html:139 templates/sales/total/monthly.html:139
 #: templates/sales/total/weekly.html:139
 msgid "Products per Sale"
 msgstr "Peças por Venda"
 
-#: templates/sales/sellers/daily.html:264
-#: templates/sales/sellers/monthly.html:263
-#: templates/sales/sellers/weekly.html:263
+#: templates/sales/sellers/daily.html:272
+#: templates/sales/sellers/monthly.html:271
+#: templates/sales/sellers/weekly.html:271
 #: templates/sales/total/daily.html:157 templates/sales/total/monthly.html:157
 #: templates/sales/total/weekly.html:157
 msgid "Products per Sale + Non-Sale"
 msgstr "Peças por Atendimento"
 
-#: templates/sales/sellers/daily.html:299
-#: templates/sales/sellers/monthly.html:298
-#: templates/sales/sellers/weekly.html:298
+#: templates/sales/sellers/daily.html:307
+#: templates/sales/sellers/monthly.html:306
+#: templates/sales/sellers/weekly.html:306
 #: templates/sales/total/daily.html:175 templates/sales/total/monthly.html:175
 #: templates/sales/total/weekly.html:175
 msgid "Sale <abbr title=\"Sales / (Non-Sales + Sales)\">Ratio</abbr>"
@@ -915,13 +961,13 @@ msgstr "Relatórios de Vendedores"
 msgid "Seller's Reports"
 msgstr "Relatórios de Vendedores"
 
-#: templates/sales/sellers/monthly.html:58
-#: templates/sales/sellers/monthly.html:73
+#: templates/sales/sellers/monthly.html:66
+#: templates/sales/sellers/monthly.html:81
 msgid "Seller's Monthly Report"
 msgstr "Relatório de Vendedores por Mês"
 
-#: templates/sales/sellers/weekly.html:58
-#: templates/sales/sellers/weekly.html:73
+#: templates/sales/sellers/weekly.html:66
+#: templates/sales/sellers/weekly.html:81
 msgid "Seller's Weekly Report"
 msgstr "Relatórios de Vendedores por Semana"
 

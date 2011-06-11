@@ -75,3 +75,11 @@ class SupplierPayment(models.Model):
         ordering = ["date_due", "value"]
         verbose_name = _("Supplier's Payment")
         verbose_name_plural = _("Supplier's Payments")
+
+    def __unicode__(self):
+        status = ""
+        for k, v in self.STATUS_CHOICES:
+            if k == self.status:
+                status = v
+                break
+        return u"%0.2f (%s, %s)" % (self.value, self.date_due, status)
