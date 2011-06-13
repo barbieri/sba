@@ -220,6 +220,32 @@ table#cashflow span.negative {
     color: #d90000;
 }
 
+div#cashflow-charts {
+    text-align: center;
+}
+
+div#cashflow-balances,
+div#cashflow-cost_centers,
+div#cashflow-payments {
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    width: 30%;
+}
+
+div#cashflow-expenses,
+div#cashflow-incomes {
+    display: inline-block;
+    vertical-align: top;
+    text-align: center;
+    width: 45%;
+}
+
+div#cashflow-tags-chart {
+    width: 95%;
+}
+
+
 /* balance */
 div.balance span.date {
     font: 8pt monospace;
@@ -311,6 +337,12 @@ div.chart-pie {
 }
 
 div.chart-timeline {
+    display: inline-block;
+    width: 600px;
+    height: 240px;
+}
+
+div.chart-columns {
     display: inline-block;
     width: 600px;
     height: 240px;

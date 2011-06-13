@@ -477,6 +477,27 @@ def index(request):
         labels.sort()
         return labels
 
+    incomes = {}
+    v = flow_balances_total.get("C")
+    if v:
+        incomes[_("Credit")] = v
+    if flow_total_net_revenue:
+        incomes[_("Sales Revenue")] = flow_total_net_revenue
+
+    expenses = {}
+    v = flow_balances_total.get("D")
+    if v:
+        expenses[_("Debit")] = v
+    if flow_total_payment:
+        expenses[_("General Payment")] = flow_total_payment
+    if flow_total_supplier_payment:
+        expenses[_("Supplier Payment")] = flow_total_supplier_payment
+
+    incomes = list(incomes.iteritems())
+    incomes.sort()
+    expenses = list(expenses.iteritems())
+    expenses.sort()
+
     ctxt = {
         "form": form,
         "balances": revmap_labels(balances, all_balances, flow_balances_total),
@@ -484,6 +505,8 @@ def index(request):
                                       flow_cost_centers_total),
         "payments": revmap_labels(payments, all_payments, flow_payments_total),
         "tags": revmap_labels(tags, all_tags, flow_tags_total),
+        "expenses": expenses,
+        "incomes": incomes,
         "flow_total_balance": flow_total_balance,
         "flow_total_payment": flow_total_payment,
         "flow_total_supplier_payment": flow_total_supplier_payment,

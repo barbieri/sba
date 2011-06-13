@@ -12,7 +12,38 @@
 <script type="text/javascript" src="{% admin_media_prefix %}js/core.js"></script>
 <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
 {{ form.media }}
-<script type="text/javascript" language="javascript" src="/static/script.js"></script>{% endblock %}
+<script type="text/javascript" language="javascript" src="/static/script.js"></script>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load('visualization', '1', {'packages':['corechart']});
+    google.setOnLoadCallback(drawCharts);
+
+    function drawCharts() {{% if balances %}
+        drawBalancesChart();{% endif %}{% if cost_centers %}
+        drawCostCentersChart();{% endif %}{% if payments %}
+        drawPaymentsChart();{% endif %}{% if expenses %}
+        drawExpensesChart();{% endif %}{% if incomes %}
+        drawIncomesChart();{% endif %}{% if tags %}
+        drawTagsChart();{% endif %}
+    }
+
+    function drawPieChart(dt, element_id) {
+        var elm = document.getElementById(element_id);
+        var w = elm.width;
+        var h = elm.height;
+        var chart = new google.visualization.PieChart(elm);
+        chart.draw(dt, {width: w, height: h, is3D: true});
+    }
+
+    function drawColumnsChart(dt, element_id) {
+        var elm = document.getElementById(element_id);
+        var w = elm.width;
+        var h = elm.height;
+        var chart = new google.visualization.ColumnChart(elm);
+        chart.draw(dt, {width: w, height: h, vAxis: {minValue: 0}, legend: "bottom"});
+    }
+</script>
+{% endblock %}
 {% block title %}{% trans "Cash Flow Report" %}{% endblock %}
 {% block breadcrumbs %}
 <div class="breadcrumbs"><a href="../">
@@ -239,6 +270,113 @@
     </tr>
   </tfoot>
 </table>
+
+<div id="cashflow-charts" class="chart-group">
+
+{% if balances %}
+<div id="cashflow-balances">
+  <h2>{% trans "Balance Types" %}</h2>
+  <div id="cashflow-balances-chart" class="chart-pie"></div>
+  <script type="text/javascript">
+      function drawBalancesChart() {
+          var dt = new google.visualization.DataTable();
+          dt.addColumn("string", "{% trans 'Type' %}");
+          dt.addColumn("number", "{% trans 'Value' %}");
+          {% for o, v in balances %}
+          dt.addRow(["{{ o|escapejs }}", {{ v|safe }}]);{% endfor %}
+          drawPieChart(dt, "cashflow-balances-chart");
+      }
+  </script>
+</div>
+{% endif %}
+
+{% if cost_centers %}
+<div id="cashflow-cost_centers">
+  <h2>{% trans "Cost Centers" %}</h2>
+  <div id="cashflow-cost_centers-chart" class="chart-pie"></div>
+  <script type="text/javascript">
+      function drawCostCentersChart() {
+          var dt = new google.visualization.DataTable();
+          dt.addColumn("string", "{% trans 'Cost Center' %}");
+          dt.addColumn("number", "{% trans 'Value' %}");
+          {% for o, v in cost_centers %}
+          dt.addRow(["{{ o|escapejs }}", {{ v|safe }}]);{% endfor %}
+          drawPieChart(dt, "cashflow-cost_centers-chart");
+      }
+  </script>
+</div>
+{% endif %}
+
+{% if payments %}
+<div id="cashflow-payments">
+  <h2>{% trans "Payment Types" %}</h2>
+  <div id="cashflow-payments-chart" class="chart-pie"></div>
+  <script type="text/javascript">
+      function drawPaymentsChart() {
+          var dt = new google.visualization.DataTable();
+          dt.addColumn("string", "{% trans 'Type' %}");
+          dt.addColumn("number", "{% trans 'Value' %}");
+          {% for o, v in payments %}
+          dt.addRow(["{{ o|escapejs }}", {{ v|safe }}]);{% endfor %}
+          drawPieChart(dt, "cashflow-payments-chart");
+      }
+  </script>
+</div>
+{% endif %}
+
+<div>
+{% if expenses %}
+<div id="cashflow-expenses">
+  <h2>{% trans "Expenses" %}</h2>
+  <div id="cashflow-expenses-chart" class="chart-pie"></div>
+  <script type="text/javascript">
+      function drawExpensesChart() {
+          var dt = new google.visualization.DataTable();
+          dt.addColumn("string", "{% trans 'Expense' %}");
+          dt.addColumn("number", "{% trans 'Value' %}");
+          {% for o, v in expenses %}
+          dt.addRow(["{{ o|escapejs }}", {{ v|safe }}]);{% endfor %}
+          drawPieChart(dt, "cashflow-expenses-chart");
+      }
+  </script>
+</div>
+{% endif %}
+
+{% if incomes %}
+<div id="cashflow-incomes">
+  <h2>{% trans "Incomes" %}</h2>
+  <div id="cashflow-incomes-chart" class="chart-pie"></div>
+  <script type="text/javascript">
+      function drawIncomesChart() {
+          var dt = new google.visualization.DataTable();
+          dt.addColumn("string", "{% trans 'Income' %}");
+          dt.addColumn("number", "{% trans 'Value' %}");
+          {% for o, v in incomes %}
+          dt.addRow(["{{ o|escapejs }}", {{ v|safe }}]);{% endfor %}
+          drawPieChart(dt, "cashflow-incomes-chart");
+      }
+  </script>
+</div>
+{% endif %}
+</div>
+
+{% if tags %}
+<div id="cashflow-tags">
+  <h2>{% trans "Tags" %}</h2>
+  <div id="cashflow-tags-chart" class="chart-columns"></div>
+  <script type="text/javascript">
+      function drawTagsChart() {
+          var dt = new google.visualization.DataTable();
+          {% for o, v in tags %}
+          dt.addColumn("number", "{{ o }}");{% endfor %}
+          dt.addRow([{% for o, v in tags %}{% if not forloop.first %}, {% endif %}{{ v|safe }}{% endfor %}]);
+          drawColumnsChart(dt, "cashflow-tags-chart");
+      }
+  </script>
+</div>
+{% endif %}
+
+</div>
 
 {% endif %}
 {% endblock %}
