@@ -77,9 +77,10 @@ function drawTotalValueCharts() {
     var dt = new google.visualization.DataTable();
     dt.addColumn("string", "{% trans 'Week' %}");
     dt.addColumn("number", "{% trans 'Total' %}");
+    dt.addColumn("number", "{% trans 'Goal' %}");
 
     {% for w, s in weeks %}
-    dt.addRow(["w{{ w.1 }}", {{ s.value|safe }}]);{% endfor %}
+    dt.addRow(["w{{ w.1 }}", {{ s.value|safe }}, {% if s.goal %}Math.round(100 * {{ s.goal.total|safe }} * {{ s.goal_proportion|safe }}) / 100.0{% else %}undefined{% endif %}]);{% endfor %}
 
     drawEvolutionChart(dt, "total-weekly-evolution-total-value");
 }
@@ -96,7 +97,7 @@ function drawAverageValueCharts() {
     dt.addColumn("number", "{% trans 'Average' %}");
 
     {% for w, s in weeks %}
-    dt.addRow(["w{{ w.1 }}", {% if s.sales > 0 %}{{ s.value|safe }}/{{ s.sales|safe }}{% else %}undefined{% endif %}]);{% endfor %}
+    dt.addRow(["w{{ w.1 }}", {% if s.sales > 0 %}Math.round(100 * {{ s.value|safe }}/{{ s.sales|safe }}) / 100.0{% else %}undefined{% endif %}]);{% endfor %}
 
     drawEvolutionChart(dt, "total-weekly-evolution-average-value");
 }
@@ -113,7 +114,7 @@ function drawAverageValueOperationsCharts() {
     dt.addColumn("number", "{% trans 'Average' %}");
 
     {% for w, s in weeks %}
-    dt.addRow(["w{{ w.1 }}", {% if s.operations > 0 %}{{ s.value|safe }}/{{ s.operations|safe }}{% else %}undefined{% endif %}]);{% endfor %}
+    dt.addRow(["w{{ w.1 }}", {% if s.operations > 0 %}Math.round(100 * {{ s.value|safe }}/{{ s.operations|safe }}) / 100.0{% else %}undefined{% endif %}]);{% endfor %}
 
     drawEvolutionChart(dt, "total-weekly-evolution-average-total-value");
 }
@@ -146,9 +147,10 @@ function drawProductsPerSaleCharts() {
     dt.addColumn("string", "{% trans 'Week' %}");
 
     dt.addColumn("number", "{% trans 'Products/Sale' %}");
+    dt.addColumn("number", "{% trans 'Goal' %}");
 
     {% for w, s in weeks %}
-    dt.addRow(["w{{ w.1 }}", {% if s.sales > 0 %}{{ s.products|safe }}/{{ s.sales|safe }}{% else %}undefined{% endif %}]);{% endfor %}
+    dt.addRow(["w{{ w.1 }}", {% if s.sales > 0 %}Math.round(100 * {{ s.products|safe }}/{{ s.sales|safe }}) / 100.0{% else %}undefined{% endif %}, {% if s.goal %}{{ s.goal.products_ratio|safe }}{% else %}undefined{% endif %}]);{% endfor %}
 
     drawEvolutionChart(dt, "total-weekly-evolution-products-sale");
 }
@@ -164,9 +166,10 @@ function drawProductsPerSaleNonSaleCharts() {
     dt.addColumn("string", "{% trans 'Week' %}");
 
     dt.addColumn("number", "{% trans 'Products/(Sale+Non-Sale)' %}");
+    dt.addColumn("number", "{% trans 'Goal' %}");
 
     {% for w, s in weeks %}
-    dt.addRow(["w{{ w.1 }}", {% if s.operations > 0 %}{{ s.products|safe }}/{{ s.operations|safe }}{% else %}undefined{% endif %}]);{% endfor %}
+    dt.addRow(["w{{ w.1 }}", {% if s.operations > 0 %}Math.round(100 * {{ s.products|safe }}/{{ s.operations|safe }}) / 100.0{% else %}undefined{% endif %}, {% if s.goal %}Math.round({{ s.goal.products_ratio|safe }} * {{ s.goal.sales_ratio }}) / 100.0{% else %}undefined{% endif %}]);{% endfor %}
 
     drawEvolutionChart(dt, "total-weekly-evolution-products-sale-nonsale");
 }
@@ -181,9 +184,10 @@ function drawRatioSaleCharts() {
     var dt = new google.visualization.DataTable();
     dt.addColumn("string", "{% trans 'Week' %}");
     dt.addColumn("number", "{% trans 'Sale Ratio' %}");
+    dt.addColumn("number", "{% trans 'Goal' %}");
 
     {% for w, s in weeks %}
-    dt.addRow(["w{{ w.1 }}", {% if s.operations > 0 %}100 * {{ s.sales|safe }}/{{ s.operations|safe }}{% else %}undefined{% endif %}]);{% endfor %}
+    dt.addRow(["w{{ w.1 }}", {% if s.operations > 0 %}Math.round(100 * {{ s.sales|safe }}/{{ s.operations|safe }}){% else %}undefined{% endif %}, {% if s.goal %}{{ s.goal.sales_ratio|safe }}{% else %}undefined{% endif %}]);{% endfor %}
 
     drawEvolutionChart(dt, "total-weekly-evolution-ratio-sale");
 }

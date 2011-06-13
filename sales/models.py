@@ -11,6 +11,14 @@ def today():
     return datetime.datetime(v.year, v.month, v.day)
 
 
+def next_month():
+    v = datetime.date.today()
+    if v.month < 12:
+        return datetime.date(v.year, v.month + 1, 1)
+    else:
+        return datetime.date(v.year + 1, 1, 1)
+
+
 class CustomerGeoState(models.Model):
     name = models.CharField(_("Name"), max_length=50)
     code = models.CharField(_("Code"), max_length=2)
@@ -197,3 +205,36 @@ class NonSale(models.Model):
         ordering = ["datetime"]
         verbose_name = _("Non-Sale")
         verbose_name_plural = _("Non-Sales")
+
+
+class MonthlyGoal(models.Model):
+    start = models.DateField(_("Start Date"), default=next_month)
+    seller = models.ForeignKey(User, blank=True, null=True,
+                               verbose_name=_("Seller"),
+                               help_text=_(
+            "Leave blank to use as whole business goal."))
+    total = models.FloatField(_("Total Value"))
+    sales_ratio = models.FloatField(_("Sales Ratio (Percentage)"))
+    products_ratio = models.FloatField(_("Products per Sale"))
+
+    def __unicode__(self):
+        if self.seller:
+            return u"%s: $%0.2f (%s)" % (self.start, self.total, self.seller)
+        else:
+            return u"%s: $%0.2f" % (self.start, self.total)
+
+    @classmethod
+    def goals_for_period(cls, start, end, seller=None):
+        queryset = cls.objects.filter(seller=seller)
+        goals = list(queryset.filter(start__range=(start, end)
+                                     ).order_by("start"))
+        if not goals or goals[0].start != start:
+            g = queryset.filter(start__lt=start).order_by("-start")[:1]
+            if g:
+                goals.insert(0, g[0])
+        return goals
+
+    class Meta:
+        ordering = ["start"]
+        verbose_name = _("Monthly Goal")
+        verbose_name_plural = _("Monthly Goals")

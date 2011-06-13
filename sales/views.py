@@ -1,4 +1,4 @@
-from sales.models import Sale, NonSale
+from sales.models import Sale, NonSale, MonthlyGoal
 
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -199,16 +199,18 @@ def sales_data_get(start, end, seller_id, key, date_id_get):
     return ctxt
 
 
-def total_report(request, key, date_id_get, template):
+def total_report(request, key, date_id_get, goal_get, template):
     ctxt = {}
+    start = None
+    end = None
     if request.method != "POST":
         form = PeriodForm()
     else:
         form = PeriodForm(request.POST)
         if form.is_valid():
-            ctxt = sales_data_get(form.cleaned_data["start"],
-                                  form.cleaned_data["end"],
-                                  None, key, date_id_get)
+            start = form.cleaned_data["start"]
+            end = form.cleaned_data["end"]
+            ctxt = sales_data_get(start, end, None, key, date_id_get)
 
     old_keys = ctxt.pop(key + "s", [])
     keys = []
@@ -224,6 +226,7 @@ def total_report(request, key, date_id_get, template):
         for s in data:
             for k, v in s.iteritems():
                 d[k] += v
+        d["goal"], d["goal_proportion"] = goal_get(start, end, date_id)
         keys.append((date_id, d))
 
     ctxt["form"] = form
@@ -231,37 +234,114 @@ def total_report(request, key, date_id_get, template):
     return render_to_response(template, ctxt,
                               context_instance=RequestContext(request))
 
+_month_days_cache = {}
+def month_days(year, month):
+    cached = _month_days_cache.get((year, month))
+    if cached is not None:
+        return cached
+
+    this = datetime.date(year, month, 1)
+    if month < 12:
+        next = datetime.date(year, month + 1, 1)
+    else:
+        next = datetime.date(year + 1, 1, 1)
+    days = (next - this).days
+
+    if len(_month_days_cache) > 1000:
+        _month_days_cache.clear() # ugly!
+    _month_days_cache[(year, month)] = days
+
+    return days
+
+
 @login_required
 def total_daily(request):
     def date_id_get(date):
         return (date.year, date.month, date.day)
-    return total_report(request, "day", date_id_get,
-                          "sales/total/daily.html")
+
+    goals = []
+    goals_proportions = {}
+    def goal_get(start, end, date_id):
+        proportion = goals_proportions.get((date_id[0], date_id[1]))
+        if proportion is None:
+            proportion = 1.0 / month_days(date_id[0], date_id[1])
+            goals_proportions[(date_id[0], date_id[1])] = proportion
+        if not goals:
+            goals.extend(MonthlyGoal.goals_for_period(start, end, None))
+        goal = None
+        date = datetime.date(*date_id)
+        for g in goals:
+            if g.start <= date:
+                goal = g
+            else:
+                break
+        return (goal, proportion)
+
+    return total_report(request, "day", date_id_get, goal_get,
+                        "sales/total/daily.html")
 
 
 @login_required
 def total_weekly(request):
     def date_id_get(date):
-        return (date.year, date.isocalendar()[1])
-    return total_report(request, "week", date_id_get,
-                          "sales/total/weekly.html")
+        x = datetime.date(date.year, date.month, date.day)
+        x -= datetime.timedelta(x.weekday())
+        return (date.year, date.isocalendar()[1], x)
+
+    goals = []
+    goals_proportions = {}
+    def goal_get(start, end, date_id):
+        proportion = goals_proportions.get((date_id[0], date_id[2].month))
+        if proportion is None:
+            proportion = 7.0 / month_days(date_id[0], date_id[2].month)
+            goals_proportions[(date_id[0], date_id[2])] = proportion
+        if not goals:
+            goals.extend(MonthlyGoal.goals_for_period(start, end, None))
+        goal = None
+        date = date_id[2]
+        for g in goals:
+            if g.start <= date:
+                goal = g
+            else:
+                break
+        return (goal, proportion)
+
+    return total_report(request, "week", date_id_get, goal_get,
+                        "sales/total/weekly.html")
 
 @login_required
 def total_monthly(request):
     def date_id_get(date):
         return (date.year, date.month, date.strftime("%B %Y"))
-    return total_report(request, "month", date_id_get,
-                          "sales/total/monthly.html")
+
+    goals = []
+    def goal_get(start, end, date_id):
+        if not goals:
+            goals.extend(MonthlyGoal.goals_for_period(start, end, None))
+        goal = None
+        date = datetime.date(date_id[0], date_id[1], 1)
+        for g in goals:
+            if g.start <= date:
+                goal = g
+            else:
+                break
+        return (goal, 1)
+
+    return total_report(request, "month", date_id_get, goal_get,
+                        "sales/total/monthly.html")
 
 
 class SellerPeriodForm(PeriodForm):
     seller = forms.ChoiceField(label=_("seller"), required=False)
 
 
-def sellers_report(request, key, date_id_get, template):
+def sellers_report(request, key, date_id_get, goal_get, template):
     sellers_choices = [("", _("All"))] + [(o.id, o.get_full_name()) for o in
                                        SELLERS_QUERY.order_by("first_name")]
     ctxt = {}
+    start = None
+    end = None
+    seller = None
 
     if request.method != "POST":
         form = SellerPeriodForm()
@@ -270,11 +350,29 @@ def sellers_report(request, key, date_id_get, template):
         form = SellerPeriodForm(request.POST)
         form.fields["seller"].choices = sellers_choices
         if form.is_valid():
-            ctxt = sales_data_get(form.cleaned_data["start"],
-                                  form.cleaned_data["end"],
-                                  form.cleaned_data["seller"],
-                                  key, date_id_get)
+            start = form.cleaned_data["start"]
+            end = form.cleaned_data["end"]
+            seller = form.cleaned_data["seller"]
+            if not seller:
+                seller = None
+            ctxt = sales_data_get(start, end, seller, key, date_id_get)
+
+    old_keys = ctxt.pop(key + "s", [])
+    keys = []
+    n_sellers = float(len(SELLERS_QUERY))
+    goal = None
+    goal_proportion = None
+    for date_id, data in old_keys:
+        goal, goal_proportion = goal_get(start, end, date_id, seller)
+        if seller is None or goal.seller is None:
+            if n_sellers:
+                goal_proportion /= n_sellers
+        keys.append((date_id, data, goal, goal_proportion))
+
     ctxt["form"] = form
+    ctxt[key + "s"] = keys
+    ctxt["goal"] = goal
+    ctxt["goal_proportion"] = goal_proportion
     return render_to_response(template, ctxt,
                               context_instance=RequestContext(request))
 
@@ -283,20 +381,80 @@ def sellers_report(request, key, date_id_get, template):
 def sellers_daily(request):
     def date_id_get(date):
         return (date.year, date.month, date.day)
-    return sellers_report(request, "day", date_id_get,
+
+    goals = []
+    goals_proportions = {}
+    def goal_get(start, end, date_id, seller):
+        proportion = goals_proportions.get((date_id[0], date_id[1]))
+        if proportion is None:
+            proportion = 1.0 / month_days(date_id[0], date_id[1])
+            goals_proportions[(date_id[0], date_id[1])] = proportion
+        if not goals:
+            goals.extend(MonthlyGoal.goals_for_period(start, end, seller))
+            if seller is not None and not goals:
+                goals.extend(MonthlyGoal.goals_for_period(start, end, None))
+        goal = None
+        date = datetime.date(*date_id)
+        for g in goals:
+            if g.start <= date:
+                goal = g
+            else:
+                break
+        return (goal, proportion)
+
+    return sellers_report(request, "day", date_id_get, goal_get,
                           "sales/sellers/daily.html")
 
 
 @login_required
 def sellers_weekly(request):
     def date_id_get(date):
-        return (date.year, date.isocalendar()[1])
-    return sellers_report(request, "week", date_id_get,
+        x = datetime.date(date.year, date.month, date.day)
+        x -= datetime.timedelta(x.weekday())
+        return (date.year, date.isocalendar()[1], x)
+
+    goals = []
+    goals_proportions = {}
+    def goal_get(start, end, date_id, seller):
+        proportion = goals_proportions.get((date_id[0], date_id[2].month))
+        if proportion is None:
+            proportion = 7.0 / month_days(date_id[0], date_id[2].month)
+            goals_proportions[(date_id[0], date_id[2])] = proportion
+        if not goals:
+            goals.extend(MonthlyGoal.goals_for_period(start, end, seller))
+            if seller is not None and not goals:
+                goals.extend(MonthlyGoal.goals_for_period(start, end, None))
+        goal = None
+        date = date_id[2]
+        for g in goals:
+            if g.start <= date:
+                goal = g
+            else:
+                break
+        return (goal, proportion)
+
+    return sellers_report(request, "week", date_id_get, goal_get,
                           "sales/sellers/weekly.html")
 
 @login_required
 def sellers_monthly(request):
     def date_id_get(date):
         return (date.year, date.month, date.strftime("%B %Y"))
-    return sellers_report(request, "month", date_id_get,
+
+    goals = []
+    def goal_get(start, end, date_id, seller):
+        if not goals:
+            goals.extend(MonthlyGoal.goals_for_period(start, end, seller))
+            if seller is not None and not goals:
+                goals.extend(MonthlyGoal.goals_for_period(start, end, None))
+        goal = None
+        date = datetime.date(date_id[0], date_id[1], 1)
+        for g in goals:
+            if g.start <= date:
+                goal = g
+            else:
+                break
+        return (goal, 1)
+
+    return sellers_report(request, "month", date_id_get, goal_get,
                           "sales/sellers/monthly.html")

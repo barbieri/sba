@@ -10,13 +10,14 @@
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
-    google.load('visualization', '1', {'packages':['corechart', 'annotatedtimeline']});
+    google.load('visualization', '1', {'packages':['corechart', 'annotatedtimeline', 'gauge']});
     google.setOnLoadCallback(drawCharts);
 
     function drawCharts() {
         drawTotalSalesChart();
         drawSellersChart();
         drawSellersRatioChart();
+        drawSellersGoalsChart();
     }
 
     function drawPieChart(dt, element_id) {
@@ -41,6 +42,21 @@
         var h = elm.height;
         var chart = new google.visualization.BarChart(elm);
         chart.draw(dt, {width: w, height: h, hAxis: {minValue: 0, maxValue: 1, format: "###%"}});
+    }
+
+    function drawPerformanceChart(element_id, label, value, goal) {
+        var dt = new google.visualization.DataTable();
+        dt.addColumn("string", "Label");
+        dt.addColumn("number", "Value");
+        dt.addRow([label, value]);
+
+        var elm = document.getElementById(element_id);
+        var w = elm.width;
+        var h = elm.height;
+        var chart = new google.visualization.Gauge(elm);
+        var maxval = (value > goal * 1.1) ? value : goal * 1.1;
+        var majorTicks = ["0", (maxval * 0.20).toFixed(0), (maxval * 0.4).toFixed(0), (maxval * 0.6).toFixed(0), (maxval * 0.8).toFixed(0), maxval.toFixed(0)];
+        chart.draw(dt, {width: w, height: h, redFrom: 0, redTo: goal * 0.25, yellowFrom: goal * 0.25, yellowTo: goal * 0.5, greenFrom: goal, greenTo: maxval, min: 0, max: maxval, majorTicks: majorTicks});
     }
 </script>
 {% endblock %}
@@ -110,20 +126,28 @@
   </tfoot>
 </table>
 
-<h2>{% trans "Sales in the last 30 days" %}</h2>
+<h2>{% trans "Month Sales" %}</h2>
 <div id="overview-sales-chart"></div>
-<h2>{% trans "Participation in the last 30 days" %}</h2>
+<h2>{% trans "Month Participation" %}</h2>
 <div id="overview-sellers-chart"></div>
-<h2>{% trans "Sale Ratio in the last 30 days" %}</h2>
+<h2>{% trans "Month Sale Ratio" %}</h2>
 <div id="overview-sellers-ratio-chart"></div>
+<h2>{% trans "Month Sales Goals" %}</h2>
+<div id="overview-seller-goals-container">
+{% for row in sellers %}{% if row.goal %}
+<div id="overview-seller-goals-{{ row.seller.id }}-chart" class="overview-sellers-goals-chart"></div>{% endif %}{% endfor %}
+</div>
+
 <script type="text/javascript">
+
 function drawTotalSalesChart() {
     var dt = new google.visualization.DataTable();
     dt.addColumn("date", "{% trans 'Date' %}");
     dt.addColumn("number", "{% trans 'Total' %}");
+    dt.addColumn("number", "{% trans 'Goal' %}");
 
-    {% for d, s in sales %}
-    dt.addRow([new Date({{ d.year }}, {{ d.month }} - 1, {{ d.day }}), {{ s|safe }}]);{% endfor %}
+    {% for d, s, g in sales %}
+    dt.addRow([new Date({{ d.year }}, {{ d.month }} - 1, {{ d.day }}), {{ s|safe }}, {% if g %}{{ g|safe }}{% else %}undefined{% endif %}]);{% endfor %}
 
     drawEvolutionChart(dt, "overview-sales-chart");
 }
@@ -143,9 +167,16 @@ function drawSellersRatioChart() {
 
     {% for row in sellers %}
     dt.addColumn("number", "{{ row.seller.first_name|escapejs }}");{% endfor %}
-    dt.addRow([{% for row in sellers %}{% if not forloop.first %}, {% endif %}{% if row.ratio_month != None %}{{ row.ratio_month|safe }}{% else %}undefined{% endif %}{% endfor %}]);
+    dt.addColumn("number", "{% trans 'Goal' %}");
+    dt.addRow([{% for row in sellers %}{% if row.ratio_month != None %}{{ row.ratio_month|safe }}{% else %}undefined{% endif %}, {% endfor %}{% if sales_ratio_goal %}{{ sales_ratio_goal|safe }}{% else %}undefined{% endif %}]);
 
     drawAggregatePercentChart(dt, "overview-sellers-ratio-chart");
+}
+
+function drawSellersGoalsChart() {
+{% for row in sellers %}{% if row.goal %}
+    drawPerformanceChart("overview-seller-goals-{{ row.seller.id }}-chart", "{{ row.seller.first_name|escapejs }}", {{ row.month|safe }}, {{ row.goal|safe }});
+{% endif %}{% endfor %}
 }
 
 </script>

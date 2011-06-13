@@ -1,6 +1,6 @@
 from sales.models import CustomerGeoState, CustomerCity, Customer, \
     Product, RevenueMethod, Sale, SaleProduct, SaleRevenue, \
-    NonSaleReason, NonSale
+    NonSaleReason, NonSale, MonthlyGoal
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
@@ -129,6 +129,15 @@ class NonSaleAdmin(admin.ModelAdmin):
     date_hierarchy = "datetime"
 
 
+class MonthlyGoalAdmin(admin.ModelAdmin):
+    list_display = ["start", "seller", "total", "sales_ratio", "products_ratio"]
+    list_filter = ["start", "seller"]
+    search_fields = ["seller__first_name", "seller__last_name",
+                     "seller__username", "start", "total", "sales_ratio",
+                     "products_ratio"]
+    date_hierarchy = "start"
+
+
 admin.site.register(CustomerGeoState, CustomerGeoStateAdmin)
 admin.site.register(CustomerCity, CustomerCityAdmin)
 admin.site.register(Customer, CustomerAdmin)
@@ -137,3 +146,4 @@ admin.site.register(Sale, SaleAdmin)
 admin.site.register(RevenueMethod, RevenueMethodAdmin)
 admin.site.register(NonSaleReason)
 admin.site.register(NonSale, NonSaleAdmin)
+admin.site.register(MonthlyGoal, MonthlyGoalAdmin)

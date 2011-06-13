@@ -4,6 +4,7 @@ from suppliers.models import SupplierPayment
 from sales.models import SaleRevenue
 from sales.models import Sale
 from sales.models import NonSale
+from sales.models import MonthlyGoal
 from django.shortcuts import render_to_response
 from django.template import Context, RequestContext, loader
 from django.contrib.auth.models import User
@@ -61,6 +62,15 @@ def index(request, date=None):
         else:
             return sales / float(total)
 
+    def get_sales_goal(seller, date, period):
+        goals = MonthlyGoal.goals_for_period(period[0], period[1], seller)
+        if not goals:
+            return None
+        else:
+            date_days = (date - period[0]).days + 1
+            month_days = (period[1] - period[0]).days + 1
+            return float(goals[-1].total * date_days) / month_days
+
     sellers = []
     sellers_date = 0.0
     sellers_week = 0.0
@@ -78,6 +88,7 @@ def index(request, date=None):
                 "week": u_week,
                 "month": u_month,
                 "ratio_month": get_sales_ratio(u, month),
+                "goal": get_sales_goal(u, date, month),
                 })
 
     def get_total_sales(period):
@@ -94,12 +105,30 @@ def index(request, date=None):
     sales_trend_week = (sales_total_week * 7) / (date.weekday() + 1)
     sales_trend_month = (sales_total_month * month[1].day) / date.day
 
+    goals = MonthlyGoal.goals_for_period(month[0], month[1], None)
+    month_days = (month[1] - month[0]).days + 1
     sales = []
-    last_day = [None, None]
+    last_day = [None, None, None]
+    if goals:
+        last_goal = 0
+        sales_ratio_goal = goals[-1].sales_ratio / 100.0
+    else:
+        last_goal = None
+        sales_ratio_goal = None
     for o in Sale.objects.filter(datetime__range=month).order_by("datetime"):
         d = datetime.date(o.datetime.year, o.datetime.month, o.datetime.day)
         if last_day[0] != d:
-            last_day = [d, 0.0]
+            if last_goal is None:
+                g = None
+            else:
+                idx = last_goal
+                idx_max = len(goals)
+                while idx + 1 < idx_max and goals[idx + 1].start < d:
+                    idx += 1
+                last_goal = idx
+                g = goals[idx].total / month_days
+                g = int(g * 100) / 100.0
+            last_day = [d, 0.0, g]
             sales.append(last_day)
         last_day[1] += o.value
 
@@ -247,6 +276,7 @@ def index(request, date=None):
         "sales_others_month": sales_others_month,
         "sales_trend_week": sales_trend_week,
         "sales_trend_month": sales_trend_month,
+        "sales_ratio_goal": sales_ratio_goal,
         "date_list": date_list,
         "is_today": is_today,
         "date": date,
