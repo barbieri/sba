@@ -49,10 +49,11 @@ class SupplierPaymentAdmin(admin.ModelAdmin):
 
 class SupplierInvoiceAdmin(admin.ModelAdmin):
     inlines = [SupplierPaymentInline]
-    list_display = ["identifier", "supplier", "date_due",
+    list_display = ["identifier", "supplier", "date_due", "date_issue",
                     "declared_value", "total_value", "payments",
                     "status", "tag_list"]
-    list_filter = ["supplier__name", "supplier", "date_due", "status"]
+    list_filter = ["supplier__name", "supplier", "date_due", "date_issue",
+                   "status"]
     search_fields = ["supplier__name", "identifier"]
     filter_horizontal = ("tags",)
     date_hierarchy = "date_due"
