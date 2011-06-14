@@ -46,8 +46,24 @@ class CustomerCity(models.Model):
 
 
 class Customer(models.Model):
+    MONTHS = (
+        (1, _("January")),
+        (2, _("February")),
+        (3, _("March")),
+        (4, _("April")),
+        (5, _("May")),
+        (6, _("June")),
+        (7, _("July")),
+        (8, _("August")),
+        (9, _("September")),
+        (10, _("October")),
+        (11, _("November")),
+        (12, _("December")),
+        )
     name = models.CharField(_("Name"), max_length=100)
     phone = models.CharField(_("Phone"), max_length=50, blank=True)
+    mobile_phone = models.CharField(_("Mobile Phone"),
+                                    max_length=50, blank=True)
     email = models.EmailField(_("Email"), blank=True)
     address = models.CharField(_("Address"), max_length=50, blank=True)
     neighborhood = models.CharField(_("Neighborhood"),
@@ -55,6 +71,9 @@ class Customer(models.Model):
     city = models.ForeignKey(CustomerCity, blank=True, verbose_name=_("City"))
     zip = models.CharField(_("Zip Code"), max_length=9, blank=True)
     note = models.TextField(_("Note"), blank=True)
+    birth_day = models.IntegerField(_("Birth Day"), blank=True)
+    birth_month = models.IntegerField(_("Birth Month"),
+                                      choices=MONTHS, blank=True)
 
     def __unicode__(self):
         return self.name

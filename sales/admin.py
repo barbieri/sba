@@ -27,10 +27,11 @@ class CustomerGeoStateAdmin(admin.ModelAdmin):
 
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ["name", "phone", "email", "city"]
-    list_filter = ["city"]
-    search_fields = ["name", "phone", "email", "address", "neighborhood",
-                     "city__name", "zip", "note"]
+    list_display = ["name", "phone", "mobile_phone", "email", "city",
+                    "birth_day", "birth_month"]
+    list_filter = ["city", "birth_month", "birth_day", "birth_month"]
+    search_fields = ["name", "phone", "mobile_phone", "email", "address",
+                     "neighborhood", "city__name", "zip", "note"]
 
 
 class ProductAdmin(admin.ModelAdmin):
