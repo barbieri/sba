@@ -5,6 +5,7 @@ from sales.models import SaleRevenue
 from sales.models import Sale
 from sales.models import NonSale
 from sales.models import MonthlyGoal
+from sales.models import Customer
 from django.shortcuts import render_to_response
 from django.template import Context, RequestContext, loader
 from django.contrib.auth.models import User
@@ -265,6 +266,12 @@ def index(request, date=None):
     q = SaleRevenue.objects.filter(date_due__lt=date)
     initial_balance += q.aggregate(Sum("value")).get("value__sum") or 0
 
+    birth_day = Customer.objects.filter(
+        birth_day=date.day, birth_month=date.month).order_by("name")
+    birth_month = Customer.objects.filter(
+        birth_day__gt=date.day, birth_month=date.month).order_by(
+        "birth_day", "name")
+
     ctxt = {
         "sellers": sellers,
         "sales": sales,
@@ -303,6 +310,8 @@ def index(request, date=None):
         "days30_revenues_count": days30_revenues_count,
         "days30_total": days30_total,
         "days30_balance": days30_total + initial_balance,
+        "birth_day": birth_day,
+        "birth_month": birth_month,
         }
     return render_to_response('overview/index.html', ctxt,
                               context_instance=RequestContext(request))

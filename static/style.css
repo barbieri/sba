@@ -377,13 +377,17 @@ div#overview-navigator-next {
 
 table#overview-sellers,
 table#overview-forecasts-summary,
-table#overview-forecasts-date {
+table#overview-forecasts-date,
+table#overview-birth-day,
+table#overview-birth-month {
     border: 1px solid #dddddd;
 }
 
 table#overview-sellers caption,
 table#overview-forecasts-summary caption,
 table#overview-forecasts-date caption,
+table#overview-birth-day caption,
+table#overview-birth-month caption,
 div#overview-sales h2 {
     color: #999999;
     font-weight: bold;
@@ -394,7 +398,9 @@ div#overview-sales h2 {
 
 table#overview-sellers,
 table#overview-forecasts-summary,
-table#overview-forecasts-date {
+table#overview-forecasts-date,
+table#overview-birth-day,
+table#overview-birth-month {
     width: 100%;
 }
 

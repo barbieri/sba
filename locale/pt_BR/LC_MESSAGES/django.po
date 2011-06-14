@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SBA 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-13 19:32-0300\n"
+"POT-Creation-Date: 2011-06-14 20:21-0300\n"
 "PO-Revision-Date: 2011-06-06 00:36-0300\n"
 "Last-Translator: Gustavo Sverzut Barbieri <barbieri@gmail.com>\n"
 "Language-Team: pt_BR <barbieri@gmail.com>\n"
@@ -56,7 +56,7 @@ msgstr "%(credits_count)d créditos ($%(credits_value)0.2f)"
 msgid "%(debits_count)d debits ($%(debits_value)0.2f)"
 msgstr "%(debits_count)d débitos ($%(debits_value)0.2f)"
 
-#: cashflow/admin.py:78 cashflow/admin.py:121 sales/admin.py:116
+#: cashflow/admin.py:78 cashflow/admin.py:121 sales/admin.py:117
 #: suppliers/admin.py:47 suppliers/admin.py:92
 msgid "Summary"
 msgstr "Resumo"
@@ -76,20 +76,20 @@ msgid "%s is not a valid #rrggbb color."
 msgstr "%s não é uma cor #rrggbb válida."
 
 #: cashflow/models.py:20 cashflow/models.py:64 sales/models.py:23
-#: sales/models.py:36 sales/models.py:49 sales/models.py:85
+#: sales/models.py:36 sales/models.py:63 sales/models.py:104
 #: suppliers/models.py:8
 msgid "Name"
 msgstr "Nome"
 
 #: cashflow/models.py:23 cashflow/models.py:47 cashflow/models.py:67
-#: cashflow/models.py:91 sales/models.py:57 sales/models.py:71
-#: sales/models.py:182 sales/models.py:198 suppliers/models.py:11
+#: cashflow/models.py:91 sales/models.py:73 sales/models.py:90
+#: sales/models.py:201 sales/models.py:217 suppliers/models.py:11
 #: suppliers/models.py:33 suppliers/models.py:70
 msgid "Note"
 msgstr "Nota"
 
-#: cashflow/models.py:24 cashflow/models.py:68 sales/models.py:72
-#: sales/models.py:88
+#: cashflow/models.py:24 cashflow/models.py:68 sales/models.py:91
+#: sales/models.py:107
 msgid "Is Active?"
 msgstr "Está Ativo?"
 
@@ -105,8 +105,8 @@ msgstr "Crédito"
 msgid "Debit"
 msgstr "Débito"
 
-#: cashflow/models.py:41 cashflow/models.py:84 sales/models.py:70
-#: sales/models.py:181 templates/cashflow/index.html:208
+#: cashflow/models.py:41 cashflow/models.py:84 sales/models.py:89
+#: sales/models.py:200 templates/cashflow/index.html:208
 msgid "Description"
 msgstr "Descrição"
 
@@ -129,8 +129,8 @@ msgstr "Data"
 msgid "Type"
 msgstr "Tipo"
 
-#: cashflow/models.py:45 cashflow/models.py:88 sales/models.py:105
-#: sales/models.py:147 suppliers/models.py:68
+#: cashflow/models.py:45 cashflow/models.py:88 sales/models.py:124
+#: sales/models.py:166 suppliers/models.py:68
 #: templates/cashflow/index.html:204 templates/cashflow/index.html.py:206
 #: templates/cashflow/index.html:284 templates/cashflow/index.html.py:301
 #: templates/cashflow/index.html:318 templates/cashflow/index.html.py:336
@@ -179,7 +179,7 @@ msgstr "Foi Pago?"
 msgid "Payment"
 msgstr "Pagamento"
 
-#: cashflow/models.py:104 overview/views.py:176 suppliers/models.py:58
+#: cashflow/models.py:104 overview/views.py:177 suppliers/models.py:58
 #: templates/overview/index.html:192
 msgid "Payments"
 msgstr "Pagamentos"
@@ -218,7 +218,7 @@ msgstr "De"
 msgid "To"
 msgstr "Até"
 
-#: cashflow/views.py:485 overview/views.py:216
+#: cashflow/views.py:485 overview/views.py:217
 #: templates/overview/index.html:195
 msgid "Sales Revenue"
 msgstr "Renda de vendas"
@@ -231,40 +231,40 @@ msgstr "Pagamentos Gerais"
 msgid "Supplier Payment"
 msgstr "Pagamentos de Fornecedores"
 
-#: overview/views.py:155
+#: overview/views.py:156
 msgid "Other Credits"
 msgstr "Outros Créditos"
 
-#: overview/views.py:160
+#: overview/views.py:161
 msgid "Other Debits"
 msgstr "Outros Débitos"
 
-#: overview/views.py:198 templates/overview/index.html:193
+#: overview/views.py:199 templates/overview/index.html:193
 msgid "Suppliers Payments"
 msgstr "Pagamentos de Fornecedores"
 
-#: sales/admin.py:50
+#: sales/admin.py:51
 #, python-format
 msgid "%s marked as inactive"
 msgstr "%s marcado como inativo"
 
-#: sales/admin.py:51
+#: sales/admin.py:52
 msgid "Mark selected as inactive"
 msgstr "Marcar selecionados como inativo"
 
-#: sales/admin.py:81 sales/models.py:81
+#: sales/admin.py:82 sales/models.py:100
 msgid "Products"
 msgstr "Produtos"
 
-#: sales/admin.py:85
+#: sales/admin.py:86
 msgid "Revenues"
 msgstr "Receitas"
 
-#: sales/admin.py:92
+#: sales/admin.py:93
 msgid "No sales selected"
 msgstr "Nenhuma venda selecionada"
 
-#: sales/admin.py:102
+#: sales/admin.py:103
 #, python-format
 msgid ""
 "%(sales)d sales, %(products)d products (%(average_products)0.1f average), "
@@ -299,71 +299,131 @@ msgstr "Cidade do Consumidor"
 msgid "Customer Citys"
 msgstr "Cidades do Consumidor"
 
-#: sales/models.py:50 suppliers/models.py:9
+#: sales/models.py:50
+msgid "January"
+msgstr "Janeiro"
+
+#: sales/models.py:51
+msgid "February"
+msgstr "Fevereiro"
+
+#: sales/models.py:52
+msgid "March"
+msgstr "Março"
+
+#: sales/models.py:53
+msgid "April"
+msgstr "Abril"
+
+#: sales/models.py:54
+msgid "May"
+msgstr "Maio"
+
+#: sales/models.py:55
+msgid "June"
+msgstr "Junho"
+
+#: sales/models.py:56
+msgid "July"
+msgstr "Julho"
+
+#: sales/models.py:57
+msgid "August"
+msgstr "Agosto"
+
+#: sales/models.py:58
+msgid "September"
+msgstr "Setembro"
+
+#: sales/models.py:59
+msgid "October"
+msgstr "Outubro"
+
+#: sales/models.py:60
+msgid "November"
+msgstr "Novembro"
+
+#: sales/models.py:61
+msgid "December"
+msgstr "Dezembro"
+
+#: sales/models.py:64 suppliers/models.py:9
 msgid "Phone"
 msgstr "Telefone"
 
-#: sales/models.py:51 suppliers/models.py:10
+#: sales/models.py:65
+msgid "Mobile Phone"
+msgstr "Celular"
+
+#: sales/models.py:67 suppliers/models.py:10
 msgid "Email"
 msgstr "Email"
 
-#: sales/models.py:52
+#: sales/models.py:68
 msgid "Address"
 msgstr "Endereço"
 
-#: sales/models.py:53
+#: sales/models.py:69
 msgid "Neighborhood"
 msgstr "Bairro"
 
-#: sales/models.py:55
+#: sales/models.py:71
 msgid "City"
 msgstr "Cidade"
 
-#: sales/models.py:56
+#: sales/models.py:72
 msgid "Zip Code"
 msgstr "CEP"
 
-#: sales/models.py:64 sales/models.py:104 sales/models.py:196
+#: sales/models.py:74
+msgid "Birth Day"
+msgstr "Dia de Nascimento"
+
+#: sales/models.py:75
+msgid "Birth Month"
+msgstr "Mês de Nascimento"
+
+#: sales/models.py:83 sales/models.py:123 sales/models.py:215
 msgid "Customer"
 msgstr "Consumidor"
 
-#: sales/models.py:65
+#: sales/models.py:84
 msgid "Customers"
 msgstr "Consumidores"
 
-#: sales/models.py:69 suppliers/models.py:28
+#: sales/models.py:88 suppliers/models.py:28
 msgid "Identifier"
 msgstr "Identificador"
 
-#: sales/models.py:73
+#: sales/models.py:92
 msgid "Cost"
 msgstr "Custo"
 
-#: sales/models.py:80 sales/models.py:133
+#: sales/models.py:99 sales/models.py:152
 msgid "Product"
 msgstr "Produto"
 
-#: sales/models.py:86 sales/models.py:155
+#: sales/models.py:105 sales/models.py:174
 msgid "Operation Cost"
 msgstr "Custo da Operação"
 
-#: sales/models.py:87 sales/models.py:156
+#: sales/models.py:106 sales/models.py:175
 msgid "Percentual Cost"
 msgstr "Custo Percentual"
 
-#: sales/models.py:95 sales/models.py:154
+#: sales/models.py:114 sales/models.py:173
 msgid "Revenue Method"
 msgstr "Método de Receita"
 
-#: sales/models.py:96
+#: sales/models.py:115
 msgid "Revenue Methods"
 msgstr "Métodos de Receita"
 
-#: sales/models.py:100 sales/models.py:193
+#: sales/models.py:119 sales/models.py:212
 msgid "Date & Time"
 msgstr "Data e Horário"
 
-#: sales/models.py:102 sales/models.py:194 sales/models.py:213
+#: sales/models.py:121 sales/models.py:213 sales/models.py:232
 #: templates/overview/index.html:87 templates/overview/index.html.py:157
 #: templates/sales/sellers/daily.html:122
 #: templates/sales/sellers/daily.html:229
@@ -374,19 +434,19 @@ msgstr "Data e Horário"
 msgid "Seller"
 msgstr "Vendedor"
 
-#: sales/models.py:106
+#: sales/models.py:125
 msgid "Updated automatically on save."
 msgstr "Atualizado automaticamente ao salvar."
 
-#: sales/models.py:107
+#: sales/models.py:126
 msgid "Discount (%)"
 msgstr "Desconto (%)"
 
-#: sales/models.py:126 sales/models.py:131 sales/models.py:145
+#: sales/models.py:145 sales/models.py:150 sales/models.py:164
 msgid "Sale"
 msgstr "Venda"
 
-#: sales/models.py:127 templates/report.html:26
+#: sales/models.py:146 templates/report.html:26
 #: templates/overview/index.html:84 templates/sales/index.html:19
 #: templates/sales/sellers/daily.html:74
 #: templates/sales/sellers/daily.html:230
@@ -402,63 +462,63 @@ msgstr "Venda"
 msgid "Sales"
 msgstr "Vendas"
 
-#: sales/models.py:134
+#: sales/models.py:153
 msgid "Count"
 msgstr "Unidades"
 
-#: sales/models.py:137
+#: sales/models.py:156
 msgid "Sale of Product"
 msgstr "Venda de Produto"
 
-#: sales/models.py:138
+#: sales/models.py:157
 msgid "Sale of Products"
 msgstr "Venda de Produtos"
 
-#: sales/models.py:146 suppliers/models.py:32 suppliers/models.py:69
+#: sales/models.py:165 suppliers/models.py:32 suppliers/models.py:69
 msgid "Due Date"
 msgstr "Data de Vencimento"
 
-#: sales/models.py:157
+#: sales/models.py:176
 msgid "Net Value"
 msgstr "Valor Líquido"
 
-#: sales/models.py:160
+#: sales/models.py:179
 msgid "Revenue of Sale"
 msgstr "Receita da Venda"
 
-#: sales/models.py:161
+#: sales/models.py:180
 msgid "Revenues of Sale"
 msgstr "Receitas da Venda"
 
-#: sales/models.py:185
+#: sales/models.py:204
 msgid "Non-Sale Reason"
 msgstr "Motivo de Não Vender"
 
-#: sales/models.py:186
+#: sales/models.py:205
 msgid "Non-Sale Reasons"
 msgstr "Motivos de Não Vender"
 
-#: sales/models.py:197
+#: sales/models.py:216
 msgid "Reason"
 msgstr "Motivo"
 
-#: sales/models.py:206
+#: sales/models.py:225
 msgid "Non-Sale"
 msgstr "Não-Venda"
 
-#: sales/models.py:207
+#: sales/models.py:226
 msgid "Non-Sales"
 msgstr "Não-Vendas"
 
-#: sales/models.py:211
+#: sales/models.py:230
 msgid "Start Date"
 msgstr "Data de Início"
 
-#: sales/models.py:215
+#: sales/models.py:234
 msgid "Leave blank to use as whole business goal."
 msgstr "Deixe em branco para meta da loja."
 
-#: sales/models.py:216 suppliers/models.py:54
+#: sales/models.py:235 suppliers/models.py:54
 #: templates/sales/sellers/daily.html:95
 #: templates/sales/sellers/monthly.html:94
 #: templates/sales/sellers/weekly.html:94 templates/sales/total/daily.html:71
@@ -466,11 +526,11 @@ msgstr "Deixe em branco para meta da loja."
 msgid "Total Value"
 msgstr "Valor Total"
 
-#: sales/models.py:217
+#: sales/models.py:236
 msgid "Sales Ratio (Percentage)"
 msgstr "Índice de Atendimento (Porcentagem)"
 
-#: sales/models.py:218 templates/sales/sellers/daily.html:238
+#: sales/models.py:237 templates/sales/sellers/daily.html:238
 #: templates/sales/sellers/monthly.html:237
 #: templates/sales/sellers/weekly.html:237
 #: templates/sales/total/daily.html:140 templates/sales/total/monthly.html:140
@@ -478,11 +538,11 @@ msgstr "Índice de Atendimento (Porcentagem)"
 msgid "Products per Sale"
 msgstr "Peças por Venda"
 
-#: sales/models.py:239
+#: sales/models.py:258
 msgid "Monthly Goal"
 msgstr "Meta Mensal"
 
-#: sales/models.py:240
+#: sales/models.py:259
 msgid "Monthly Goals"
 msgstr "Metas Mensais"
 
@@ -937,6 +997,19 @@ msgstr "Agenda para %(date)s"
 #: templates/overview/index.html:264
 msgid "Nothing schedule to date."
 msgstr "Nada agendado para o dia."
+
+#: templates/overview/index.html:270
+msgid "Today's Birthdays"
+msgstr "Aniversariantes de Hoje"
+
+#: templates/overview/index.html:270
+#, python-format
+msgid "Birthdays for %(date)s"
+msgstr "Aniversariantes em %(date)s"
+
+#: templates/overview/index.html:285
+msgid "Month's Birthdays"
+msgstr "Aniversariantes do Mês"
 
 #: templates/registration/login.html:17
 msgid "Please correct the error below."

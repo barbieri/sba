@@ -264,5 +264,37 @@ function drawSellersGoalsChart() {
   <tr><td class="no-items">{% trans "Nothing schedule to date." %}</td></tr>
   {% endif %}
 </table>
+
+{% if birth_day %}
+<table id="overview-birth-day">
+  <caption>{% if is_today %}{% trans "Today's Birthdays" %}{% else %}{% blocktrans %}Birthdays for {{ date }}{% endblocktrans %}{% endif %}</caption>
+  <tbody>
+    {% for o in birth_day %}
+    <tr>
+      <td class="overview-description">{{ o.name }}</td>
+      <td>{{ o.phone }}{% if o.phone and o.mobile_phone %}, {% endif %}{{ o.mobile_phone }}</td>
+      <td class="action"><a href="/admin/sales/customer/{{ o.id }}">view</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+{% if birth_month %}
+<table id="overview-birth-month">
+  <caption>{% trans "Month's Birthdays" %}</caption>
+  <tbody>
+    {% for o in birth_month %}
+    <tr>
+      <td>{{ o.birth_day }}</td>
+      <td class="overview-description">{{ o.name }}</td>
+      <td>{{ o.phone }}{% if o.phone and o.mobile_phone %}, {% endif %}{{ o.mobile_phone }}</td>
+      <td class="action"><a href="/admin/sales/customer/{{ o.id }}">view</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
 </div>
 {% endblock %}
