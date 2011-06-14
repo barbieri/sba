@@ -391,7 +391,7 @@ def index(request):
         day_of_week = day.weekday()
         month_id = (day.year, day.month)
         if month_id != last_month["id"]:
-            if last_month["id"] and last_week["id"]:
+            if last_month["id"] and last_week["id"] and day_of_week > 0:
                 # fill in the remaining days of the week with next month
                 for i in xrange(day_of_week, 7):
                     last_week["days"][i] = {
