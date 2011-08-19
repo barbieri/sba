@@ -99,7 +99,7 @@ class SaleAdmin(admin.ModelAdmin):
                 revenue += o.value
                 discount += o.discount
                 products += o.saleproduct_set.aggregate(Sum("count")
-                                                        ).get("count__sum")
+                                                        ).get("count__sum") or 0
             message = _("%(sales)d sales, %(products)d products "
                         "(%(average_products)0.1f average), "
                         "%(average_discount)0.0f%% average discount, "
