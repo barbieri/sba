@@ -1,0 +1,34 @@
+             SBA - Small Business Administration (Django)
+             ============================================
+
+A simple django website that helps managing a small business. I've
+written it for my personal usage in a shoe store I owned -- do not
+expect a generic system :-)
+
+It contains:
+
+ * dashboard with sales, cashflow and some nice charts
+ * cashflow module:
+   * balance
+   * cost center
+   * labels/tags
+   * payments registry
+ * sales module:
+   * consumer registry
+   * sales goal per sales person
+   * non-sales registry
+   * sales registry
+   * products registry
+ * suppliers module:
+   * suppliers registry
+   * suppliers payments registry
+   * invoices registry
+ * report module:
+   * sales per sales person: daily, weekly and monthly
+   * whole sales: daily, weekly and monthly
+ * cashflow module:
+   * highly configurable listing (balances, cost centers, payment types...)
+
+Charts use Google Chart API.
+
+I hope it may be of use for you, patches are accepted!
